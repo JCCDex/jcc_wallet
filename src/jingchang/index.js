@@ -26,6 +26,9 @@ const isObject = (obj) => {
  * @returns {*} secret
  */
 const decrypt = (password, encryptData) => {
+    if (isEmptyObject(encryptData) || isEmptyObject(encryptData.crypto) || isEmptyObject(encryptData.crypto.kdfparams)) {
+        return null
+    }
     let iv = Buffer.from(encryptData.crypto.iv, 'hex')
     let kdfparams = encryptData.crypto.kdfparams
     let derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen)
@@ -46,7 +49,7 @@ const decrypt = (password, encryptData) => {
  * @param {*} opts
  * @returns {*} encrypt object
  */
-const encrypt = (password, secret, opts) => {
+const encrypt = (password, secret, opts = {}) => {
     let iv = opts.iv || forge.util.bytesToHex(forge.random.getBytesSync(16))
     let kdfparams = {
         dklen: opts.dklen || 32,
@@ -236,7 +239,7 @@ const decryptEthKeystore = (password, encryptData) => {
         return null
     }
     let cryptoData = encryptData.Crypto || encryptData.crypto;
-    if (isEmptyObject(cryptoData)) {
+    if (isEmptyObject(cryptoData) || isEmptyObject(cryptoData.cipherparams) || isEmptyObject(cryptoData.kdfparams)) {
         return null
     }
     let iv = Buffer.from(cryptoData.cipherparams.iv, 'hex');
@@ -259,7 +262,7 @@ const decryptEthKeystore = (password, encryptData) => {
  * @param {object} opts
  * @returns {object} encrypt object
  */
-const encryptWallet = (password, keypairs, opts) => {
+const encryptWallet = (password, keypairs, opts = {}) => {
     let data = encrypt(password, keypairs.secret, opts)
     data.type = keypairs.type || 'swt'
     data.address = keypairs.address
@@ -275,7 +278,7 @@ const encryptWallet = (password, keypairs, opts) => {
  * @param {object} opts
  * @returns {object} encrypt data
  */
-const encryptContact = (password, contacts, opts) => {
+const encryptContact = (password, contacts, opts = {}) => {
     return encrypt(password, JSON.stringify(contacts), opts)
 }
 
