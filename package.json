@@ -4,7 +4,8 @@
   "description": "wallet tool of jcc",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "gulp",
+    "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
