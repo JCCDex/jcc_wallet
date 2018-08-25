@@ -43,11 +43,11 @@ gulp.task('test', ['pre-test'], function () {
     return gulp.src(['test/*.js'])
         .pipe(mocha())
         .pipe(istanbul.writeReports())
-        // .pipe(istanbul.enforceThresholds({
-        //     thresholds: {
-        //         global: 90
-        //     }
-        // }))
+        .pipe(istanbul.enforceThresholds({
+            thresholds: {
+                global: 90
+            }
+        }))
         .on('error', gutil.log);
 });
 

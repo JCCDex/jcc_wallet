@@ -8,7 +8,14 @@ describe('test call', function () {
     describe('test createWallet', function () {
         it('the wallet should be valid when create call wallet successfully', function () {
             let wallet = callWallet.createWallet();
-            expect(wallet).to.deep.not.equal(null);
+            let {
+                secret,
+                address
+            } = wallet;
+            let a = callWallet.isValidAddress(address);
+            let b = callWallet.isValidSecret(secret);
+            expect(a).to.equal(true);
+            expect(b).to.equal(true);
         })
 
         it('should return null when create call wallet wrongly', function () {
