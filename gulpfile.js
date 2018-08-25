@@ -7,14 +7,14 @@ const babel = require('gulp-babel');
 const isparta = require('isparta');
 
 gulp.task('eslint', function () {
-    return gulp.src(['src/**/*.js'])
+    return gulp.src(['src/**/*.js', '!src/stm/lib/**/*.js'])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 });
 
 gulp.task('pre-test', function () {
-    return gulp.src(['src/**/*.js', '!src/index.js'])
+    return gulp.src(['src/**/*.js', '!src/index.js', '!src/stm/lib/**/*.js'])
         .pipe(istanbul({
             instrumenter: isparta.Instrumenter
         }))
