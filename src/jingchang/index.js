@@ -9,10 +9,6 @@ const isEmptyObject = require('jcc_common').isEmptyObject;
 const WALLET_VERSION = '1.0'
 const WALLET_NAME = 'wallets'
 
-const isObject = (obj) => {
-    return Object.prototype.toString.call(obj) === '[object Object]';
-}
-
 /**
  * decrypt wallet with password
  * @param {string} password
@@ -227,34 +223,6 @@ const delJCWallet = () => {
 }
 
 /**
- * decrypt ethereum keystore file with ethereum password
- * @param {string} password
- * @param {object} encryptData
- * @returns {string | null | false} return null if the encrypt data is invalid, return false if the password is not correct,
- * return secret if all cases are right
- */
-const decryptEthKeystore = (password, encryptData) => {
-    if (!isObject(encryptData)) {
-        return null
-    }
-    let cryptoData = encryptData.Crypto || encryptData.crypto;
-    if (isEmptyObject(cryptoData) || isEmptyObject(cryptoData.cipherparams) || isEmptyObject(cryptoData.kdfparams)) {
-        return null
-    }
-    let iv = Buffer.from(cryptoData.cipherparams.iv, 'hex');
-    let kdfparams = cryptoData.kdfparams;
-    let derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
-    let ciphertext = Buffer.from(cryptoData.ciphertext, 'hex');
-    let mac = createKeccakHash('keccak256').update(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).digest();
-    if (mac.toString('hex') !== cryptoData.mac) {
-        return false
-    }
-    let decipher = crypto.createDecipheriv('aes-128-ctr', derivedKey.slice(0, 16), iv)
-    let seed = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
-    return seed.toString('hex');
-}
-
-/**
  * encrypt jingtum keypairs
  * @param {string} password
  * @param {type: string, secret: string, address: string, alias: string} keypairs
@@ -288,7 +256,6 @@ module.exports = {
     isValidJingtumKeystore,
     getSecret,
     setJCWallet,
-    decryptEthKeystore,
     getAddress,
     encryptWallet,
     getJCWallet,

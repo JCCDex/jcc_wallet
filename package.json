@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "call-lib": "^0.2.3",
+    "ethereumjs-util": "^5.2.0",
     "jcc_common": "0.0.1",
     "jingtum-base-lib": "^1.0.9",
     "keccak": "^1.4.0",

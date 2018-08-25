@@ -29,28 +29,6 @@ let testWallet = {
     }]
 }
 
-let testEthKeystore = {
-    "version": 3,
-    "id": "00451ad2-2d5c-454b-b2b9-db577ef4423c",
-    "address": "2995c1376a852e4040caf9dbae2c765e24c37a15",
-    "Crypto": {
-        "ciphertext": "3ea9adcb5b65be6d960697a1a9fd708a3091001f454a4ab6c1b4fbcf44852f8c",
-        "cipherparams": {
-            "iv": "406870de57ee28cfbb41915a8250d647"
-        },
-        "cipher": "aes-128-ctr",
-        "kdf": "scrypt",
-        "kdfparams": {
-            "dklen": 32,
-            "salt": "5a215098320a4e652ac16b4ada3d6e4d974f9b747ecea5c0f0ba25c90d65f467",
-            "n": 8192,
-            "r": 8,
-            "p": 1
-        },
-        "mac": "90764bb86419bdc82222880c3c953cc01cb9ea424a1b18e8414d336f132e99f2"
-    }
-}
-
 let testJingtumAddress = 'jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH';
 let testJingtumSecret = 'snfXQMEVbbZng84CcfdKDASFRi4Hf'
 
@@ -118,29 +96,6 @@ describe('test jingchang', function () {
             let address = jcWallet.getAddress(testWallet);
             let isValid = jcWallet.isValidAddress(address);
             expect(isValid).to.equal(true);
-        })
-    })
-
-
-    describe('test decryptEthKeystore', function () {
-        it('should return null when the given data is not object', function () {
-            let secret = jcWallet.decryptEthKeystore(123, null);
-            expect(secret).to.equal(null);
-        })
-
-        it('should return null when the given data does not contain Crypto and crypto', function () {
-            let secret = jcWallet.decryptEthKeystore(123, {});
-            expect(secret).to.equal(null);
-        })
-
-        it('should return false when the password is wrong', function () {
-            let secret = jcWallet.decryptEthKeystore("12345678", testEthKeystore);
-            expect(secret).to.equal(false);
-        })
-
-        it('should return right secret when the password is correct', function () {
-            let secret = jcWallet.decryptEthKeystore("123456789", testEthKeystore);
-            expect(secret).to.equal("ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c250a883e4486");
         })
     })
 

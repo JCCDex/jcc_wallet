@@ -32,12 +32,12 @@ describe('test stm', function () {
     })
 
     describe('test isValidSecret', function () {
-        it('should return true if the address is valid', function () {
+        it('should return true if the secret is valid', function () {
             let isvalid = stmWallet.isValidSecret(testSecret);
             expect(isvalid).to.equal(true);
         })
 
-        it('should return false if the address is not valid', function () {
+        it('should return false if the secret is not valid', function () {
             let isvalid = stmWallet.isValidSecret(testSecret.substring(1));
             expect(isvalid).to.equal(false);
         })
