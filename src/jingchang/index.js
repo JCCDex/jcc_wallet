@@ -5,15 +5,9 @@ const scrypt = require('scryptsy');
 const Lockr = require('lockr');
 const sjcl = require('sjcl');
 const Wallet = require('jingtum-base-lib').Wallet;
+const isEmptyObject = require('jcc_common').isEmptyObject;
 const WALLET_VERSION = '1.0'
 const WALLET_NAME = 'wallets'
-
-const isEmptyObject = (obj) => {
-    for (let name in obj) {
-        return false;
-    }
-    return true;
-}
 
 const isObject = (obj) => {
     return Object.prototype.toString.call(obj) === '[object Object]';
@@ -23,7 +17,8 @@ const isObject = (obj) => {
  * decrypt wallet with password
  * @param {string} password
  * @param {object} encryptData
- * @returns {*} secret
+ * @returns {string | null | false} return null if the encrypt data is invalid, return false if the password is not correct,
+ * return secret if all cases are right
  */
 const decrypt = (password, encryptData) => {
     if (isEmptyObject(encryptData) || isEmptyObject(encryptData.crypto) || isEmptyObject(encryptData.crypto.kdfparams)) {
@@ -47,7 +42,7 @@ const decrypt = (password, encryptData) => {
  * @param {string} password
  * @param {string} secret
  * @param {*} opts
- * @returns {*} encrypt object
+ * @returns {object} encrypt object
  */
 const encrypt = (password, secret, opts = {}) => {
     let iv = opts.iv || forge.util.bytesToHex(forge.random.getBytesSync(16))
@@ -77,6 +72,7 @@ const encrypt = (password, secret, opts = {}) => {
 /**
  * check jingtum wallet is valid or not
  * @param {object} jcWallet
+ * @returns {boolean}
  */
 const isValidJCWallet = (jcWallet) => {
     return !isEmptyObject(jcWallet) && Array.isArray(jcWallet.wallets) && jcWallet.wallets.length > 0;
@@ -140,13 +136,14 @@ const isValidSecret = (secret) => {
 /**
  * check jingtum keystore file is valid or not
  * @param {*} text
+ * @returns {boolean}
  */
 const isValidJingtumKeystore = (text) => {
     try {
         if (typeof text === 'string') {
             text = JSON.parse(text);
         }
-        return isValidJCWallet(text) && text.contact && text.id && text.version;
+        return Boolean(isValidJCWallet(text) && text.contact && text.id && text.version);
     } catch (error) {
         return false;
     }
@@ -157,7 +154,7 @@ const isValidJingtumKeystore = (text) => {
  * @param {object} jcWallet
  * @param {string} password
  * @param {string} type
- * @returns {string} secret
+ * @returns {string | null} return secret if success, otherwise return null
  */
 const getSecret = (jcWallet, password, type = 'swt') => {
     let secret;
@@ -181,7 +178,7 @@ const getSecret = (jcWallet, password, type = 'swt') => {
  * get wallet's address
  * @param {object} jcWallet
  * @param {string} type
- * @returns {*} address
+ * @returns {string} return address if success, otherwise return null
  */
 const getAddress = (jcWallet, type = 'swt') => {
     if (isValidJCWallet(jcWallet)) {
@@ -199,7 +196,7 @@ const getAddress = (jcWallet, type = 'swt') => {
 
 /**
  * get jingtum wallet from localstorage
- * @returns {object}
+ * @returns {object | null} return object if success, otherwise return null
  */
 const getJCWallet = () => {
     let walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()))
@@ -213,6 +210,7 @@ const getJCWallet = () => {
 /**
  * save jingtum wallet to localstorage
  * @param {object} jcWallet
+ * @param {function} callback
  */
 const setJCWallet = (jcWallet, callback) => {
     let walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()));
@@ -232,7 +230,8 @@ const delJCWallet = () => {
  * decrypt ethereum keystore file with ethereum password
  * @param {string} password
  * @param {object} encryptData
- * @returns {*} secret
+ * @returns {string | null | false} return null if the encrypt data is invalid, return false if the password is not correct,
+ * return secret if all cases are right
  */
 const decryptEthKeystore = (password, encryptData) => {
     if (!isObject(encryptData)) {

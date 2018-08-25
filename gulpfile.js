@@ -51,6 +51,9 @@ gulp.task('test', ['pre-test'], function () {
         .on('error', gutil.log);
 });
 
-gulp.watch(['src/**/*.js', 'src/test/*.js'], ['test']);
-gulp.watch(['src/**/*.js'], ['eslint']);
+gulp.task('watch', function () {
+    gulp.watch(['src/**/*.js', 'src/test/*.js'], ['test']);
+    gulp.watch(['src/**/*.js'], ['eslint']);
+})
+
 gulp.task('default', ['eslint', 'test']);

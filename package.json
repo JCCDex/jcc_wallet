@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/JCCDex/jcc_wallet#readme",
   "devDependencies": {
+    "ajv": "^6.5.3",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
@@ -48,6 +49,8 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
+    "call-lib": "^0.2.3",
+    "jcc_common": "0.0.1",
     "jingtum-base-lib": "^1.0.9",
     "keccak": "^1.4.0",
     "lockr": "^0.8.4",

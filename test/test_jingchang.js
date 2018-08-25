@@ -54,7 +54,7 @@ let testEthKeystore = {
 let testJingtumAddress = 'jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH';
 let testJingtumSecret = 'snfXQMEVbbZng84CcfdKDASFRi4Hf'
 
-describe('test jingtum file', function () {
+describe('test jingchang', function () {
 
     describe('test isValidAddress', function () {
         it('should return true when the jingtum address is valid', function () {
@@ -194,7 +194,7 @@ describe('test jingtum file', function () {
             jcWallet.setJCWallet(testWallet, () => {
                 let wallet = jcWallet.getJCWallet();
                 let isValid = jcWallet.isValidJingtumKeystore(wallet);
-                expect(!!isValid).to.equal(true);
+                expect(isValid).to.equal(true);
                 done();
             })
         })
@@ -204,7 +204,7 @@ describe('test jingtum file', function () {
             jcWallet.setJCWallet(testWallet, () => {
                 let wallet = jcWallet.getJCWallet();
                 let isValid = jcWallet.isValidJingtumKeystore(JSON.stringify(wallet));
-                expect(!!isValid).to.equal(true);
+                expect(isValid).to.equal(true);
                 jcWallet.delJCWallet();
                 wallet = jcWallet.getJCWallet();
                 expect(wallet).to.equal(null);
