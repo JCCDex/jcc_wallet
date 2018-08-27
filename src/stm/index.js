@@ -4,7 +4,7 @@ const UInt160 = require('./lib/stream/').UInt160;
 const Base = require('./lib/stream/').Base;
 
 /**
- * check call secret is valid or not
+ * check stream secret is valid or not
  * @param {string} secret
  * @returns {boolean}
  */
@@ -13,7 +13,7 @@ const isValidSecret = (secret) => {
 }
 
 /**
- * check call address is valid or not
+ * check stream address is valid or not
  * @param {string} address
  * @returns {boolean}
  */
@@ -22,7 +22,7 @@ const isValidAddress = (address) => {
 }
 
 /**
- * create call wallet
+ * create stream wallet
  * @param {*} opt
  * @returns {object | null} return { address: '', secret: '' } if success, otherwise return null
  */
