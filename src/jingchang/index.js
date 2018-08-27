@@ -4,8 +4,11 @@ const createKeccakHash = require('keccak');
 const scrypt = require('scryptsy');
 const Lockr = require('lockr');
 const sjcl = require('sjcl');
-const Wallet = require('jingtum-base-lib').Wallet;
 const isEmptyObject = require('jcc_common').isEmptyObject;
+const {
+    isValidAddress,
+    isValidSecret
+} = require('../jingtum');
 const WALLET_VERSION = '1.0'
 const WALLET_NAME = 'wallets'
 
@@ -66,7 +69,7 @@ const encrypt = (password, secret, opts = {}) => {
 }
 
 /**
- * check jingtum wallet is valid or not
+ * check jingchang wallet is valid or not
  * @param {object} jcWallet
  * @returns {boolean}
  */
@@ -75,7 +78,7 @@ const isValidJCWallet = (jcWallet) => {
 }
 
 /**
- * create jingtum wallet
+ * create jingchang wallet
  * @param {string} password
  * @param {secret: string, address: string} wallet
  * @param {function} callback
@@ -112,29 +115,11 @@ const buildJCWallet = (password, wallet, callback) => {
 }
 
 /**
- * check jingtum address is valid or not
- * @param {string} address
- * @returns {boolean}
- */
-const isValidAddress = (address) => {
-    return Wallet.isValidAddress(address);
-}
-
-/**
- * check jingtum secret is valid or not
- * @param {string} secret
- * @returns {boolean}
- */
-const isValidSecret = (secret) => {
-    return Wallet.isValidSecret(secret);
-}
-
-/**
- * check jingtum keystore file is valid or not
+ * check jingchang keystore file is valid or not
  * @param {*} text
  * @returns {boolean}
  */
-const isValidJingtumKeystore = (text) => {
+const isValidJCKeystore = (text) => {
     try {
         if (typeof text === 'string') {
             text = JSON.parse(text);
@@ -191,7 +176,7 @@ const getAddress = (jcWallet, type = 'swt') => {
 }
 
 /**
- * get jingtum wallet from localstorage
+ * get jingchang wallet from localstorage
  * @returns {object | null} return object if success, otherwise return null
  */
 const getJCWallet = () => {
@@ -204,7 +189,7 @@ const getJCWallet = () => {
 }
 
 /**
- * save jingtum wallet to localstorage
+ * save jingchang wallet to localstorage
  * @param {object} jcWallet
  * @param {function} callback
  */
@@ -215,15 +200,15 @@ const setJCWallet = (jcWallet, callback) => {
 }
 
 /**
- * clear jingtum wallet from localstorage
+ * clear jingchang wallet from localstorage
  */
-const delJCWallet = () => {
+const clearJCWallet = () => {
     let walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()))
     Lockr.set(walletID, {})
 }
 
 /**
- * encrypt jingtum keypairs
+ * encrypt jingchang keypairs
  * @param {string} password
  * @param {type: string, secret: string, address: string, alias: string} keypairs
  * @param {object} opts
@@ -251,16 +236,14 @@ const encryptContact = (password, contacts, opts = {}) => {
 
 module.exports = {
     buildJCWallet,
-    delJCWallet,
-    isValidAddress,
-    isValidJingtumKeystore,
+    clearJCWallet,
+    isValidJCKeystore,
     getSecret,
     setJCWallet,
     getAddress,
     encryptWallet,
     getJCWallet,
     encryptContact,
-    isValidSecret,
     encrypt,
     decrypt
 }

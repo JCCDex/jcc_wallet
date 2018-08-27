@@ -15,6 +15,8 @@ npm install jcc_wallet
 
 - [jcWallet](#api-of-jc-wallet)
 
+- [jtWallet](#api-of-jingtum-wallet)
+
 - [callWallet](#api-of-call-wallet)
 
 - [stmWallet](#api-of-stream-wallet)
@@ -103,38 +105,10 @@ Void
 callback(walletID, jcWallet)
 ```
 
-### isValidAddress
+### isValidJCKeystore
 
 ```javascript
-jcWallet.isValidAddress(address)
-```
-
-Parameters
-
-`address`- `any`
-
-Return
-
-`Boolean`
-
-### isValidSecret
-
-```javascript
-jcWallet.isValidSecret(secret)
-```
-
-Parameters
-
-`secret`- `any`
-
-Return
-
-`Boolean`
-
-### isValidJingtumKeystore
-
-```javascript
-jcWallet.isValidJingtumKeystore(text)
+jcWallet.isValidJCKeystore(text)
 ```
 
 Parameters
@@ -221,12 +195,12 @@ Void
 callback(jcWallet)
 ```
 
-### delJCWallet
+### clearJCWallet
 
 #### clear jingchang wallet from localstorage
 
 ```javascript
-jcWallet.delJCWallet()
+jcWallet.clearJCWallet()
 ```
 
 ### encryptWallet
@@ -268,6 +242,76 @@ Parameters
 Return
 
 `Object`
+
+## API Of Jingtum Wallet
+
+### Usage
+
+```javascript
+const jtWallet = require('jcc_wallet').jtWallet
+or
+import { jtWallet } from 'jcc_wallet'
+```
+
+### isValidAddress
+
+```javascript
+jtWallet.isValidAddress(address)
+```
+
+Parameters
+
+`address`- `any`
+
+Return
+
+`Boolean`
+
+### isValidSecret
+
+```javascript
+jtWallet.isValidSecret(secret)
+```
+
+Parameters
+
+`secret`- `any`
+
+Return
+
+`Boolean`
+
+### getAddress
+
+```javascript
+jtWallet.getAddress(secret)
+```
+
+Parameters
+
+`secret`- `string`
+
+Return
+
+`string | null`
+
+return address if the secret is valid, otherwise return null
+
+### createWallet
+
+create wallet of stream chain
+
+```javascript
+jtWallet.createWallet()
+```
+
+Return
+
+`Object`
+
+- `secret`: `string`
+
+- `address`: `string`
 
 ## API Of Call Wallet
 
