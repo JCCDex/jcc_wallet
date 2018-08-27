@@ -11,6 +11,16 @@
 npm install jcc_wallet
 ```
 
+## Table Of Contents
+
+- [jcWallet](#api-of-jc-wallet)
+
+- [callWallet](#api-of-call-wallet)
+
+- [stmWallet](#api-of-stream-wallet)
+
+- [ethWallet](#api-of-ethereum-wallet)
+
 ## API Of JC Wallet
 
 ### Description
