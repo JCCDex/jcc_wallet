@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD024 -->
+
 # jcc_wallet
 
 [![Build Status](https://travis-ci.com/JCCDex/jcc_wallet.svg?branch=master)](https://travis-ci.com/JCCDex/jcc_wallet)
@@ -13,7 +15,7 @@ npm install jcc_wallet
 
 ### Description
 
-the jc wallet is a tool to manage various wallet, now the wallet type includes jingtum, stream, call and etherum chain.
+the jc wallet is a tool to manage various wallet, now the wallet type includes jingtum, stream, call and ethereum chain.
 
 ### Data Structure of JC Wallet
 
@@ -147,16 +149,18 @@ Parameters
 
 `type`- `string`
 
+- default type is swt
+
 Return
 
 `string | null | false`
 
-return null if the jcWallet is invalid, return false if the password is not correct, otherwise return secret
+return null if the jcWallet is invalid or the given type is not existent, return false if the password is not correct, otherwise return secret
 
 ### getAddress
 
 ```javascript
-jcWallet.getAddress(jcWallet)
+jcWallet.getAddress(jcWallet, type)
 ```
 
 Parameters
@@ -165,15 +169,17 @@ Parameters
 
 `type`- `string`
 
+- default type is swt
+
 Return
 
 `string | null`
 
-return null if the jcWallet is invalid, otherwise return address
+return null if the jcWallet is invalid or the given type is not existent, otherwise return address
 
 ### getJCWallet
 
-#### get jingtum wallet from localstorage
+#### get jingchang wallet from localstorage
 
 ```javascript
 jcWallet.getJCWallet()
@@ -187,7 +193,7 @@ return jc wallet if the wallet is valid from localstorage, otherwise return null
 
 ### setJCWallet
 
-#### set jingtum wallet to localstorage
+#### save jingchang wallet to localstorage
 
 ```javascript
 jcWallet.setJCWallet(jcWallet, callback)
@@ -207,7 +213,7 @@ callback(jcWallet)
 
 ### delJCWallet
 
-#### clear jingtum wallet from localstorage
+#### clear jingchang wallet from localstorage
 
 ```javascript
 jcWallet.delJCWallet()
@@ -238,7 +244,7 @@ Return
 #### encrypt contact
 
 ```javascript
-jcWallet.encryptContact(password, contacts, opts = {})
+jcWallet.encryptContact(password, contacts, opts)
 ```
 
 Parameters
@@ -252,3 +258,219 @@ Parameters
 Return
 
 `Object`
+
+## API Of Call Wallet
+
+### Usage
+
+```javascript
+const callWallet = require('jcc_wallet').callWallet
+or
+import { callWallet } from 'jcc_wallet'
+```
+
+### isValidAddress
+
+```javascript
+callWallet.isValidAddress(address)
+```
+
+Parameters
+
+`address`- `any`
+
+Return
+
+`Boolean`
+
+### isValidSecret
+
+```javascript
+callWallet.isValidSecret(secret)
+```
+
+Parameters
+
+`secret`- `any`
+
+Return
+
+`Boolean`
+
+### getAddress
+
+```javascript
+callWallet.getAddress(secret)
+```
+
+Parameters
+
+`secret`- `string`
+
+Return
+
+`string | null`
+
+return address if the secret is valid, otherwise return null
+
+### createWallet
+
+create wallet of call chain
+
+```javascript
+callWallet.createWallet()
+```
+
+Return
+
+`Object | null`
+
+- `secret`: `string`
+
+- `address`: `string`
+
+return object if success, otherwise return null
+
+## API Of Stream Wallet
+
+### Usage
+
+```javascript
+const stmWallet = require('jcc_wallet').stmWallet
+or
+import { stmWallet } from 'jcc_wallet'
+```
+
+### isValidAddress
+
+```javascript
+stmWallet.isValidAddress(address)
+```
+
+Parameters
+
+`address`- `any`
+
+Return
+
+`Boolean`
+
+### isValidSecret
+
+```javascript
+stmWallet.isValidSecret(secret)
+```
+
+Parameters
+
+`secret`- `any`
+
+Return
+
+`Boolean`
+
+### getAddress
+
+```javascript
+stmWallet.getAddress(secret)
+```
+
+Parameters
+
+`secret`- `string`
+
+Return
+
+`string | null`
+
+return address if the secret is valid, otherwise return null
+
+### createWallet
+
+create wallet of stream chain
+
+```javascript
+stmWallet.createWallet()
+```
+
+Return
+
+`Object`
+
+- `secret`: `string`
+
+- `address`: `string`
+
+## API Of Ethereum Wallet
+
+### Usage
+
+```javascript
+const ethWallet = require('jcc_wallet').ethWallet
+or
+import { ethWallet } from 'jcc_wallet'
+```
+
+### isValidAddress
+
+```javascript
+ethWallet.isValidAddress(address)
+```
+
+Parameters
+
+`address`- `any`
+
+Return
+
+`Boolean`
+
+### isValidSecret
+
+```javascript
+ethWallet.isValidSecret(secret)
+```
+
+Parameters
+
+`secret`- `any`
+
+Return
+
+`Boolean`
+
+### getAddress
+
+```javascript
+ethWallet.getAddress(secret)
+```
+
+Parameters
+
+`secret`- `string`
+
+Return
+
+`string | null`
+
+return address if the secret is valid, otherwise return null
+
+### decryptKeystore
+
+get secret from ethereum keystore file with password
+
+```javascript
+ethWallet.decryptKeystore(password, encryptData)
+```
+
+Parameters
+
+`password`- `string`
+
+`encryptData`- `object`
+
+Return
+
+`string | null | false`
+
+return secret if the keystore file is valid and the password is correct, return false if the password is not correct, otherwise return null
