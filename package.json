@@ -1,8 +1,9 @@
 {
   "name": "jcc_wallet",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "description": "wallet tool of jcc",
   "main": "lib/index.js",
+  "files": ["lib"],
   "scripts": {
     "test": "gulp",
     "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
