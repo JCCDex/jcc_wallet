@@ -3,7 +3,9 @@
   "version": "0.1.2",
   "description": "wallet tool of jcc",
   "main": "lib/index.js",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "test": "gulp",
     "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
@@ -53,6 +55,7 @@
   },
   "dependencies": {
     "call-lib": "^0.2.3",
+    "clone-deep": "^4.0.0",
     "ethereumjs-util": "^5.2.0",
     "jcc_common": "0.0.1",
     "jingtum-base-lib": "^1.0.9",

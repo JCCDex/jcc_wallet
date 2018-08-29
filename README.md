@@ -2,8 +2,10 @@
 
 # jcc_wallet
 
+![npm](https://img.shields.io/npm/v/jcc_wallet.svg)
 [![Build Status](https://travis-ci.com/JCCDex/jcc_wallet.svg?branch=master)](https://travis-ci.com/JCCDex/jcc_wallet)
 [![Coverage Status](https://coveralls.io/repos/github/JCCDex/jcc_wallet/badge.svg?branch=master)](https://coveralls.io/github/JCCDex/jcc_wallet?branch=master)
+[![npm downloads](https://img.shields.io/npm/dm/jcc_wallet.svg)](http://npm-stat.com/charts.html?package=jcc_wallet)
 
 ## Installtion
 
@@ -12,6 +14,8 @@ npm install jcc_wallet
 ```
 
 ## Table Of Contents
+
+- [JcWalletTool](#api-of-jc-wallet-tool)
 
 - [jcWallet](#api-of-jc-wallet)
 
@@ -23,11 +27,181 @@ npm install jcc_wallet
 
 - [ethWallet](#api-of-ethereum-wallet)
 
-## API Of JC Wallet
+## API Of JC Wallet Tool
 
 ### Description
 
-the jc wallet is a tool to manage various wallet, now the wallet type includes jingtum, stream, call and ethereum chain.
+the jc wallet tool to manage multiple wallets, now the wallet type includes jingtum(swt), stream(stm), call(call) and ethereum(eth) chain.
+
+### Usage
+
+```javascript
+const JcWalletTool = require('jcc_wallet').JcWalletTool
+// import { JcWalletTool } from 'jcc_wallet'
+let inst = new JcWalletTool(jcWallet)
+```
+
+### setJCWallet
+
+```javascript
+inst.setJCWallet(jcWallet)
+```
+
+Parameters
+
+`jcWallet`- `object`
+
+### validatePassword
+
+```javascript
+inst.validatePassword(password, type)
+```
+
+Parameters
+
+`password`- `string`
+
+`type`- `string`
+
+- `default`- `swt`
+
+Return
+
+`promise`
+
+resolve secret if success, otherwise reject error message
+
+Error message:
+
+- `password is required`
+
+- `wallet is empty`
+
+- `password is wrong`
+
+### removeWallet
+
+it will clear whole wallet if the type is swt, because the wallet of swt is basic. if the type is not swt, will remove it from wallet array.
+
+```javascript
+inst.removeWallet(type)
+```
+
+Parameters
+
+`type`- `string`
+
+- `default`- `swt`
+
+Return
+
+`promise`
+
+resolve new object of jc wallet
+
+### importEthKeystore
+
+```javascript
+inst.importEthKeystore(keystore, jcPassword, ethPassword)
+```
+
+decrypt secret from ethereum keystore file and encrypt ethereum secret and address with jc password, then save encrypt data to jingchang wallet object.
+
+Tips
+
+- Only one for eth type. if already exists, remove it firstly.
+
+Parameters
+
+`keystore`- `object`
+
+`jcPassword`- `string`
+
+`ethPassword`- `string`
+
+Return
+
+`promise`
+
+resolve new object of jc wallet if success, otherwise reject error message.
+
+Error message:
+
+- `password is required`
+
+- `wallet is empty`
+
+- `password is wrong`
+
+- `keystore is invalid`
+
+- `ethereum password is wrong`
+
+### importSecret
+
+```javascript
+inst.importSecret(secret, jcPassword, type, getAddress)
+```
+
+decrypt address from secret and encrypt secret and address with jc password, then save encrypt data to jingchang wallet object.
+
+Tips
+
+- Only one for each type. if already exists, remove it firstly.
+
+Parameters
+
+`secret`- `string`
+
+`jcPassword`- `string`
+
+`type`- `string`
+
+`getAddress`- `function`
+
+Return
+
+`promise`
+
+resolve new object of jc wallet if success, otherwise reject error message.
+
+Error message:
+
+- `password is required`
+
+- `wallet is empty`
+
+- `password is wrong`
+
+- `secret is invalid`
+
+### changePassword
+
+```javascript
+inst.changePassword(oldPassword, newPassword)
+```
+
+Parameters
+
+`oldPassword`- `string`
+
+`newPassword`- `string`
+
+Return
+
+`promise`
+
+resolve new object of jc wallet if success, otherwise reject error message.
+
+Error message:
+
+- `password is required`
+
+- `wallet is empty`
+
+- `password is wrong`
+
+## API Of JC Wallet
 
 ### Data Structure of JC Wallet
 
