@@ -57,3 +57,4 @@ gulp.task('watch', function () {
 })
 
 gulp.task('default', ['eslint', 'test']);
+gulp.task('dev', ['eslint', 'test', 'watch']);
