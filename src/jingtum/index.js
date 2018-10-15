@@ -3,29 +3,32 @@ const Wallet = require('jcc_jingtum_base_lib').Wallet;
 /**
  * check jingtum address is valid or not
  * @param {string} address
+ * @param {string} chian
  * @returns {boolean}
  */
-const isValidAddress = (address) => {
-    return Wallet.isValidAddress(address);
+const isValidAddress = (address, chian = 'swt') => {
+    return Wallet.isValidAddress(address, chian);
 }
 
 /**
  * check jingtum secret is valid or not
  * @param {string} secret
+ * @param {string} chian
  * @returns {boolean}
  */
-const isValidSecret = (secret) => {
-    return Wallet.isValidSecret(secret);
+const isValidSecret = (secret, chian = 'swt') => {
+    return Wallet.isValidSecret(secret, chian);
 }
 
 /**
  * get address through decrypting secret
  * @param {string} secret
+ * @param {string} chian
  * @returns {string | null} return address if success, otherwise return null
  */
-const getAddress = (secret) => {
+const getAddress = (secret, chian = 'swt') => {
     try {
-        let wallet = Wallet.fromSecret(secret);
+        let wallet = Wallet.fromSecret(secret, chian);
         return wallet.address
     } catch (error) {
         return null;
@@ -34,11 +37,11 @@ const getAddress = (secret) => {
 
 /**
  * create jingtum wallet
- * @param {*} opt
+ * @param {string} chian
  * @returns {object} { address: '', secret: '' }
  */
-const createWallet = () => {
-    let wallet = Wallet.generate();
+const createWallet = (chian = 'swt') => {
+    let wallet = Wallet.generate(chian);
     return wallet;
 }
 
