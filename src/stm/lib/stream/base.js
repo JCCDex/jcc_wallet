@@ -1,26 +1,26 @@
-var sjcl    = require('./utils').sjcl;
-var utils   = require('./utils');
-var extend  = require('extend');
+var sjcl = require('./utils').sjcl;
+var utils = require('./utils');
+var extend = require('extend');
 
-var BigInteger = utils.jsbn.BigInteger;
+var BigInteger = require('jsbn').BigInteger;
 
 var Base = {};
 
 var alphabets = Base.alphabets = {
-  stream:  'vpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1turAxyz',
-  tipple:  'VPShNAF39wBUDnEGHJKLM4pQrsT7RWXYZ2bcdeCg65jkm8ofqi1tuvaxyz',
-  bitcoin:  '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+  stream: 'vpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1turAxyz',
+  tipple: 'VPShNAF39wBUDnEGHJKLM4pQrsT7RWXYZ2bcdeCg65jkm8ofqi1tuvaxyz',
+  bitcoin: '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 };
 
 extend(Base, {
-  VER_NONE              : 1,
-  VER_NODE_PUBLIC       : 28,
-  VER_NODE_PRIVATE      : 32,
-  VER_ACCOUNT_ID        : 0,
-  VER_ACCOUNT_PUBLIC    : 35,
-  VER_ACCOUNT_PRIVATE   : 34,
-  VER_FAMILY_GENERATOR  : 41,
-  VER_FAMILY_SEED       : 33
+  VER_NONE: 1,
+  VER_NODE_PUBLIC: 28,
+  VER_NODE_PRIVATE: 32,
+  VER_ACCOUNT_ID: 0,
+  VER_ACCOUNT_PUBLIC: 35,
+  VER_ACCOUNT_PRIVATE: 34,
+  VER_FAMILY_GENERATOR: 41,
+  VER_FAMILY_SEED: 33
 });
 
 function sha256(bytes) {
@@ -33,13 +33,13 @@ function sha256hash(bytes) {
 
 // --> input: big-endian array of bytes.
 // <-- string at least as long as input.
-Base.encode = function(input, alpha) {
+Base.encode = function (input, alpha) {
   var alphabet = alphabets[alpha || 'stream'];
-  var bi_base  = new BigInteger(String(alphabet.length));
-  var bi_q     = new BigInteger();
-  var bi_r     = new BigInteger();
+  var bi_base = new BigInteger(String(alphabet.length));
+  var bi_q = new BigInteger();
+  var bi_r = new BigInteger();
   var bi_value = new BigInteger(input);
-  var buffer   = [];
+  var buffer = [];
 
   while (bi_value.compareTo(BigInteger.ZERO) > 0) {
     bi_value.divRemTo(bi_base, bi_q, bi_r);
@@ -47,7 +47,7 @@ Base.encode = function(input, alpha) {
     buffer.push(alphabet[bi_r.intValue()]);
   }
 
-  for (var i=0; i !== input.length && !input[i]; i += 1) {
+  for (var i = 0; i !== input.length && !input[i]; i += 1) {
     buffer.push(alphabet[0]);
   }
 
@@ -56,18 +56,17 @@ Base.encode = function(input, alpha) {
 
 // --> input: String
 // <-- array of bytes or undefined.
-Base.decode = function(input, alpha) {
+Base.decode = function (input, alpha) {
   if (typeof input !== 'string') {
     return void(0);
   }
 
   var alphabet = alphabets[alpha || 'stream'];
-  var bi_base  = new BigInteger(String(alphabet.length));
+  var bi_base = new BigInteger(String(alphabet.length));
   var bi_value = new BigInteger();
   var i;
 
-  for (i = 0; i !== input.length && input[i] === alphabet[0]; i += 1) {
-  }
+  for (i = 0; i !== input.length && input[i] === alphabet[0]; i += 1) {}
 
   for (; i !== input.length; i += 1) {
     var v = alphabet.indexOf(input[i]);
@@ -78,13 +77,15 @@ Base.decode = function(input, alpha) {
 
     var r = new BigInteger();
     r.fromInt(v);
-    bi_value  = bi_value.multiply(bi_base).add(r);
+    bi_value = bi_value.multiply(bi_base).add(r);
   }
 
   // toByteArray:
   // - Returns leading zeros!
   // - Returns signed bytes!
-  var bytes =  bi_value.toByteArray().map(function(b) { return b ? b < 0 ? 256+b : b : 0; });
+  var bytes = bi_value.toByteArray().map(function (b) {
+    return b ? b < 0 ? 256 + b : b : 0;
+  });
   var extra = 0;
 
   while (extra !== bytes.length && !bytes[extra]) {
@@ -104,12 +105,12 @@ Base.decode = function(input, alpha) {
   return [].concat(utils.arraySet(zeros, 0), bytes);
 };
 
-Base.verify_checksum = function(bytes) {
+Base.verify_checksum = function (bytes) {
   var computed = sha256hash(bytes.slice(0, -4)).slice(0, 4);
   var checksum = bytes.slice(-4);
   var result = true;
 
-  for (var i=0; i<4; i++) {
+  for (var i = 0; i < 4; i++) {
     if (computed[i] !== checksum[i]) {
       result = false;
       break;
@@ -121,16 +122,16 @@ Base.verify_checksum = function(bytes) {
 
 // --> input: Array
 // <-- String
-Base.encode_check = function(version, input, alphabet) {
+Base.encode_check = function (version, input, alphabet) {
   var buffer = [].concat(version, input);
-  var check  = sha256(sha256(buffer)).slice(0, 4);
+  var check = sha256(sha256(buffer)).slice(0, 4);
 
   return Base.encode([].concat(buffer, check), alphabet);
 };
 
 // --> input : String
 // <-- NaN || BigInteger
-Base.decode_check = function(version, input, alphabet) {
+Base.decode_check = function (version, input, alphabet) {
   var buffer = Base.decode(input, alphabet);
 
   if (!buffer || buffer.length < 5) {
@@ -146,7 +147,7 @@ Base.decode_check = function(version, input, alphabet) {
   if (Array.isArray(version)) {
     var match = false;
 
-    for (var i=0, l=version.length; i<l; i++) {
+    for (var i = 0, l = version.length; i < l; i++) {
       match |= version[i] === buffer[0];
     }
 

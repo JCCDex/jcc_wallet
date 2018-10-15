@@ -1,8 +1,7 @@
-var utils   = require('./utils');
-var config  = require('./config');
-var extend  = require('extend');
+var config = require('./config');
+var extend = require('extend');
 
-var BigInteger = utils.jsbn.BigInteger;
+var BigInteger = require('jsbn').BigInteger;
 
 var UInt = require('./uint').UInt;
 var Base = require('./base').Base;
@@ -11,9 +10,9 @@ var Base = require('./base').Base;
 // UInt160 support
 //
 
-var UInt160 = extend(function() {
+var UInt160 = extend(function () {
   // Internal form: NaN or BigInteger
-  this._value  = NaN;
+  this._value = NaN;
   this._version_byte = void(0);
   this._update();
 }, UInt);
@@ -22,24 +21,17 @@ UInt160.width = 20;
 UInt160.prototype = extend({}, UInt.prototype);
 UInt160.prototype.constructor = UInt160;
 
-var ACCOUNT_ZERO = UInt160.ACCOUNT_ZERO = 'v3DE1Hz18piSsckSvzQ3ba79hVXGkLq9Ed';
-var ACCOUNT_ONE  = UInt160.ACCOUNT_ONE  = 'vU2gkSzi1HevUJrT6HAobXvyBuAoTM5qp8';
-var HEX_ZERO     = UInt160.HEX_ZERO     = '0000000000000000000000000000000000000000';
-var HEX_ONE      = UInt160.HEX_ONE      = '0000000000000000000000000000000000000001';
-var STR_ZERO     = UInt160.STR_ZERO     = utils.hexToString(HEX_ZERO);
-var STR_ONE      = UInt160.STR_ONE      = utils.hexToString(HEX_ONE);
-
-UInt160.prototype.set_version = function(j) {
+UInt160.prototype.set_version = function (j) {
   this._version_byte = j;
   return this;
 };
 
-UInt160.prototype.get_version = function() {
+UInt160.prototype.get_version = function () {
   return this._version_byte;
 };
 
 // value = NaN on error.
-UInt160.prototype.parse_json = function(j) {
+UInt160.prototype.parse_json = function (j) {
   // Canonicalize and validate
   if (config.accounts && (j in config.accounts)) {
     j = config.accounts[j].account;
@@ -65,7 +57,7 @@ UInt160.prototype.parse_json = function(j) {
   return this;
 };
 
-UInt160.prototype.parse_generic = function(j) {
+UInt160.prototype.parse_generic = function (j) {
   UInt.prototype.parse_generic.call(this, j);
 
   if (isNaN(this._value)) {
@@ -80,8 +72,8 @@ UInt160.prototype.parse_generic = function(j) {
 };
 
 // XXX Json form should allow 0 and 1, C++ doesn't currently allow it.
-UInt160.prototype.to_json = function(opts) {
-  opts  = opts || {};
+UInt160.prototype.to_json = function (opts) {
+  opts = opts || {};
 
   if (this._value instanceof BigInteger) {
     // If this value has a type, return a Base58 encoded string.
