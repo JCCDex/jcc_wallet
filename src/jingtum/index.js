@@ -1,4 +1,4 @@
-const Wallet = require('jingtum-base-lib').Wallet;
+const Wallet = require('jcc_jingtum_base_lib').Wallet;
 
 /**
  * check jingtum address is valid or not

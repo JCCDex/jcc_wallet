@@ -59,7 +59,7 @@
     "clone-deep": "^4.0.0",
     "ethereumjs-util": "^5.2.0",
     "jcc_common": "0.0.1",
-    "jingtum-base-lib": "^1.0.9",
+    "jcc_jingtum_base_lib": "^1.0.9",
     "keccak": "^1.4.0",
     "lockr": "^0.8.4",
     "node-forge": "^0.7.6",
