@@ -13,13 +13,13 @@
 npm install jcc_wallet
 ```
 
-## Table Of Contents
+## Table of Contents
 
-- [JcWalletTool](#api-of-jc-wallet-tool)
+- [JcWalletTool](#api-of-jingchang-wallet-tool)
 
-- [jcWallet](#api-of-jc-wallet)
+- [jcWallet](#api-of-jingchang-wallet)
 
-- [jtWallet](#api-of-jingtum-wallet)
+- [jtWallet](#api-of-jingtum-and-consortium-blockchains-Wallet)
 
 - [callWallet](#api-of-call-wallet)
 
@@ -27,11 +27,11 @@ npm install jcc_wallet
 
 - [ethWallet](#api-of-ethereum-wallet)
 
-## API Of JC Wallet Tool
+## API of JingChang Wallet Tool
 
 ### Description
 
-the jc wallet tool to manage multiple wallets, now the wallet type includes jingtum(swt), stream(stm), call(call) and ethereum(eth) chain.
+the jc wallet tool to manage multiple wallets, now the wallet type includes jingtum(swt), stream(stm), call(call), ethereum(eth) and bizain(biz) chain.
 
 ### Usage
 
@@ -201,9 +201,9 @@ Error message:
 
 - `password is wrong`
 
-## API Of JC Wallet
+## API of JingChang Wallet
 
-### Data Structure of JC Wallet
+### Data Structure of JingChang Wallet
 
 ```json
 {
@@ -417,7 +417,7 @@ Return
 
 `Object`
 
-## API Of Jingtum Wallet
+## API of Jingtum and Consortium Blockchains Wallet
 
 ### Usage
 
@@ -430,12 +430,17 @@ import { jtWallet } from 'jcc_wallet'
 ### isValidAddress
 
 ```javascript
-jtWallet.isValidAddress(address)
+jtWallet.isValidAddress(address, chain)
 ```
 
 Parameters
 
 `address`- `any`
+
+`chain` - `string`
+
+- `swt`: `jingtum chain(default)`
+- `bwt`: `bizain chain`
 
 Return
 
@@ -444,12 +449,17 @@ Return
 ### isValidSecret
 
 ```javascript
-jtWallet.isValidSecret(secret)
+jtWallet.isValidSecret(secret, chain)
 ```
 
 Parameters
 
 `secret`- `any`
+
+`chain` - `string`
+
+- `swt`: `jingtum chain(default)`
+- `bwt`: `bizain chain`
 
 Return
 
@@ -458,12 +468,17 @@ Return
 ### getAddress
 
 ```javascript
-jtWallet.getAddress(secret)
+jtWallet.getAddress(secret, chain)
 ```
 
 Parameters
 
 `secret`- `string`
+
+`chain` - `string`
+
+- `swt`: `jingtum chain(default)`
+- `bwt`: `bizain chain`
 
 Return
 
@@ -476,8 +491,15 @@ return address if the secret is valid, otherwise return null
 create wallet of stream chain
 
 ```javascript
-jtWallet.createWallet()
+jtWallet.createWallet(chain)
 ```
+
+Parameters
+
+`chain` - `string`
+
+- `swt`: `jingtum chain(default)`
+- `bwt`: `bizain chain`
 
 Return
 
@@ -487,7 +509,7 @@ Return
 
 - `address`: `string`
 
-## API Of Call Wallet
+## API of Call Wallet
 
 ### Usage
 
@@ -559,7 +581,7 @@ Return
 
 return object if success, otherwise return null
 
-## API Of Stream Wallet
+## API of Stream Wallet
 
 ### Usage
 
@@ -629,7 +651,7 @@ Return
 
 - `address`: `string`
 
-## API Of Ethereum Wallet
+## API of Ethereum Wallet
 
 ### Usage
 
