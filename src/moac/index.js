@@ -10,7 +10,7 @@ const ethereumjsUtil = require('ethereumjs-util');
  * @returns {boolean}
  */
 const isValidSecret = (secret) => {
-    return ethereumjsUtil.isValidPrivate(Buffer.from(filterOx(secret), 'hex'));
+    return typeof secret === 'string' && ethereumjsUtil.isValidPrivate(Buffer.from(filterOx(secret), 'hex'));
 }
 
 /**
