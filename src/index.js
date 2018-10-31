@@ -24,18 +24,20 @@ SOFTWARE.
 /**
  * @author https://github.com/GinMu
  */
-const jcWallet = require('./jingchang');
-const callWallet = require('./call');
-const ethWallet = require('./eth');
-const stmWallet = require('./stm');
-const jtWallet = require('./jingtum');
-const JcWalletTool = require('./jctool');
+import jcWallet from './jingchang';
+import callWallet from './call';
+import ethWallet from './eth';
+import stmWallet from './stm';
+import jtWallet from './jingtum';
+import JcWalletTool from './jctool';
+import moacWallet from './moac'
 
-exports = module.exports = {
+export {
     jcWallet,
     callWallet,
     ethWallet,
     stmWallet,
     jtWallet,
-    JcWalletTool
+    JcWalletTool,
+    moacWallet
 }
