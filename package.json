@@ -56,7 +56,9 @@
   },
   "dependencies": {
     "call-lib": "^0.2.3",
+    "chain3": "^0.1.10",
     "clone-deep": "^4.0.0",
+    "eth-lightwallet": "^3.0.1",
     "ethereumjs-util": "^5.2.0",
     "jcc_common": "0.0.1",
     "jcc_jingtum_base_lib": "^1.0.9",

@@ -27,6 +27,8 @@ npm install jcc_wallet
 
 - [ethWallet](#api-of-ethereum-wallet)
 
+- [moacWallet](#api-of-moac-wallet)
+
 ## API of JingChang Wallet Tool
 
 ### Description
@@ -724,3 +726,57 @@ Return
 `string | null | false`
 
 return secret if the keystore file is valid and the password is correct, return false if the password is not correct, otherwise return null
+
+## API of Moac Wallet
+
+### Usage
+
+```javascript
+const moacWallet = require('jcc_wallet').moacWallet
+or
+import { moacWallet } from 'jcc_wallet'
+```
+
+### isValidAddress
+
+```javascript
+moacWallet.isValidAddress(address)
+```
+
+Parameters
+
+`address`- `any`
+
+Return
+
+`Boolean`
+
+### isValidSecret
+
+```javascript
+moacWallet.isValidSecret(secret)
+```
+
+Parameters
+
+`secret`- `any`
+
+Return
+
+`Boolean`
+
+### getAddress
+
+```javascript
+moacWallet.getAddress(secret)
+```
+
+Parameters
+
+`secret`- `string`
+
+Return
+
+`string | null`
+
+return address if the secret is valid, otherwise return null
