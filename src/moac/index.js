@@ -29,7 +29,7 @@ const isValidAddress = (address) => {
  */
 const getAddress = (secret) => {
     if (isValidSecret(secret)) {
-        return '0x' + keyStore._computeAddressFromPrivKey(secret)
+        return '0x' + keyStore._computeAddressFromPrivKey(filterOx(secret))
     }
     return null
 }
