@@ -16,7 +16,7 @@ const isObject = (obj) => {
  */
 const isValidSecret = (secret) => {
     secret = filterOx(secret);
-    return ethereumjsUtil.isValidPrivate(Buffer.from(secret, 'hex'));
+    return typeof secret === 'string' && ethereumjsUtil.isValidPrivate(Buffer.from(secret, 'hex'));
 }
 
 /**
@@ -34,14 +34,13 @@ const isValidAddress = (address) => {
  * @returns {string | null} return address if success, otherwise return null
  */
 const getAddress = (secret) => {
-    try {
-        secret = filterOx(secret);
-        let buffer = ethereumjsUtil.privateToAddress(Buffer.from(secret, 'hex'));
-        let decodeAddress = ethereumjsUtil.bufferToHex(buffer);
-        return decodeAddress;
-    } catch (error) {
+    secret = filterOx(secret);
+    if (!isValidSecret(secret)) {
         return null
     }
+    let buffer = ethereumjsUtil.privateToAddress(Buffer.from(secret, 'hex'));
+    let decodeAddress = ethereumjsUtil.bufferToHex(buffer);
+    return decodeAddress;
 }
 
 /**

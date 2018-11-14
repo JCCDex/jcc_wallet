@@ -3,6 +3,15 @@ const expect = chai.expect;
 const stmWallet = require('../src/stm');
 const testAddress = 'vaFtuK2skLZUCcqHvsFk2BMKpzQmJbQsXa';
 const testSecret = 'sp5KqpgwuHo3ejF5Bf9kDSJPivEYV'
+
+let invalidAddresses = ['', null, undefined, {},
+    [], 'xxxx', testAddress.substring(1), testAddress + 'a', true, false, 123456
+];
+
+let invalidSecrets = ['', null, undefined, {},
+    [], 'xxxx', testSecret.substring(1), testSecret + 'a', true, false, 123456
+];
+
 describe('test stm', function () {
 
     describe('test createWallet', function () {
@@ -26,8 +35,10 @@ describe('test stm', function () {
         })
 
         it('should return false if the address is not valid', function () {
-            let isvalid = stmWallet.isValidAddress(testAddress.substring(1));
-            expect(isvalid).to.equal(false);
+            for (let address of invalidAddresses) {
+                let isvalid = stmWallet.isValidAddress(address);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -38,8 +49,10 @@ describe('test stm', function () {
         })
 
         it('should return false if the secret is not valid', function () {
-            let isvalid = stmWallet.isValidSecret(testSecret.substring(1));
-            expect(isvalid).to.equal(false);
+            for (let secret of invalidSecrets) {
+                let isvalid = stmWallet.isValidSecret(secret);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -50,8 +63,10 @@ describe('test stm', function () {
         })
 
         it('should return null if the secret is not valid', function () {
-            let address = stmWallet.getAddress(testSecret.substring(1));
-            expect(address).to.equal(null);
+            for (let secret of invalidSecrets) {
+                let address = stmWallet.getAddress(secret);
+                expect(address).to.equal(null);
+            }
         })
     })
 

@@ -25,6 +25,15 @@ let testEthKeystore = {
 
 const testSecret = "ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c250a883e4486";
 const testAddress = "0x2995c1376a852e4040caf9dbae2c765e24c37a15";
+
+let invalidAddresses = ['', null, undefined, {},
+    [], 'xxxx', testAddress.substring(1), testAddress + 'a', true, false, 123456
+];
+
+let invalidSecrets = ['', null, undefined, {},
+    [], 'xxxx', testSecret.substring(1), true, false, 123456
+];
+
 describe('test eth', function () {
 
     describe('test isValidAddress', function () {
@@ -34,8 +43,10 @@ describe('test eth', function () {
         })
 
         it('should return false if the address is not valid', function () {
-            let isvalid = ethWallet.isValidAddress(testAddress.substring(1));
-            expect(isvalid).to.equal(false);
+            for (let address of invalidAddresses) {
+                let isvalid = ethWallet.isValidAddress(address);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -46,8 +57,10 @@ describe('test eth', function () {
         })
 
         it('should return false if the secret is not valid', function () {
-            let isvalid = ethWallet.isValidSecret(testSecret.substring(1));
-            expect(isvalid).to.equal(false);
+            for (let secret of invalidSecrets) {
+                let isvalid = ethWallet.isValidSecret(secret);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -58,8 +71,10 @@ describe('test eth', function () {
         })
 
         it('should return null if the secret is not valid', function () {
-            let address = ethWallet.getAddress(testSecret.substring(1));
-            expect(address).to.equal(null);
+            for (let secret of invalidSecrets) {
+                let address = ethWallet.getAddress(secret);
+                expect(address).to.equal(null);
+            }
         })
     })
 

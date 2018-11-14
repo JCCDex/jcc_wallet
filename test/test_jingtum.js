@@ -3,6 +3,14 @@ const expect = chai.expect;
 const jtWallet = require('../src/jingtum');
 let testAddress = 'jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH';
 let testSecret = 'snfXQMEVbbZng84CcfdKDASFRi4Hf'
+
+let invalidAddresses = ['', null, undefined, {},
+    [], 'xxxx', testAddress.substring(1), testAddress + 'a', true, false, 123456
+];
+
+let invalidSecrets = ['', null, undefined, {},
+    [], 'xxxx', testSecret.substring(1), testSecret + 'a', true, false, 123456
+];
 describe('test jingtum', function () {
 
     describe('test isValidAddress', function () {
@@ -12,8 +20,10 @@ describe('test jingtum', function () {
         })
 
         it('should return false when the jingtum address is not valid', function () {
-            let isValid = jtWallet.isValidAddress(testAddress.substring(1))
-            expect(isValid).to.equal(false);
+            for (let address of invalidAddresses) {
+                let isvalid = jtWallet.isValidAddress(address);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -24,8 +34,10 @@ describe('test jingtum', function () {
         })
 
         it('should return false when the jingtum secret is not valid', function () {
-            let isValid = jtWallet.isValidSecret(testSecret.substring(1));
-            expect(isValid).to.equal(false);
+            for (let secret of invalidSecrets) {
+                let isvalid = jtWallet.isValidSecret(secret);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -36,8 +48,10 @@ describe('test jingtum', function () {
         })
 
         it('should return null if the secret is not valid', function () {
-            let address = jtWallet.getAddress(testSecret.substring(1));
-            expect(address).to.equal(null);
+            for (let secret of invalidSecrets) {
+                let address = jtWallet.getAddress(secret);
+                expect(address).to.equal(null);
+            }
         })
     })
 

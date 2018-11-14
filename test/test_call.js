@@ -3,6 +3,15 @@ const expect = chai.expect;
 const callWallet = require('../src/call');
 const testSecret = "shaXxkbcS8NoHrL1TzTfWBRCbsD2K";
 const testAddress = "c3oPNfL3k3EUTBQMFQ2LTZM5W5TUM7Qq5N";
+
+let invalidAddresses = ['', null, undefined, {},
+    [], 'xxxx', testAddress.substring(1), testAddress + 'a', true, false, 123456
+];
+
+let invalidSecrets = ['', null, undefined, {},
+    [], 'xxxx', testSecret.substring(1), testSecret + 'a', true, false, 123456
+];
+
 describe('test call', function () {
 
     describe('test createWallet', function () {
@@ -31,8 +40,10 @@ describe('test call', function () {
         })
 
         it('should return false if the address is not valid', function () {
-            let isvalid = callWallet.isValidAddress(testAddress.substring(1));
-            expect(isvalid).to.equal(false);
+            for (let address of invalidAddresses) {
+                let isvalid = callWallet.isValidAddress(address);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -43,8 +54,10 @@ describe('test call', function () {
         })
 
         it('should return false if the secret is not valid', function () {
-            let isvalid = callWallet.isValidSecret(testSecret.substring(1));
-            expect(isvalid).to.equal(false);
+            for (let secret of invalidSecrets) {
+                let isvalid = callWallet.isValidSecret(secret);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -55,8 +68,10 @@ describe('test call', function () {
         })
 
         it('should return null if the secret is not valid', function () {
-            let address = callWallet.getAddress(testSecret.substring(1));
-            expect(address).to.equal(null);
+            for (let secret of invalidSecrets) {
+                let address = callWallet.getAddress(secret);
+                expect(address).to.equal(null);
+            }
         })
     })
 

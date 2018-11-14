@@ -3,6 +3,14 @@ const expect = chai.expect;
 const testSecret = "0x8fef3bc906ea19f0348cb44bca851f5459b61e32c5cae445220e2f7066db36d8";
 const testAddress = "0x5edccedfe9952f5b828937b325bd1f132aa09f60";
 const moacWallet = require('../src/moac')
+
+let invalidAddresses = ['', null, undefined, {},
+    [], 'xxxx', testAddress.substring(1), testAddress + 'a', true, false, 123456
+];
+
+let invalidSecrets = ['', null, undefined, {},
+    [], 'xxxx', testSecret.substring(1), true, false, 123456
+];
 describe('test moac', function () {
 
     describe('test isValidAddress', function () {
@@ -12,8 +20,10 @@ describe('test moac', function () {
         })
 
         it('should return false if the address is not valid', function () {
-            let isvalid = moacWallet.isValidAddress(testAddress.substring(1));
-            expect(isvalid).to.equal(false);
+            for (let address of invalidAddresses) {
+                let isvalid = moacWallet.isValidAddress(address);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -24,8 +34,10 @@ describe('test moac', function () {
         })
 
         it('should return false if the secret is not valid', function () {
-            let isvalid = moacWallet.isValidSecret(testSecret.substring(1));
-            expect(isvalid).to.equal(false);
+            for (let secret of invalidSecrets) {
+                let isvalid = moacWallet.isValidSecret(secret);
+                expect(isvalid).to.equal(false);
+            }
         })
     })
 
@@ -36,8 +48,10 @@ describe('test moac', function () {
         })
 
         it('should return null if the secret is not valid', function () {
-            let address = moacWallet.getAddress(testSecret.substring(1));
-            expect(address).to.equal(null);
+            for (let secret of invalidSecrets) {
+                let address = moacWallet.getAddress(secret);
+                expect(address).to.equal(null);
+            }
         })
     })
 
