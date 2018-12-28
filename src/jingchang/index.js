@@ -43,7 +43,7 @@ const decrypt = (password, encryptData) => {
  * @param {*} opts
  * @returns {object} encrypt object
  */
-const encrypt = (password, secret, opts = {}) => {
+const encrypt = (password, secret, opts) => {
     let iv = opts.iv || forge.util.bytesToHex(forge.random.getBytesSync(16))
     let kdfparams = {
         dklen: opts.dklen || 32,
@@ -95,7 +95,7 @@ const buildJCWallet = (password, wallet, callback) => {
         walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()))
         let keypairs = wallet
         keypairs.type = 'swt'
-        let walletObj = encryptWallet(password, keypairs, {})
+        let walletObj = encryptWallet(password, keypairs)
         jcWallet.version = WALLET_VERSION
         jcWallet.id = walletID
         jcWallet.contact = {}
@@ -244,6 +244,5 @@ module.exports = {
     encryptWallet,
     getJCWallet,
     encryptContact,
-    encrypt,
     decrypt
 }
