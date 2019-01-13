@@ -54,7 +54,7 @@ class JcWalletTool {
      * @param {string} password
      */
     [saveWallet](type, secret, address, password) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             // support type: ethereum, stream, jingtum and call
             let encryptData = this[getEncryptData](type, secret, address, password);
             let jcwallet = cloneDeep(this.jcWallet);
@@ -106,7 +106,7 @@ class JcWalletTool {
      * @returns {Promise} resolve(newJcWallet)
      */
     removeWallet(type = 'swt') {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             let jcWallet = cloneDeep(this.jcWallet);
             let wallets = this[getWallets](jcWallet);
             let newWallet;

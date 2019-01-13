@@ -4,14 +4,16 @@ module.exports = {
     root: true,
     parser: 'babel-eslint',
     parserOptions: {
+        ecmaVersion: 6,
         sourceType: 'module'
     },
     env: {
         browser: true,
-        node: true
+        node: true,
+        es6: true
     },
     // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-    extends: 'standard',
+    extends: 'eslint:recommended',
     'rules': {
         'space-before-function-paren': 0,
         'no-useless-constructor': 0,

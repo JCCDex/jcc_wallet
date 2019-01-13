@@ -7,7 +7,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "gulp && nyc --reporter=html --reporter=text mocha --timeout=3000 --reporter nyan test/test_*.js",
+    "test": "gulp && nyc --reporter=html --reporter=text mocha --timeout=3000 test/test_*.js",
     "deploy": "./publish.sh",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
