@@ -1,5 +1,5 @@
 'use strict';
-const keyStore = require('eth-lightwallet').keystore;
+const keyStore = require('jcc_eth_lightwallet').keystore;
 const Chain3 = require('chain3');
 const filterOx = require('jcc_common').filterOx;
 const ethereumjsUtil = require('ethereumjs-util');
