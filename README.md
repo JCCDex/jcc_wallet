@@ -9,11 +9,11 @@
 
 ## Preface
 
-[jcc_wallet](https://github.com/JCCDex/jcc_walle)项目是井畅交换平台的钱包处理工具，目前可以可以处理[jingtum](http://www.swtc.top/html/en/HOME/), [moac](https://www.moac.io/), [ethereum](https://ethereum.org/), [stm](https://labs.stream/en/), [call](http://www.callchain.live/) 的钱包的创建和校验，以keystore形式导入和导出钱包，设置钱包交易密码。
+[jcc_wallet](https://github.com/JCCDex/jcc_wallet) is a wallet toolkit of JCCDex. At present, it can handle the creation and verification of [jingtum](http://swtc-global.com/index.html), [moac](https://www.moac.io/), [ethereum](https://ethereum.org/), [stm](https://labs.stream/en/), [call](http://www.callchain.live/) & [bizain](https://bizain.net/) wallet, import and export wallet with keystore file, and set password for wallet.
 
-Project [jcc_wallet](https://github.com/JCCDex/jcc_walle) is a wallet toolkit of JCCDex. At present, it can handle the creation and verification of [jingtum](http://www.swtc.top/html/en/HOME/), [moac](https://www.moac.io/), [ethereum](https://ethereum.org/), [stm](https://labs.stream/en/), [call](http://www.callchain.live/) wallet, import and export wallet in form of keystore, and set password for wallet.
+[jcc_wallet](https://github.com/JCCDex/jcc_wallet)是井畅交换平台的钱包处理工具，目前可以处理[jingtum](http://swtc-global.com/index.html), [moac](https://www.moac.io/), [ethereum](https://ethereum.org/), [stm](https://labs.stream/en/), [call](http://www.callchain.live/)以及[bizain](https://bizain.net/)钱包的创建和校验，以keystore形式导入和导出钱包，设置钱包交易密码。
 
-***[jcc_wallet](https://github.com/JCCDex/jcc_walle)支持浏览器 Support running in browsers***
+***[jcc_wallet](https://github.com/JCCDex/jcc_walle) Support running in browsers***
 
 井畅应用交流群: 557524730
 
