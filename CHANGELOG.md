@@ -1,5 +1,11 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.2.4
+
+2019-02-13
+
+- Only import the api of utils from the chain3 folder when check the moac address [#1176b6c](https://github.com/JCCDex/jcc_wallet/commit/1176b6c64e3298354a68d210e0d94224211c08d6)
+
 # 0.2.3
 
 2019-02-13
