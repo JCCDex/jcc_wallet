@@ -1,7 +1,10 @@
 'use strict';
-const keyStore = require('jcc_eth_lightwallet').keystore;
 const Chain3 = require('chain3');
 const filterOx = require('jcc_common').filterOx;
+const CryptoJS = require('crypto-js');
+const EC = require('elliptic').ec;
+const ec = new EC('secp256k1');
+
 const ethereumjsUtil = require('ethereumjs-util');
 
 /**
@@ -29,7 +32,16 @@ const isValidAddress = (address) => {
  */
 const getAddress = (secret) => {
     if (isValidSecret(secret)) {
-        return '0x' + keyStore._computeAddressFromPrivKey(filterOx(secret))
+        let keyPair = ec.genKeyPair();
+        keyPair._importPrivate(filterOx(secret), 'hex');
+        let compact = false;
+        let pubKey = keyPair.getPublic(compact, 'hex').slice(2);
+        let pubKeyWordArray = CryptoJS.enc.Hex.parse(pubKey);
+        let hash = CryptoJS.SHA3(pubKeyWordArray, {
+            outputLength: 256
+        });
+        let address = hash.toString(CryptoJS.enc.Hex).slice(24);
+        return '0x' + address
     }
     return null
 }
