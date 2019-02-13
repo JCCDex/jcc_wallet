@@ -1,3 +1,10 @@
+<!-- markdownlint-disable MD024 -->
+
+# 0.2.3
+
+2019-02-13
+
+- Removed jcc_eth_lightwallet [#978ed2d](https://github.com/JCCDex/jcc_wallet/commit/978ed2dff972457126e6b5cdedd2da24289c6361)
 
 # 0.2.2
 
