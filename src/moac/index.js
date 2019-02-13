@@ -1,9 +1,9 @@
 'use strict';
-const Chain3 = require('chain3');
 const filterOx = require('jcc_common').filterOx;
 const CryptoJS = require('crypto-js');
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
+const moacUtils = require('chain3/lib/utils/utils');
 
 const ethereumjsUtil = require('ethereumjs-util');
 
@@ -22,7 +22,7 @@ const isValidSecret = (secret) => {
  * @returns {boolean}
  */
 const isValidAddress = (address) => {
-    return new Chain3().isAddress(filterOx(address));
+    return moacUtils.isAddress(filterOx(address));
 }
 
 /**
