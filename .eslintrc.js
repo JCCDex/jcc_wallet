@@ -14,7 +14,7 @@ module.exports = {
     },
     // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
     extends: 'eslint:recommended',
-    'rules': {
+    rules: {
         'space-before-function-paren': 0,
         'no-useless-constructor': 0,
         'arrow-parens': 0,
