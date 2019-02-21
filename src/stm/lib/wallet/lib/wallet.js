@@ -60,7 +60,7 @@ module.exports = function (options) {
     getPublicGenerator: function () {
       var privateKey = this.getPrivateKey(this.secret);
       var privateGenerator = this.getPrivateGenerator(privateKey);
-      return publicGenerator.fromPrivateGenerator(privateGenerator);
+      return generator.fromPrivateGenerator(privateGenerator);
     },
 
     getPublicKey: function (publicGenerator) {
