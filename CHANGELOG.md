@@ -1,5 +1,11 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.2.6
+
+2019-02-21
+
+- Fixed publicGenerator is undefined [#5c0287c](https://github.com/JCCDex/jcc_wallet/commit/e01fd2033944aba26a4ffdbc194015ac865f0e51)
+
 # 0.2.5
 
 2019-02-21
