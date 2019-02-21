@@ -1,5 +1,11 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.2.5
+
+2019-02-21
+
+- Fixed stream lib [#faec5e9](https://github.com/JCCDex/jcc_wallet/commit/faec5e974038734d7c523f8babfc988bfe23d2d5)
+
 # 0.2.4
 
 2019-02-13
