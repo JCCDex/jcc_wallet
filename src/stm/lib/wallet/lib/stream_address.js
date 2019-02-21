@@ -1,18 +1,21 @@
+var Base58 = require('./base58');
 
-module.exports = function(options) { // inject sjcl dependency
+module.exports = function (options) { // inject sjcl dependency
   var sjcl = options.sjcl
-  var base58 = require(__dirname+'/base58.js')({ sjcl: sjcl });
+  var base58 = Base58({
+    sjcl: sjcl
+  });
 
 
   function SHA256_RIPEMD160(bits) {
     return sjcl.hash.ripemd160.hash(sjcl.hash.sha256.hash(bits));
   }
 
-  function StreamAddress(address){
+  function StreamAddress(address) {
     this.value = address;
   }
 
-  StreamAddress.fromPublicKey = function(publicKey){
+  StreamAddress.fromPublicKey = function (publicKey) {
     /* Encode the EC public key as a stream address 
        using SHA256 and then RIPEMD160
     */

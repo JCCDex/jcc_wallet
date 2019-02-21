@@ -1,16 +1,20 @@
-module.exports = function(options) {
-  var sjcl = options.sjcl;
-  var base58 = require(__dirname+'/base58.js')({ sjcl: sjcl });
+var Base58 = require('./base58');
 
-  function MasterKey(key){ 
+module.exports = function (options) {
+  var sjcl = options.sjcl;
+  var base58 = Base58({
+    sjcl: sjcl
+  });
+
+  function MasterKey(key) {
     this.value = key;
   };
 
-  MasterKey.fromBytes = function(bytes){
+  MasterKey.fromBytes = function (bytes) {
     return new MasterKey(base58.encode_base_check(33, bytes));
   };
 
-  MasterKey.getRandom = function(){
+  MasterKey.getRandom = function () {
     for (var i = 0; i < 8; i++) {
       sjcl.random.addEntropy(Math.random(), 32, "Math.random()");
     }

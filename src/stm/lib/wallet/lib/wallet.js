@@ -1,16 +1,21 @@
+var Base58 = require('./base58');
+var MasterKey = require('./master_key');
+var StreamAddress = require('./stream_address');
+var PublicGenerator = require('./public_generator');
+
 module.exports = function (options) {
   var sjcl = options.sjcl; // inject sjcl dependency
 
-  var base58 = require(__dirname + '/base58.js')({
+  var base58 = Base58({
     sjcl: options.sjcl
   });;
-  var MasterKey = require(__dirname + '/master_key.js')({
+  var masterKey = MasterKey({
     sjcl: options.sjcl
   });
-  var StreamAddress = require(__dirname + '/stream_address.js')({
+  var streamAddress = StreamAddress({
     sjcl: options.sjcl
   });
-  var PublicGenerator = require(__dirname + '/public_generator.js')({
+  var generator = PublicGenerator({
     sjcl: options.sjcl
   });
 
@@ -55,7 +60,7 @@ module.exports = function (options) {
     getPublicGenerator: function () {
       var privateKey = this.getPrivateKey(this.secret);
       var privateGenerator = this.getPrivateGenerator(privateKey);
-      return PublicGenerator.fromPrivateGenerator(privateGenerator);
+      return publicGenerator.fromPrivateGenerator(privateGenerator);
     },
 
     getPublicKey: function (publicGenerator) {
@@ -74,14 +79,14 @@ module.exports = function (options) {
     getAddress: function () {
       var privateKey = this.getPrivateKey(this.secret);
       var privateGenerator = this.getPrivateGenerator(privateKey);
-      var publicGenerator = PublicGenerator.fromPrivateGenerator(privateGenerator).value;
+      var publicGenerator = generator.fromPrivateGenerator(privateGenerator).value;
       var publicKey = this.getPublicKey(publicGenerator);
-      return StreamAddress.fromPublicKey(publicKey);
+      return streamAddress.fromPublicKey(publicKey);
     }
   }
 
   StreamWallet.getRandom = function () {
-    var secretKey = MasterKey.getRandom().value;
+    var secretKey = masterKey.getRandom().value;
     return new StreamWallet(secretKey);
   };
 
@@ -89,7 +94,7 @@ module.exports = function (options) {
     /* Generate a 128-bit master key that can be used to make 
        any number of private / public key pairs and accounts
     */
-    var secretKey = MasterKey.getRandom().value;
+    var secretKey = masterKey.getRandom().value;
     var wallet = new StreamWallet(secretKey);
     return {
       address: wallet.getAddress().value,
