@@ -9,11 +9,11 @@
         "moduleResolution": "node",
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "declaration": true,
         "experimentalDecorators": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "allowJs": true
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*"
     ]
 }

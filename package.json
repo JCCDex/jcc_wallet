@@ -9,7 +9,8 @@
   "scripts": {
     "deploy": "./publish.sh",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "test": "tsc && nyc --reporter=html --reporter=text mocha --timeout=3000 test/test_*.js",
+    "build": "tsc && tsc -d --emitDeclarationOnly --allowJs false",
+    "test": "npm run build && nyc --reporter=html --reporter=text mocha --timeout=3000 test/test_*.js",
     "tslint": "tslint --project tsconfig.json --config tslint.json"
   },
   "repository": {

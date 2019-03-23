@@ -5,7 +5,7 @@ gulp.task('watch', function () {
     gulp.watch(['src/**/*.ts'], shell.task('npm run tslint && npm test'));
 });
 
-gulp.task('build', shell.task('tsc'));
+gulp.task('build', shell.task('npm run build'));
 
 gulp.task('tslint', shell.task('npm run tslint'));
 gulp.task('test', shell.task('npm test'));
