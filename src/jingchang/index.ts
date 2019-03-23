@@ -87,7 +87,7 @@ const isValidJCWallet = (jcWallet: any): boolean => {
  * @param {(walletID: string, wallet: IJingchangWalletModel) => void} callback
  */
 const buildJCWallet = (password: string, wallet: IWalletModel, callback: (walletID: string, wallet: IJingchangWalletModel) => void) => {
-    let secret: any;
+    let secret = "";
     let address = "";
     let count = 0;
     let walletID;
@@ -134,7 +134,7 @@ const isValidJCKeystore = (text: any): boolean => {
 
 /**
  * get wallet's secret
- * @param {object} jcWallet
+ * @param {IJingchangWalletModel} jcWallet
  * @param {string} password
  * @param {string} type
  * @returns {string | null} return secret if valid, throws `keystore is invalid` if the keystore is invalid or
@@ -158,11 +158,12 @@ const getSecret = (jcWallet: IJingchangWalletModel, password: string, type: stri
 
 /**
  * get wallet's address
- * @param {object} jcWallet
- * @param {string} type
- * @returns {string} return address if success, otherwise return null
+ *
+ * @param {IJingchangWalletModel} jcWallet
+ * @param {string} [type="swt"]
+ * @returns {(string | null)} return address if success, otherwise return null
  */
-const getAddress = (jcWallet, type = "swt"): string | null => {
+const getAddress = (jcWallet: IJingchangWalletModel, type: string = "swt"): string | null => {
     if (isValidJCWallet(jcWallet)) {
         const wallets = jcWallet.wallets;
         const wallet = wallets.find((w) => {

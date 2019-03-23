@@ -10,7 +10,7 @@
     "deploy": "./publish.sh",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "build": "tsc && tsc -d --emitDeclarationOnly --allowJs false",
-    "test": "npm run build && nyc --reporter=html --reporter=text mocha --timeout=3000 test/test_*.js",
+    "test": "gulp",
     "tslint": "tslint --project tsconfig.json --config tslint.json"
   },
   "repository": {
@@ -24,7 +24,7 @@
     "eth",
     "stm",
     "call",
-    "moca"
+    "moac"
   ],
   "author": "JCCDex",
   "license": "MIT",
