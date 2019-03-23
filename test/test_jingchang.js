@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const jsdom = require('jsdom')
-const jcWallet = require('../src/jingchang');
+const jcWallet = require('../lib').jcWallet;
 
 let testWallet = {
     "version": "1.0",
@@ -32,19 +32,16 @@ let testWallet = {
 describe('test jingchang', function () {
 
     describe('test getSecret', function () {
-        it('should get null when the wallet is not valid', function () {
-            let secret = jcWallet.getSecret(null, '123');
-            expect(secret).to.equal(null);
+        it('throw wallet is empty when the wallet is not valid', function () {
+            expect(() => jcWallet.getSecret(null, '123')).throw("wallet is empty");
         })
 
-        it('should return null when the wallet does not contain wallet info given type', function () {
-            let secret = jcWallet.getSecret(testWallet, '12334', 'eth');
-            expect(secret).to.equal(null);
+        it('throw wallet is empty when the wallet does not contain wallet info given type', function () {
+            expect(() => jcWallet.getSecret(testWallet, '12334', 'eth')).throw("wallet is empty");
         })
 
-        it('should return false when the given password is wrong', function () {
-            let secret = jcWallet.getSecret(testWallet, '12334');
-            expect(secret).to.equal(false);
+        it('throw password is wrong when the given password is wrong', function () {
+            expect(() => jcWallet.getSecret(testWallet, '12334')).throw("password is wrong");
         })
 
         it('jingtum secret is valid when the wallet type is swt and the given password is correct', function () {
@@ -172,9 +169,8 @@ describe('test jingchang', function () {
     })
 
     describe('test decrypt', function () {
-        it('should return null when the data is not valid', function () {
-            let data = jcWallet.decrypt('123456', {});
-            expect(data).to.equal(null);
+        it('throw keystore is invalid when the data is not valid', function () {
+            expect(() => jcWallet.decrypt('123456', {})).throw("keystore is invalid")
         })
     })
 

@@ -1,9 +1,9 @@
 const chai = require('chai');
 const expect = chai.expect;
 const jsdom = require('jsdom')
-const JcTool = require('../src/jctool');
-const constant = require('../src/constant');
-const ethWallet = require('../src/eth');
+const JcTool = require('../lib').JcWalletTool;
+const constant = require('../lib/constant');
+const ethWallet = require('../lib/eth');
 const cloneDeep = require('clone-deep');
 
 let testWallet = {

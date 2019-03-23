@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": [
+            "es5"
+        ],
+        "outDir": "lib",
+        "rootDir": "src",
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "sourceMap": true
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}

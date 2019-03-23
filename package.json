@@ -7,9 +7,10 @@
     "lib"
   ],
   "scripts": {
-    "test": "gulp && nyc --reporter=html --reporter=text mocha --timeout=3000 test/test_*.js",
     "deploy": "./publish.sh",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "test": "tsc && nyc --reporter=html --reporter=text mocha --timeout=3000 test/test_*.js",
+    "tslint": "tslint --project tsconfig.json --config tslint.json"
   },
   "repository": {
     "type": "git",
@@ -34,20 +35,18 @@
     "@babel/core": "^7.3.3",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
+    "@babel/runtime": "^7.4.2",
+    "@types/node": "^11.11.6",
     "babel-eslint": "^8.2.6",
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^4.0.0",
-    "eslint-plugin-standard": "^3.1.0",
     "gulp": "^4.0.0",
-    "gulp-babel": "^8.0.0",
-    "gulp-eslint": "^5.0.0",
+    "gulp-shell": "^0.7.0",
     "jsdom": "^12.0.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.3.0"
+    "nyc": "^13.3.0",
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.4000"
   },
   "dependencies": {
     "call-address-codec": "^0.1.0",
@@ -72,7 +71,7 @@
     "functions": 99,
     "branches": 99,
     "exclude": [
-      "src/stm/lib/**/*.js"
+      "lib/stm/lib/**/*.js"
     ]
   }
 }

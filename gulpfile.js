@@ -1,35 +1,13 @@
 const gulp = require('gulp');
-const eslint = require('gulp-eslint');
-const babel = require('gulp-babel');
-
-gulp.task('eslint', function () {
-    return gulp.src(['src/**/*.js', '!src/stm/lib/**/*.js'])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
-gulp.task('build', function () {
-    return gulp.src('src/**/*.js')
-        .pipe(babel({
-            presets: [
-                ["@babel/preset-env", {
-                    "targets": {
-                        "browsers": ["last 2 versions"],
-                        "node": "8.11.3"
-                    }
-                }]
-            ],
-            plugins: [
-                "@babel/plugin-transform-runtime"
-            ]
-        }))
-        .pipe(gulp.dest('lib/'))
-})
+const shell = require('gulp-shell');
 
 gulp.task('watch', function () {
-    gulp.watch(['src/**/*.js'], ['eslint']);
-})
+    gulp.watch(['src/**/*.ts'], shell.task('npm run tslint && npm test'));
+});
 
-gulp.task('default', gulp.parallel('eslint'));
-gulp.task('dev', gulp.parallel('eslint', 'watch'));
+gulp.task('build', shell.task('tsc'));
+
+gulp.task('tslint', shell.task('npm run tslint'));
+gulp.task('test', shell.task('npm test'));
+gulp.task('default', gulp.parallel('tslint', 'test'));
+gulp.task('dev', gulp.parallel(['tslint', 'test', 'watch']));

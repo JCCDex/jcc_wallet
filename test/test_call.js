@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
-const callWallet = require('../src/call');
+const callWallet = require('../lib').callWallet;
 const testSecret = "shaXxkbcS8NoHrL1TzTfWBRCbsD2K";
 const testAddress = "c3oPNfL3k3EUTBQMFQ2LTZM5W5TUM7Qq5N";
 

@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
-const stmWallet = require('../src/stm');
+const stmWallet = require('../lib').stmWallet;
 const testAddress = 'vaFtuK2skLZUCcqHvsFk2BMKpzQmJbQsXa';
 const testSecret = 'sp5KqpgwuHo3ejF5Bf9kDSJPivEYV'
 
