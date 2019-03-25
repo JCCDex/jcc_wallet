@@ -1,6 +1,6 @@
 {
   "name": "jcc_wallet",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "wallet tool of jcc",
   "main": "lib/index.js",
   "files": [
