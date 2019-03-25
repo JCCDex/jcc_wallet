@@ -1,10 +1,5 @@
 {
     "extends": "tslint:recommended",
-    "linterOptions": {
-        "exclude": [
-            "src/stm/lib/**/*.js"
-        ]
-    },
     "rules": {
         "semicolon": [true, "always", "ignore-bound-class-methods", "ignore-interfaces"],
         "no-console": false,

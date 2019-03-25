@@ -71,9 +71,6 @@
     "lines": 99,
     "statements": 99,
     "functions": 99,
-    "branches": 99,
-    "exclude": [
-      "lib/stm/lib/**/*.js"
-    ]
+    "branches": 99
   }
 }
