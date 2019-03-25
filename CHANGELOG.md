@@ -1,5 +1,13 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.3.0
+
+2019-03-26
+
+- Removed src/stm/lib file & use stm-lib package instead of it
+
+[#9e6a7b1](https://github.com/JCCDex/jcc_wallet/commit/9e6a7b100fee385a7783f9ada810a0d3e009614a)
+
 # 0.2.9
 
 2019-03-25
