@@ -1,5 +1,13 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.2.9
+
+2019-03-25
+
+- should call save api after set default wallet success
+
+[#e642704](https://github.com/JCCDex/jcc_wallet/commit/e6427044336f217fd330e7ff8073edea2e51a020)
+
 # 0.2.8
 
 2019-03-25
