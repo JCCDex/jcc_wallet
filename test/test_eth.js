@@ -1,6 +1,6 @@
-const chai = require('chai');
+const chai = require("chai");
 const expect = chai.expect;
-const ethWallet = require('../lib').ethWallet;
+const ethWallet = require("../lib").ethWallet;
 let testEthKeystore = {
     "version": 3,
     "id": "00451ad2-2d5c-454b-b2b9-db577ef4423c",
@@ -21,81 +21,81 @@ let testEthKeystore = {
         },
         "mac": "90764bb86419bdc82222880c3c953cc01cb9ea424a1b18e8414d336f132e99f2"
     }
-}
+};
 
 const testSecret = "ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c250a883e4486";
 const testAddress = "0x2995c1376a852e4040caf9dbae2c765e24c37a15";
 
-let invalidAddresses = ['', null, undefined, {},
-    [], 'xxxx', testAddress.substring(1), testAddress + 'a', true, false, 123456
+let undefinedValue;
+let invalidAddresses = ["", null, undefinedValue, {},
+    [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456
 ];
 
-let invalidSecrets = ['', null, undefined, {},
-    [], 'xxxx', testSecret.substring(1), true, false, 123456
+let invalidSecrets = ["", null, undefinedValue, {},
+    [], "xxxx", testSecret.substring(1), true, false, 123456
 ];
 
-describe('test eth', function () {
+describe("test eth", function () {
 
-    describe('test isValidAddress', function () {
-        it('should return true if the address is valid', function () {
+    describe("test isValidAddress", function () {
+        it("should return true if the address is valid", function () {
             let isvalid = ethWallet.isValidAddress(testAddress);
             expect(isvalid).to.equal(true);
-        })
+        });
 
-        it('should return false if the address is not valid', function () {
+        it("should return false if the address is not valid", function () {
             for (let address of invalidAddresses) {
                 let isvalid = ethWallet.isValidAddress(address);
                 expect(isvalid).to.equal(false);
             }
-        })
-    })
+        });
+    });
 
-    describe('test isValidSecret', function () {
-        it('should return true if the secret is valid', function () {
+    describe("test isValidSecret", function () {
+        it("should return true if the secret is valid", function () {
             let isvalid = ethWallet.isValidSecret(testSecret);
             expect(isvalid).to.equal(true);
-        })
+        });
 
-        it('should return false if the secret is not valid', function () {
+        it("should return false if the secret is not valid", function () {
             for (let secret of invalidSecrets) {
                 let isvalid = ethWallet.isValidSecret(secret);
                 expect(isvalid).to.equal(false);
             }
-        })
-    })
+        });
+    });
 
-    describe('test getAddress', function () {
-        it('should return correct address if the secret is valid', function () {
+    describe("test getAddress", function () {
+        it("should return correct address if the secret is valid", function () {
             let address = ethWallet.getAddress(testSecret);
             expect(address.toLowerCase()).to.equal(testAddress.toLowerCase());
-        })
+        });
 
-        it('should return null if the secret is not valid', function () {
+        it("should return null if the secret is not valid", function () {
             for (let secret of invalidSecrets) {
                 let address = ethWallet.getAddress(secret);
                 expect(address).to.equal(null);
             }
-        })
-    })
+        });
+    });
 
-    describe('test decryptKeystore', function () {
-        it('should return null when the given data is not object', function () {
+    describe("test decryptKeystore", function () {
+        it("should return null when the given data is not object", function () {
             expect(() => ethWallet.decryptKeystore(123, null)).throw("keystore is invalid");
-        })
+        });
 
-        it('should return null when the given data does not contain Crypto and crypto', function () {
+        it("should return null when the given data does not contain Crypto and crypto", function () {
             expect(() => ethWallet.decryptKeystore(123, {})).throw("keystore is invalid");
+        });
 
-        })
-
-        it('should return false when the password is wrong', function () {
+        it("should return false when the password is wrong", function () {
             expect(() => ethWallet.decryptKeystore("123", testEthKeystore)).throw("ethereum password is wrong");
-        })
+        });
 
-        it('should return right secret when the password is correct', function () {
+        it("should return right secret when the password is correct", function () {
             let secret = ethWallet.decryptKeystore("123456789", testEthKeystore);
             expect(secret).to.equal("ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c250a883e4486");
-        })
-    })
+        });
+    });
 
 });

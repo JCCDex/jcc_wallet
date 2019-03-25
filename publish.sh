@@ -1,5 +1,5 @@
 #!/bin/bash
-username=`npm whoami`
+username=$(npm whoami)
 echo $username
 if test "$username" = "jccdex"; then
     if test "$1" = "";then

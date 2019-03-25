@@ -1,7 +1,7 @@
-const chai = require('chai');
+const chai = require("chai");
 const expect = chai.expect;
-const jsdom = require('jsdom')
-const jcWallet = require('../lib').jcWallet;
+const jsdom = require("jsdom");
+const jcWallet = require("../lib").jcWallet;
 
 let testWallet = {
     "version": "1.0",
@@ -27,120 +27,121 @@ let testWallet = {
         "default": true,
         "alias": "默认钱包"
     }]
-}
+};
 
-describe('test jingchang', function () {
+describe("test jingchang", function () {
 
-    describe('test getSecret', function () {
-        it('throw wallet is empty when the wallet is not valid', function () {
-            expect(() => jcWallet.getSecret(null, '123')).throw("wallet is empty");
-        })
+    before(function () {
+        const {
+            JSDOM
+        } = jsdom;
+        const a = new JSDOM("<!doctype html><html><body></body></html>", {
+            url: "https://localhost",
+        });
+        const {
+            window
+        } = a;
+        global.localStorage = window.localStorage;
+    });
 
-        it('throw wallet is empty when the wallet does not contain wallet info given type', function () {
-            expect(() => jcWallet.getSecret(testWallet, '12334', 'eth')).throw("wallet is empty");
-        })
+    describe("test getSecret", function () {
+        it("throw wallet is empty when the wallet is not valid", function () {
+            expect(() => jcWallet.getSecret(null, "123")).throw("wallet is empty");
+        });
 
-        it('throw password is wrong when the given password is wrong', function () {
-            expect(() => jcWallet.getSecret(testWallet, '12334')).throw("password is wrong");
-        })
+        it("throw wallet is empty when the wallet does not contain wallet info given type", function () {
+            expect(() => jcWallet.getSecret(testWallet, "12334", "eth")).throw("wallet is empty");
+        });
 
-        it('jingtum secret is valid when the wallet type is swt and the given password is correct', function () {
-            let secret = jcWallet.getSecret(testWallet, '1qaz2WSX');
+        it("throw password is wrong when the given password is wrong", function () {
+            expect(() => jcWallet.getSecret(testWallet, "12334")).throw("password is wrong");
+        });
+
+        it("jingtum secret is valid when the wallet type is swt and the given password is correct", function () {
+            let secret = jcWallet.getSecret(testWallet, "1qaz2WSX");
             expect(secret).to.equal("snfXQMEVbbZng84CcfdKDASFRi4Hf");
-        })
-    })
+        });
+    });
 
-    describe('test getAddress', function () {
-        it('should get null when the wallet is not valid', function () {
+    describe("test getAddress", function () {
+        it("should get null when the wallet is not valid", function () {
             let address = jcWallet.getAddress(null);
             expect(address).to.equal(null);
-        })
+        });
 
-        it('should return null when the wallet does not contain wallet info given type', function () {
-            let address = jcWallet.getAddress(testWallet, 'eth');
+        it("should return null when the wallet does not contain wallet info given type", function () {
+            let address = jcWallet.getAddress(testWallet, "eth");
             expect(address).to.equal(null);
-        })
+        });
 
-        it('jingtum address is valid when the wallet type is swt', function () {
+        it("jingtum address is valid when the wallet type is swt", function () {
             let address = jcWallet.getAddress(testWallet);
             expect(address).to.equal("jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH");
-        })
-    })
+        });
+    });
 
-    describe('test isValidJCKeystore', function () {
-        it('should return false when the keystore file is not valid', function () {
+    describe("test isValidJCKeystore", function () {
+        it("should return false when the keystore file is not valid", function () {
             let isValid = jcWallet.isValidJCKeystore("");
             expect(isValid).to.equal(false);
-        })
-    })
-
-    describe('test encryptWallet', function () {
-        it('the default type and alias should be right when call encryptWallet function', function () {
-            let keypairs = {
-                secret: 'shTJVfLFK9JdbRmN3tCLSoMy36yiD',
-                address: 'jGPxfPsixZXpYNaYiQdnd3n1B26RsgLU69',
-                default: false
-            }
-            let encryptData = jcWallet.encryptWallet('123456', keypairs, {});
-            let {
-                type,
-                alias
-            } = encryptData;
-            let isDefault = encryptData.default;
-            expect(type).to.equal('swt');
-            expect(isDefault).to.equal(false);
-            expect(alias).to.equal('');
-
-        })
-
-        it('the default type and alias should be right when call encryptWallet function if the opts is undefined', function () {
-            let keypairs = {
-                secret: 'shTJVfLFK9JdbRmN3tCLSoMy36yiD',
-                address: 'jGPxfPsixZXpYNaYiQdnd3n1B26RsgLU69',
-                default: false
-            }
-            let encryptData = jcWallet.encryptWallet('123456', keypairs);
-            let {
-                type,
-                alias
-            } = encryptData;
-            let isDefault = encryptData.default;
-            expect(type).to.equal('swt');
-            expect(isDefault).to.equal(false);
-            expect(alias).to.equal('');
-        })
-    })
-
-    describe('test getJCWallet, clearJCWallet and setJCWallet', function () {
-        beforeEach(function () {
-            const {
-                JSDOM
-            } = jsdom
-            const a = new JSDOM('<!doctype html><html><body></body></html>', {
-                url: "https://localhost",
-            });
-            const {
-                window
-            } = a;
-            global.localStorage = window.localStorage
         });
-        it('should return null when the wallet is invalid which is from localstorage', function () {
+    });
+
+    describe("test encryptWallet", function () {
+        it("the default type and alias should be right when call encryptWallet function", function () {
+            let keypairs = {
+                secret: "shTJVfLFK9JdbRmN3tCLSoMy36yiD",
+                address: "jGPxfPsixZXpYNaYiQdnd3n1B26RsgLU69",
+                default: false
+            };
+            let encryptData = jcWallet.encryptWallet("123456", keypairs, {});
+            let {
+                type,
+                alias
+            } = encryptData;
+            let isDefault = encryptData.default;
+            expect(type).to.equal("swt");
+            expect(isDefault).to.equal(false);
+            expect(alias).to.equal("");
+
+        });
+
+        it("the default type and alias should be right when call encryptWallet function if the opts is undefined", function () {
+            let keypairs = {
+                secret: "shTJVfLFK9JdbRmN3tCLSoMy36yiD",
+                address: "jGPxfPsixZXpYNaYiQdnd3n1B26RsgLU69",
+                default: false
+            };
+            let encryptData = jcWallet.encryptWallet("123456", keypairs);
+            let {
+                type,
+                alias
+            } = encryptData;
+            let isDefault = encryptData.default;
+            expect(type).to.equal("swt");
+            expect(isDefault).to.equal(false);
+            expect(alias).to.equal("");
+        });
+    });
+
+    describe("test getJCWallet, clearJCWallet and setJCWallet", function () {
+        it("should return null when the wallet is invalid which is from localstorage", function () {
             this.timeout(0);
             let wallet = jcWallet.getJCWallet();
             expect(wallet).to.equal(null);
-        })
+        });
 
-        it('the wallet should be valid if we set valid wallet to localstorage', function (done) {
+        it("the wallet should be valid if we set valid wallet to localstorage", function (done) {
             this.timeout(0);
             jcWallet.setJCWallet(testWallet, () => {
                 let wallet = jcWallet.getJCWallet();
                 let isValid = jcWallet.isValidJCKeystore(wallet);
                 expect(isValid).to.equal(true);
                 done();
-            })
-        })
+            });
+        });
 
-        it('the wallet should be empty if we remove wallet from localstorage', function (done) {
+        it("the wallet should be empty if we remove wallet from localstorage", function (done) {
             this.timeout(0);
             jcWallet.setJCWallet(testWallet, () => {
                 let wallet = jcWallet.getJCWallet();
@@ -150,53 +151,53 @@ describe('test jingchang', function () {
                 wallet = jcWallet.getJCWallet();
                 expect(wallet).to.equal(null);
                 done();
-            })
-        })
-    })
+            });
+        });
+    });
 
-    describe('test encryptContact', function () {
-        it('should encrypt contact correctly', function () {
-            let data = jcWallet.encryptContact('123456', [123456789], {});
-            let contact = jcWallet.decrypt('123456', data);
+    describe("test encryptContact", function () {
+        it("should encrypt contact correctly", function () {
+            let data = jcWallet.encryptContact("123456", [123456789], {});
+            let contact = jcWallet.decrypt("123456", data);
             expect(contact).to.equal("[123456789]");
-        })
+        });
 
-        it('should encrypt contact correctly if the opts is undefined', function () {
-            let data = jcWallet.encryptContact('123456', [123456789]);
-            let contact = jcWallet.decrypt('123456', data);
+        it("should encrypt contact correctly if the opts is undefined", function () {
+            let data = jcWallet.encryptContact("123456", [123456789]);
+            let contact = jcWallet.decrypt("123456", data);
             expect(contact).to.equal("[123456789]");
-        })
-    })
+        });
+    });
 
-    describe('test decrypt', function () {
-        it('throw keystore is invalid when the data is not valid', function () {
-            expect(() => jcWallet.decrypt('123456', {})).throw("keystore is invalid")
-        })
-    })
+    describe("test decrypt", function () {
+        it("throw keystore is invalid when the data is not valid", function () {
+            expect(() => jcWallet.decrypt("123456", {})).throw("keystore is invalid");
+        });
+    });
 
-    describe('test buildJCWallet', function () {
-        it('the built wallet should be valid', function (done) {
-            const Wallet = require('jcc_jingtum_base_lib').Wallet;
+    describe("test buildJCWallet", function () {
+        it("the built wallet should be valid", function (done) {
+            const Wallet = require("jcc_jingtum_base_lib").Wallet;
             let keypairs = Wallet.generate();
-            jcWallet.buildJCWallet('1qaz2wsx', keypairs, (walletID, wallet) => {
+            jcWallet.buildJCWallet("1qaz2wsx", keypairs, (walletID, wallet) => {
                 let address = jcWallet.getAddress(wallet);
-                let secret = jcWallet.getSecret(wallet, '1qaz2wsx');
+                let secret = jcWallet.getSecret(wallet, "1qaz2wsx");
                 expect(address).to.equal(keypairs.address);
                 expect(secret).to.equal(keypairs.secret);
-                done()
+                done();
             });
-        })
+        });
 
-        it('should break loop when count more than 30', function (done) {
-            const Wallet = require('jcc_jingtum_base_lib').Wallet;
+        it("should break loop when count more than 30", function (done) {
+            const Wallet = require("jcc_jingtum_base_lib").Wallet;
             let keypairs = Wallet.generate();
-            keypairs.secret = keypairs.secret + 'aaaa';
+            keypairs.secret = keypairs.secret + "aaaa";
             this.timeout(0);
-            jcWallet.buildJCWallet('1qaz2wsx', keypairs, (walletID, wallet) => {
+            jcWallet.buildJCWallet("1qaz2wsx", keypairs, (walletID, wallet) => {
                 expect(wallet).to.deep.equal({});
-                done()
+                done();
             });
-        })
-    })
+        });
+    });
 
 });
