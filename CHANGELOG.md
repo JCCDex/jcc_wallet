@@ -1,5 +1,13 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.2.8
+
+2019-03-25
+
+- fixed spelling error
+
+[#acfb7a8](https://github.com/JCCDex/jcc_wallet/commit/acfb7a80f56ddc901df676087cc2e8337652f3a2)
+
 # 0.2.7
 
 2019-03-25
