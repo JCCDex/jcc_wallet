@@ -89,7 +89,7 @@ describe('test jingchang', function () {
             let isDefault = encryptData.default;
             expect(type).to.equal('swt');
             expect(isDefault).to.equal(false);
-            expect(alias).to.equal('default wallet');
+            expect(alias).to.equal('');
 
         })
 
@@ -107,7 +107,7 @@ describe('test jingchang', function () {
             let isDefault = encryptData.default;
             expect(type).to.equal('swt');
             expect(isDefault).to.equal(false);
-            expect(alias).to.equal('default wallet');
+            expect(alias).to.equal('');
         })
     })
 
