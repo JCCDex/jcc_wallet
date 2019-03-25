@@ -1,7 +1,8 @@
 "use strict";
+import { Base } from "stm-lib/src/js/stream/base";
+import { UInt160 } from "stm-lib/src/js/stream/uint160";
+import StmWallet = require("stm-lib/src/js/stream/wallet");
 import { IWalletModel } from "../model";
-import { Base, UInt160 } from "./lib/stream";
-import StmWallet = require("./lib/stream/wallet");
 
 /**
  * check stream secret is valid or not
