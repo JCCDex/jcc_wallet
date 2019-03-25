@@ -84,7 +84,7 @@ export default class JingchangWallet {
      * @returns {Promise<IJingchangWalletModel>} resolve jingchang wallet if success.
      * @memberof JingchangWallet
      */
-    public static genarate(password: string, secret?: string): Promise<IJingchangWalletModel> {
+    public static generate(password: string, secret?: string): Promise<IJingchangWalletModel> {
         return new Promise((resolve, reject) => {
             const keypairs: any = {};
             if (secret === undefined) {

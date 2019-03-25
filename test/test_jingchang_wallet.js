@@ -161,9 +161,9 @@ describe('test JingchangWallet', function () {
         })
     })
 
-    describe("static, test genarate api", function () {
+    describe("static, test generate api", function () {
         it("return jingchang wallet if the given secret is undefined", function (done) {
-            JingchangWallet.genarate("123").then(wallet => {
+            JingchangWallet.generate("123").then(wallet => {
                 expect(JingchangWallet.isValid(wallet)).to.true;
                 const inst = new JingchangWallet(wallet);
                 inst.getAddress().then(address => {
@@ -177,7 +177,7 @@ describe('test JingchangWallet', function () {
         });
 
         it("return jingchang wallet if the given secret is valid", function (done) {
-            JingchangWallet.genarate("123", testSecret).then(wallet => {
+            JingchangWallet.generate("123", testSecret).then(wallet => {
                 expect(JingchangWallet.isValid(wallet)).to.true;
                 const inst = new JingchangWallet(wallet);
                 inst.getAddress("swt").then(address => {
@@ -191,7 +191,7 @@ describe('test JingchangWallet', function () {
         })
 
         it("reject `secret is invalid` if the given secret is invalid", function (done) {
-            JingchangWallet.genarate("123", "123").catch(err => {
+            JingchangWallet.generate("123", "123").catch(err => {
                 expect(err.message).to.equal("secret is invalid");
                 done();
             })

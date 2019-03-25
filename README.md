@@ -69,7 +69,7 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
 */
 ```
 
-### genarate
+### generate
 
 ```javascript
 /**
