@@ -430,6 +430,7 @@ export default class JingchangWallet {
                 const defaultWallet = await this.getWalletWithType(wallet.type);
                 defaultWallet.default = false;
                 wallet.default = true;
+                JingchangWallet.save(this._jingchangWallet);
                 return resolve(this._jingchangWallet);
             } catch (error) {
                 return reject(error);
