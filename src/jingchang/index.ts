@@ -11,6 +11,7 @@ const WALLET_NAME = "wallets";
 /**
  * check jingchang wallet is valid or not
  *
+ * @deprecated
  * @param {*} jcWallet
  * @returns {boolean} return true if valid
  */
@@ -21,6 +22,7 @@ const isValidJCWallet = (jcWallet: any): boolean => {
 /**
  * create jingchang wallet
  *
+ * @deprecated
  * @param {string} password
  * @param {IWalletModel} wallet
  * @param {(walletID: string, wallet: IJingchangWalletModel) => void} callback
@@ -57,6 +59,7 @@ const buildJCWallet = (password: string, wallet: IWalletModel, callback: (wallet
 /**
  * check jingchang keystore file is valid or not
  *
+ * @deprecated
  * @param {*} text
  * @returns {boolean} return true if valid
  */
@@ -73,6 +76,8 @@ const isValidJCKeystore = (text: any): boolean => {
 
 /**
  * get wallet's secret
+ *
+ * @deprecated
  * @param {IJingchangWalletModel} jcWallet
  * @param {string} password
  * @param {string} type
@@ -98,6 +103,7 @@ const getSecret = (jcWallet: IJingchangWalletModel, password: string, type: stri
 /**
  * get wallet's address
  *
+ * @deprecated
  * @param {IJingchangWalletModel} jcWallet
  * @param {string} [type="swt"]
  * @returns {(string | null)} return address if success, otherwise return null
@@ -119,6 +125,7 @@ const getAddress = (jcWallet: IJingchangWalletModel, type: string = "swt"): stri
 /**
  * get jingchang wallet from localstorage
  *
+ * @deprecated
  * @returns {(IJingchangWalletModel | null)} return IJingchangWalletModel if success, otherwise return null
  */
 const getJCWallet = (): IJingchangWalletModel | null => {
@@ -133,6 +140,7 @@ const getJCWallet = (): IJingchangWalletModel | null => {
 /**
  * save jingchang wallet to localstorage
  *
+ * @deprecated
  * @param {IJingchangWalletModel} jcWallet
  * @param {(wallet: IJingchangWalletModel) => void} callback
  */
@@ -145,6 +153,7 @@ const setJCWallet = (jcWallet: IJingchangWalletModel, callback: (wallet: IJingch
 /**
  * clear jingchang wallet from localstorage
  *
+ * @deprecated
  */
 const clearJCWallet = () => {
     const walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()));

@@ -13,6 +13,7 @@ const saveWallet = Symbol("saveWallet");
 /**
  * toolkit of opearating jichang wallet
  *
+ * @deprecated
  * @class JcWalletTool
  */
 class JcWalletTool {
@@ -38,6 +39,7 @@ class JcWalletTool {
     /**
      * set jingchang wallet
      *
+     * @deprecated
      * @param {IJingchangWalletModel} wallet
      * @memberof JcWalletTool
      */
@@ -48,6 +50,7 @@ class JcWalletTool {
     /**
      * validate password is right or not
      *
+     * @deprecated
      * @param {string} password
      * @param {string} [type="swt"]
      * @returns {Promise<string>} resolve secret if success
@@ -70,6 +73,8 @@ class JcWalletTool {
     /**
      * remove wallet of given type
      * if the type is swt, will clear whole wallet from localstorage
+     *
+     * @deprecated
      * @param {string} [type="swt"]
      * @returns {Promise<IJingchangWalletModel>}
      * @memberof JcWalletTool
@@ -102,6 +107,7 @@ class JcWalletTool {
     /**
      * import ethereum keystore file
      *
+     * @deprecated
      * @param {*} keystore
      * @param {string} jcPassword
      * @param {string} ethPassword
@@ -125,6 +131,7 @@ class JcWalletTool {
     /**
      * import secret
      *
+     * @deprecated
      * @param {string} secret
      * @param {string} jcPassword
      * @param {string} type
@@ -151,6 +158,7 @@ class JcWalletTool {
     /**
      * change jingchang wallet password
      *
+     * @deprecated
      * @param {string} oldPassword
      * @param {string} newPassword
      * @returns {Promise<IJingchangWalletModel>} resolve jingchang wallet if success
@@ -185,6 +193,7 @@ class JcWalletTool {
     /**
      * get wallets from keystore file
      *
+     * @deprecated
      * @private
      * @param {IJingchangWalletModel} jcWallet
      * @returns {Array<IKeystoreModel>}
@@ -203,6 +212,7 @@ class JcWalletTool {
     /**
      * get encrypted data
      *
+     * @deprecated
      * @private
      * @param {string} type
      * @param {string} secret
@@ -227,6 +237,7 @@ class JcWalletTool {
     /**
      * save wallet to jingchang wallet
      *
+     * @deprecated
      * @private
      * @param {string} type
      * @param {string} secret

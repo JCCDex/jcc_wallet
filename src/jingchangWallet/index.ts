@@ -25,7 +25,7 @@ export default class JingchangWallet {
 
     private _jingchangWallet: IJingchangWalletModel;
     /**
-     * if the value is true, support save multiple keystore for each type, otherwise only support one.
+     * if the value is true, support save multiple wallet keystore for each type, otherwise only support one.
      *
      * @private
      * @type {boolean}
@@ -34,7 +34,7 @@ export default class JingchangWallet {
     private _multiple: boolean;
 
     /**
-     * if the value is true, use the default swt keystore's password which be genarated in the beginning for other type.
+     * if the value is true, use the default swt keystore's password which be genarated in the beginning as password for other type.
      *
      * @private
      * @type {boolean}
@@ -45,8 +45,8 @@ export default class JingchangWallet {
     /**
      * Creates an instance of JingchangWallet.
      * @param {IJingchangWalletModel} wallet
-     * @param {boolean} [multiple=false]
-     * @param {boolean} [samePassword=true]
+     * @param {boolean} [multiple=false] if the value is true, support save multiple wallet keystore for each type, otherwise only support one.
+     * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password which be genarated in the beginning as password for other type.
      * @memberof JingchangWallet
      */
     constructor(wallet: IJingchangWalletModel, multiple: boolean = false, samePassword: boolean = true) {
@@ -55,6 +55,14 @@ export default class JingchangWallet {
         this._samePassword = samePassword;
     }
 
+    /**
+     * check jingchang wallet is valid or not
+     *
+     * @static
+     * @param {*} wallet
+     * @returns {boolean} return true if valid.
+     * @memberof JingchangWallet
+     */
     public static isValid(wallet: any): boolean {
         try {
             if (typeof wallet === "string") {
@@ -67,6 +75,15 @@ export default class JingchangWallet {
         }
     }
 
+    /**
+     * create a jingchang wallet
+     *
+     * @static
+     * @param {string} password password for keystore
+     * @param {string} [secret] swtc chain's secret
+     * @returns {Promise<IJingchangWalletModel>} resolve jingchang wallet if success.
+     * @memberof JingchangWallet
+     */
     public static genarate(password: string, secret?: string): Promise<IJingchangWalletModel> {
         return new Promise((resolve, reject) => {
             const keypairs: any = {};
@@ -95,6 +112,13 @@ export default class JingchangWallet {
         });
     }
 
+    /**
+     * get jingchang wallet from local storage
+     *
+     * @static
+     * @returns {(IJingchangWalletModel | null)} return jingchang wallet or null
+     * @memberof JingchangWallet
+     */
     public static get(): IJingchangWalletModel | null {
         const jcWallet = Lockr.get(JingchangWallet._walletID);
         if (!JingchangWallet.isValid(jcWallet)) {
@@ -103,6 +127,12 @@ export default class JingchangWallet {
         return jcWallet;
     }
 
+    /**
+     * clear jingchang wallet from local storage
+     *
+     * @static
+     * @memberof JingchangWallet
+     */
     public static clear() {
         Lockr.set(JingchangWallet._walletID, {});
     }
@@ -110,8 +140,8 @@ export default class JingchangWallet {
     /**
      * save jingchang wallet to local storage.
      *
+     * @static
      * @param {IJingchangWalletModel} wallet
-     * @returns {Promise<IJingchangWalletModel>}
      * @memberof JingchangWallet
      */
     public static save(wallet: IJingchangWalletModel): void {
@@ -119,12 +149,12 @@ export default class JingchangWallet {
     }
 
     /**
-     * get wallets from keystore file
+     * get wallets from jingchang wallet
      *
-     * @private
+     * @static
      * @param {IJingchangWalletModel} jcWallet
-     * @returns {Array<IKeystoreModel>}
-     * @memberof JcWalletTool
+     * @returns {Array<IKeystoreModel>} return wallets if valid, otherwise return empty array.
+     * @memberof JingchangWallet
      */
     public static getWallets(keystore: IJingchangWalletModel): Array<IKeystoreModel> {
         let wallets;
@@ -136,15 +166,21 @@ export default class JingchangWallet {
         return wallets;
     }
 
+    /**
+     * set property of _jingchangWallet
+     *
+     * @param {IJingchangWalletModel} wallet
+     * @memberof JingchangWallet
+     */
     public setJingchangWallet(wallet: IJingchangWalletModel) {
         this._jingchangWallet = wallet;
     }
 
     /**
-     * get default wallet address for each type
+     * get default wallet's keystore address for each type
      *
      * @param {string} [type="swt"]
-     * @returns {Promise<string>}
+     * @returns {Promise<string>} resolve address if success
      * @memberof JingchangWallet
      */
     public getAddress(type: string = "swt"): Promise<string> {
@@ -158,6 +194,13 @@ export default class JingchangWallet {
         });
     }
 
+    /**
+     * get default wallet keystore with type
+     *
+     * @param {string} [type="swt"]
+     * @returns {Promise<IKeystoreModel>} resolve default wallet keystore if success.
+     * @memberof JingchangWallet
+     */
     public getWalletWithType(type: string = "swt"): Promise<IKeystoreModel> {
         return new Promise((resolve, reject) => {
             try {
@@ -169,6 +212,13 @@ export default class JingchangWallet {
         });
     }
 
+    /**
+     * get wallet keystore with address
+     *
+     * @param {string} address
+     * @returns {Promise<IKeystoreModel>} resolve wallet keystore if success.
+     * @memberof JingchangWallet
+     */
     public getWalletWithAddress(address: string): Promise<IKeystoreModel> {
         return new Promise((resolve, reject) => {
             try {
@@ -184,7 +234,7 @@ export default class JingchangWallet {
      * check if has default wallet for each type
      *
      * @param {string} [type="swt"]
-     * @returns {boolean} return true if has
+     * @returns {boolean} return true if has default
      * @memberof JingchangWallet
      */
     public hasDefault(type: string = "swt"): boolean {
@@ -197,7 +247,7 @@ export default class JingchangWallet {
     }
 
     /**
-     * get the default wallet secret for each type.
+     * get the default wallet keystore's secret with type.
      *
      * @param {string} password
      * @param {string} [type="swt"]
@@ -217,12 +267,12 @@ export default class JingchangWallet {
     }
 
     /**
-     * get the wallet secret with address.
+     * get the wallet keystore's secret with address.
      *
      * @param {string} password
      * @param {string} address
      * @returns {Promise<string>}
-     * @memberof JingchangWallet
+     * @memberof JingchangWallet resolve secret if success.
      */
     public getSecretWithAddress(password: string, address: string): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -241,8 +291,8 @@ export default class JingchangWallet {
      *
      * @param {string} oldPassword
      * @param {string} newPassword
-     * @returns {Promise<IJingchangWalletModel>} resolve jingchang wallet if success
-     * @memberof JcWalletTool
+     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+     * @memberof JingchangWallet
      */
     public changeWholePassword(oldPassword: string, newPassword: string): Promise<IJingchangWalletModel> {
         return new Promise(async (resolve, reject) => {
@@ -280,11 +330,10 @@ export default class JingchangWallet {
     /**
      * change the keystore password with address, if you set the property of _samePassword is true, will throw an error
      *
-     *
      * @param {string} address
      * @param {string} oldPassword
      * @param {string} newPassword
-     * @returns {Promise<IJingchangWalletModel>}
+     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
      * @memberof JingchangWallet
      */
     public changePasswordWithAddress(address: string, oldPassword: string, newPassword: string): Promise<IJingchangWalletModel> {
@@ -317,11 +366,10 @@ export default class JingchangWallet {
     }
 
     /**
-     * remove wallet of given type
-     * if the type is swt, will clear whole wallet from localstorage
+     * remove default wallet keystore of the given type
      * @param {string} [type="swt"]
-     * @returns {Promise<IJingchangWalletModel>}
-     * @memberof JcWalletTool
+     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+     * @memberof JingchangWallet
      */
     public removeWalletWithType(type: string = "swt"): Promise<IJingchangWalletModel> {
         return new Promise(async (resolve, reject) => {
@@ -335,23 +383,13 @@ export default class JingchangWallet {
         });
     }
 
-    public setDefaultWallet(address: string): Promise<IJingchangWalletModel> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const wallet = await this.getWalletWithAddress(address);
-                if (wallet.default) {
-                    return resolve(this._jingchangWallet);
-                }
-                const defaultWallet = await this.getWalletWithType(wallet.type);
-                defaultWallet.default = false;
-                wallet.default = true;
-                return resolve(this._jingchangWallet);
-            } catch (error) {
-                return reject(error);
-            }
-        });
-    }
-
+    /**
+     * remove wallet keystore of the given address
+     *
+     * @param {string} address
+     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+     * @memberof JingchangWallet
+     */
     public removeWalletWithAddress(address: string): Promise<IJingchangWalletModel> {
         return new Promise((resolve, reject) => {
             const jcWallet = cloneDeep(this._jingchangWallet);
@@ -376,13 +414,37 @@ export default class JingchangWallet {
     }
 
     /**
-     * import ethereum keystore file
+     * set defalut wallet keystore for each type
+     *
+     * @param {string} address
+     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+     * @memberof JingchangWallet
+     */
+    public setDefaultWallet(address: string): Promise<IJingchangWalletModel> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const wallet = await this.getWalletWithAddress(address);
+                if (wallet.default) {
+                    return resolve(this._jingchangWallet);
+                }
+                const defaultWallet = await this.getWalletWithType(wallet.type);
+                defaultWallet.default = false;
+                wallet.default = true;
+                return resolve(this._jingchangWallet);
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
+
+    /**
+     * import ethereum keystore
      *
      * @param {*} keystore
      * @param {string} password
-     * @param {string} ethPassword
-     * @returns {Promise<IJingchangWalletModel>}
-     * @memberof JcWalletTool
+     * @param {string} ethPassword ethereum keystore's password
+     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+     * @memberof JingchangWallet
      */
     public importEthKeystore(keystore: any, password: string, ethPassword: string): Promise<IJingchangWalletModel> {
 
@@ -418,11 +480,11 @@ export default class JingchangWallet {
      * import secret
      *
      * @param {string} secret
-     * @param {string} jcPassword
+     * @param {string} password
      * @param {string} type
      * @param {(secret: string) => string} retriveSecret
-     * @returns {Promise<IJingchangWalletModel>}
-     * @memberof JcWalletTool
+     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+     * @memberof JingchangWallet
      */
     public importSecret(secret: string, password: string, type: string, retriveSecret: (secret: string) => string): Promise<IJingchangWalletModel> {
         return new Promise(async (resolve, reject) => {
@@ -455,11 +517,12 @@ export default class JingchangWallet {
     }
 
     /**
-     * find wallet according to filter function
+     * find wallet keystore according to filter function
      *
      * @protected
      * @param {(wallet: IKeystoreModel) => boolean} filter
-     * @returns {IKeystoreModel}
+     * @returns {IKeystoreModel} return wallet keystore if existent, otherwise throw `keystore is invalid` if the jingchang wallet is invalid
+     * or throw `wallet is empty` if the wallet isn't existent
      * @memberof JingchangWallet
      */
     protected findWallet(filter: (wallet: IKeystoreModel) => boolean): IKeystoreModel {
@@ -475,11 +538,29 @@ export default class JingchangWallet {
         return wallet;
     }
 
+    /**
+     * encrypt data
+     *
+     * @protected
+     * @param {string} password
+     * @param {IKeypairsModel} keypairs
+     * @returns {IKeystoreModel}
+     * @memberof JingchangWallet
+     */
     protected getEncryptData(password: string, keypairs: IKeypairsModel): IKeystoreModel {
         const encryptData = encryptWallet(password, keypairs, {});
         return encryptData;
     }
 
+    /**
+     * save wallet keystore to jingchang wallet
+     *
+     * @private
+     * @param {string} password
+     * @param {IKeypairsModel} keypairs
+     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+     * @memberof JingchangWallet
+     */
     private saveWallet(password: string, keypairs: IKeypairsModel): Promise<IJingchangWalletModel> {
         return new Promise((resolve) => {
             // support type: ethereum, stream, jingtum, call and moac

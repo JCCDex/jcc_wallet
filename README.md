@@ -28,11 +28,9 @@ npm install jcc_wallet
 
 ## Table of Contents
 
-- [JcWalletTool](#api-of-jingchang-wallet-tool)
+- [JingchangWallet](#api-of-jingchangwallet)
 
-- [jcWallet](#api-of-jingchang-wallet)
-
-- [jtWallet](#api-of-jingtum-and-consortium-blockchains-Wallet)
+- [jtWallet](#api-of-jingtum-and-alliance-chains-Wallet)
 
 - [callWallet](#api-of-call-wallet)
 
@@ -42,397 +40,329 @@ npm install jcc_wallet
 
 - [moacWallet](#api-of-moac-wallet)
 
-## API of JingChang Wallet Tool
+## Deprecated API
 
-### Description
+***Deprecated api will be removed after 2020.1.1, please update asap.***
 
-the jc wallet tool to manage multiple wallets, now the wallet type includes jingtum(swt), stream(stm), call(call), ethereum(eth) and bizain(biz) chain.
+For more see [deprecatedAPI](https://github.com/JCCDex/jcc_wallet/blob/master/deprecatedAPI.md).
+
+## API of JingchangWallet
+
+Support multiple wallet keystore for each type.
 
 ### Usage
 
 ```javascript
-const JcWalletTool = require('jcc_wallet').JcWalletTool
-// import { JcWalletTool } from 'jcc_wallet'
-let inst = new JcWalletTool(jcWallet)
+const JingchangWallet = require('jcc_wallet').JingchangWallet
+// import { JingchangWallet } from 'jcc_wallet'
 ```
 
-### setJCWallet
+### constructor
 
 ```javascript
-inst.setJCWallet(jcWallet)
+/**
+ * Creates an instance of JingchangWallet.
+ * @param {IJingchangWalletModel} wallet
+ * @param {boolean} [multiple=false] if the value is true, support save multiple wallet keystore for each type, otherwise only support one.
+ * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password which be genarated in the beginning as password for other type.
+ * @memberof JingchangWallet
+*/
 ```
 
-Parameters
-
-`jcWallet`- `object`
-
-### validatePassword
+### genarate
 
 ```javascript
-inst.validatePassword(password, type)
+/**
+ * create a jingchang wallet
+ *
+ * @static
+ * @param {string} password password for keystore
+ * @param {string} [secret] swtc chain's secret
+ * @returns {Promise<IJingchangWalletModel>} resolve jingchang wallet if success.
+ * @memberof JingchangWallet
+*/
 ```
 
-Parameters
-
-`password`- `string`
-
-`type`- `string`
-
-- `default`- `swt`
-
-Return
-
-`promise`
-
-resolve secret if success, otherwise reject error message
-
-Error message:
-
-- `password is required`
-
-- `wallet is empty`
-
-- `password is wrong`
-
-### removeWallet
-
-it will clear whole wallet if the type is swt, because the wallet of swt is basic. if the type is not swt, will remove it from wallet array.
+### isValid
 
 ```javascript
-inst.removeWallet(type)
+/**
+ * check jingchang wallet is valid or not
+ *
+ * @static
+ * @param {*} wallet
+ * @returns {boolean} return true if valid.
+ * @memberof JingchangWallet
+*/
 ```
 
-Parameters
-
-`type`- `string`
-
-- `default`- `swt`
-
-Return
-
-`promise`
-
-resolve new object of jc wallet
-
-### importEthKeystore
+### get
 
 ```javascript
-inst.importEthKeystore(keystore, jcPassword, ethPassword)
+/**
+ * get jingchang wallet from local storage
+ *
+ * @static
+ * @returns {(IJingchangWalletModel | null)} return jingchang wallet or null.
+ * @memberof JingchangWallet
+*/
 ```
 
-decrypt secret from ethereum keystore file and encrypt ethereum secret and address with jc password, then save encrypt data to jingchang wallet object.
-
-Tips
-
-- Only one for eth type. if already exists, remove it firstly.
-
-Parameters
-
-`keystore`- `object`
-
-`jcPassword`- `string`
-
-`ethPassword`- `string`
-
-Return
-
-`promise`
-
-resolve new object of jc wallet if success, otherwise reject error message.
-
-Error message:
-
-- `password is required`
-
-- `wallet is empty`
-
-- `password is wrong`
-
-- `keystore is invalid`
-
-- `ethereum password is wrong`
-
-### importSecret
+### clear
 
 ```javascript
-inst.importSecret(secret, jcPassword, type, getAddress)
+/**
+ * clear jingchang wallet from local storage.
+ *
+ * @static
+ * @memberof JingchangWallet
+*/
 ```
 
-decrypt address from secret and encrypt secret and address with jc password, then save encrypt data to jingchang wallet object.
-
-Tips
-
-- Only one for each type. if already exists, remove it firstly.
-
-Parameters
-
-`secret`- `string`
-
-`jcPassword`- `string`
-
-`type`- `string`
-
-`getAddress`- `function`
-
-Return
-
-`promise`
-
-resolve new object of jc wallet if success, otherwise reject error message.
-
-Error message:
-
-- `password is required`
-
-- `wallet is empty`
-
-- `password is wrong`
-
-- `secret is invalid`
-
-### changePassword
+### save
 
 ```javascript
-inst.changePassword(oldPassword, newPassword)
+/**
+ * save jingchang wallet to local storage.
+ *
+ * @static
+ * @param {IJingchangWalletModel} wallet
+ * @memberof JingchangWallet
+*/
 ```
 
-Parameters
-
-`oldPassword`- `string`
-
-`newPassword`- `string`
-
-Return
-
-`promise`
-
-resolve new object of jc wallet if success, otherwise reject error message.
-
-Error message:
-
-- `password is required`
-
-- `wallet is empty`
-
-- `password is wrong`
-
-## API of JingChang Wallet
-
-### Data Structure of JingChang Wallet
-
-```json
-{
-    "contact": {},
-    "id": "",
-    "version": "",
-    "wallets":[{
-        "address": "",
-        "alias": "",
-        "ciphertext": "",
-        "crypto":{
-            "cipher": "",
-            "iv": "",
-            "kdf": "",
-            "kdfparams":{
-                "dklen": "",
-                "n": "",
-                "p": "",
-                "r": "",
-                "salt": ""
-            }
-        },
-        "default": true,
-        "mac": "",
-        "type": ""
-    }]
-}
-```
-
-### Usage
+### getWallets
 
 ```javascript
-const jcWallet = require('jcc_wallet').jcWallet
-or
-import { jcWallet } from 'jcc_wallet'
+/**
+ * get wallets from jingchang wallet.
+ *
+ * @static
+ * @param {IJingchangWalletModel} jcWallet
+ * @returns {Array<IKeystoreModel>} return wallets if valid, otherwise return empty array.
+ * @memberof JingchangWallet
+*/
 ```
 
-### isValidJCWallet
+### setJingchangWallet
 
 ```javascript
-jcWallet.isValidJCWallet(jcWallet)
+/**
+ * set property of _jingchangWallet
+ *
+ * @param {IJingchangWalletModel} wallet
+ * @memberof JingchangWallet
+*/
 ```
-
-Parameters
-
-`jcWallet`- `any`
-
-Return
-
-`Boolean`
-
-### buildJCWallet
-
-```javascript
-jcWallet.buildJCWallet(password, wallet, callback)
-```
-
-Parameters
-
-`password`- `string`
-
-`wallet`- `object`
-
-- `secret`: `string`
-
-- `address`: `string`
-
-`callback`- `function`
-
-Void
-
-```javascript
-callback(walletID, jcWallet)
-```
-
-### isValidJCKeystore
-
-```javascript
-jcWallet.isValidJCKeystore(text)
-```
-
-Parameters
-
-`text`- `any`
-
-Return
-
-`Boolean`
-
-### getSecret
-
-```javascript
-jcWallet.getSecret(jcWallet, password, type)
-```
-
-Parameters
-
-`jcWallet`- `object`
-
-`password`- `string`
-
-`type`- `string`
-
-- default type is swt
-
-Return
-
-`string | null | false`
-
-return null if the jcWallet is invalid or the given type is not existent, return false if the password is not correct, otherwise return secret
 
 ### getAddress
 
 ```javascript
-jcWallet.getAddress(jcWallet, type)
+/**
+ * get default wallet's keystore address for each type
+ *
+ * @param {string} [type="swt"]
+ * @returns {Promise<string>} resolve address if success
+ * @memberof JingchangWallet
+*/
 ```
 
-Parameters
-
-`jcWallet`- `object`
-
-`type`- `string`
-
-- default type is swt
-
-Return
-
-`string | null`
-
-return null if the jcWallet is invalid or the given type is not existent, otherwise return address
-
-### getJCWallet
-
-#### get jingchang wallet from localstorage
+### getWalletWithType
 
 ```javascript
-jcWallet.getJCWallet()
+/**
+ * get default wallet keystore with type
+ *
+ * @param {string} [type="swt"]
+ * @returns {Promise<IKeystoreModel>} resolve default wallet keystore if success.
+ * @memberof JingchangWallet
+*/
 ```
 
-Return
-
-`Object | null`
-
-return jc wallet if the wallet is valid from localstorage, otherwise return null
-
-### setJCWallet
-
-#### save jingchang wallet to localstorage
+### getWalletWithAddress
 
 ```javascript
-jcWallet.setJCWallet(jcWallet, callback)
+/**
+ * get wallet keystore with address
+ *
+ * @param {string} address
+ * @returns {Promise<IKeystoreModel>} resolve wallet keystore if success.
+ * @memberof JingchangWallet
+*/
 ```
 
-Parameters
-
-`jcWallet`- `object`
-
-`callback`- `function`
-
-Void
+### hasDefault
 
 ```javascript
-callback(jcWallet)
+/**
+ * check if has default wallet for each type
+ *
+ * @param {string} [type="swt"]
+ * @returns {boolean} return true if has default.
+ * @memberof JingchangWallet
+*/
 ```
 
-### clearJCWallet
-
-#### clear jingchang wallet from localstorage
+### getSecretWithType
 
 ```javascript
-jcWallet.clearJCWallet()
+/**
+ * get the default wallet keystore's secret with type.
+ *
+ * @param {string} password
+ * @param {string} [type="swt"]
+ * @returns {Promise<string>} resolve secret if success.
+ * @memberof JingchangWallet
+*/
 ```
 
-### encryptWallet
-
-#### encrypt wallet
+### getSecretWithAddress
 
 ```javascript
-jcWallet.encryptWallet(password, keypairs, opts)
+/**
+ * get the wallet keystore's secret with address.
+ *
+ * @param {string} password
+ * @param {string} address
+ * @returns {Promise<string>} resolve secret if success.
+ * @memberof JingchangWallet
+*/
 ```
 
-Parameters
-
-`password`- `string`
-
-`keypairs`- `object`
-
-`options`- `object`
-
-Return
-
-`Object`
-
-### encryptContact
-
-#### encrypt contact
+### changeWholePassword
 
 ```javascript
-jcWallet.encryptContact(password, contacts, opts)
+/**
+ * change the whole jingchang wallet password, if you set property of _samePassword is false, will throw an error
+ *
+ * @param {string} oldPassword
+ * @param {string} newPassword
+ * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+ * @memberof JingchangWallet
+*/
 ```
 
-Parameters
+### changePasswordWithAddress
 
-`password`- `string`
+```javascript
+/**
+ * change the keystore password with address, if you set the property of _samePassword is true, will throw an error
+ *
+ * @param {string} address
+ * @param {string} oldPassword
+ * @param {string} newPassword
+ * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+ * @memberof JingchangWallet
+*/
+```
 
-`contacts`- `object`
+### removeWalletWithType
 
-`options`- `object`
+```javascript
+/**
+ * remove default wallet keystore of the given type
+ * @param {string} [type="swt"]
+ * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+ * @memberof JingchangWallet
+*/
+```
 
-Return
+### removeWalletWithAddress
 
-`Object`
+```javascript
+/**
+ * remove wallet keystore of the given address
+ *
+ * @param {string} address
+ * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+ * @memberof JingchangWallet
+*/
+```
 
-## API of Jingtum and Consortium Blockchains Wallet
+### setDefaultWallet
+
+```javascript
+/**
+ * set defalut wallet keystore for each type
+ *
+ * @param {string} address
+ * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+ * @memberof JingchangWallet
+*/
+```
+
+### importEthKeystore
+
+```javascript
+/**
+ * import ethereum keystore
+ *
+ * @param {*} keystore
+ * @param {string} password
+ * @param {string} ethPassword ethereum keystore's password
+ * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+ * @memberof JingchangWallet
+*/
+```
+
+### importSecret
+
+```javascript
+/**
+ * import secret
+ *
+ * @param {string} secret
+ * @param {string} password
+ * @param {string} type
+ * @param {(secret: string) => string} retriveSecret
+ * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+ * @memberof JingchangWallet
+*/
+```
+
+### findWallet
+
+```javascript
+/**
+ * find wallet keystore according to filter function
+ *
+ * @protected
+ * @param {(wallet: IKeystoreModel) => boolean} filter
+ * @returns {IKeystoreModel} return wallet keystore if existent, otherwise throw `keystore is invalid` if the jingchang wallet is invalid
+ * or throw `wallet is empty` if the wallet isn't existent
+ * @memberof JingchangWallet
+*/
+```
+
+### getEncryptData
+
+```javascript
+/**
+ * encrypt data
+ *
+ * @protected
+ * @param {string} password
+ * @param {IKeypairsModel} keypairs
+ * @returns {IKeystoreModel}
+ * @memberof JingchangWallet
+*/
+```
+
+### saveWallet
+
+```javascript
+/**
+ * save wallet keystore to jingchang wallet
+ *
+ * @private
+ * @param {string} password
+ * @param {IKeypairsModel} keypairs
+ * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
+ * @memberof JingchangWallet
+*/
+```
+
+## API of Jingtum and Alliance Chains Wallet
 
 ### Usage
 

@@ -452,7 +452,7 @@ describe('test JingchangWallet', function () {
             })
 
             it("resolve new wallet if import new ethereum keystore again success", async function () {
-                this.timeout(15000);
+                this.timeout(30000);
                 await inst.importEthKeystore(testNewEthereumKeystore, testPassword, testNewEthereumPassword);
                 const keystore = await inst.getWalletWithAddress(testNewEthereumAddress);
                 expect(keystore.type).to.equal("eth");
