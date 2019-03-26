@@ -3,6 +3,7 @@ const expect = chai.expect;
 const jsdom = require("jsdom");
 const JingchangWallet = require("../lib").JingchangWallet;
 const jtWallet = require("../lib").jtWallet;
+const Lockr = require("lockr");
 
 let testWallet = {
     "version": "1.0",
@@ -142,6 +143,8 @@ describe("test JingchangWallet", function () {
     describe("static: test get and save api", function () {
         it("return null if the keystore of jingchang wallet is invalid from local storage", function () {
             JingchangWallet.save({});
+            const key = Lockr._getPrefixedKey(JingchangWallet._walletID);
+            expect(key).to.equal("jingchang_4085118690b6b24a58e8b9a2e26a15a31f2dfbd9e6280752a04af70e3a5389cc");
             const wallet = JingchangWallet.get();
             expect(wallet).to.null;
         });
@@ -409,26 +412,6 @@ describe("test JingchangWallet", function () {
         });
     });
 
-    describe("instance: test changeWholePassword api", function () {
-        it("reject `the property of _samePassword is false, so please don't call this function!` if the property of _samePassword is false", function (done) {
-            const inst = new JingchangWallet(testWallet, false, false);
-            inst.changeWholePassword("123", "123").catch((err) => {
-                expect(err.message).to.equal("the property of _samePassword is false, so please don't call this function!");
-                done();
-            });
-        });
-    });
-
-    describe("instance: test changePasswordWithAddress api", function () {
-        it("reject `the property of _samePassword is true, so please don't call this function!` if the property of _samePassword is true", function (done) {
-            const inst = new JingchangWallet(testWallet, false, true);
-            inst.changePasswordWithAddress("123", "123", testAddress).catch((err) => {
-                expect(err.message).to.equal("the property of _samePassword is true, so please don't call this function!");
-                done();
-            });
-        });
-    });
-
     describe("instance: test importEthKeystore api", function () {
 
         describe("when the _multiple is true and the _samePassword is true", function () {
@@ -439,6 +422,7 @@ describe("test JingchangWallet", function () {
 
             it("resolve new wallet if import etherum keystore success", async function () {
                 const wallet = await inst.importEthKeystore(testEthereumKeystore, testPassword, testEthereumPassword);
+                expect(wallet).to.deep.equal(JingchangWallet.get());
                 expect(JingchangWallet.get()).to.deep.equal(wallet);
                 expect(JingchangWallet.isValid(wallet)).to.true;
                 const keystore = await inst.getWalletWithType("eth");
@@ -454,7 +438,8 @@ describe("test JingchangWallet", function () {
 
             it("resolve new wallet if import new ethereum keystore again success", async function () {
                 this.timeout(30000);
-                await inst.importEthKeystore(testNewEthereumKeystore, testPassword, testNewEthereumPassword);
+                const wallet = await inst.importEthKeystore(testNewEthereumKeystore, testPassword, testNewEthereumPassword);
+                expect(wallet).to.deep.equal(JingchangWallet.get());
                 const keystore = await inst.getWalletWithAddress(testNewEthereumAddress);
                 expect(keystore.type).to.equal("eth");
                 expect(keystore.default).to.false;
@@ -489,7 +474,8 @@ describe("test JingchangWallet", function () {
             });
 
             it("resolve new wallet if import etherum keystore success and the given password is not the default swt keystore's password", async function () {
-                await inst.importEthKeystore(testEthereumKeystore, "123", testEthereumPassword);
+                const wallet = await inst.importEthKeystore(testEthereumKeystore, "123", testEthereumPassword);
+                expect(wallet).to.deep.equal(JingchangWallet.get());
                 const secret = await inst.getSecretWithType("123", "eth");
                 expect(secret).to.equal(testEthereumSecret);
             });
@@ -515,7 +501,8 @@ describe("test JingchangWallet", function () {
                 expect(address).to.equal(testEthereumAddress);
                 let secret = await inst.getSecretWithType(testPassword, "eth");
                 expect(secret).to.equal(testEthereumSecret);
-                await inst.importEthKeystore(testNewEthereumKeystore, testPassword, testNewEthereumPassword);
+                const newWallet = await inst.importEthKeystore(testNewEthereumKeystore, testPassword, testNewEthereumPassword);
+                expect(newWallet).to.deep.equal(JingchangWallet.get());
                 keystore = await inst.getWalletWithType("eth");
                 expect(keystore.type).to.equal("eth");
                 expect(keystore.default).to.true;
@@ -649,7 +636,8 @@ describe("test JingchangWallet", function () {
             await inst.importSecret(jingtumSecret, testPassword, "swt", getSecret);
             let wallets = JingchangWallet.getWallets(JingchangWallet.get());
             expect(wallets.length).to.equal(2);
-            await inst.removeWalletWithType();
+            const newWallet = await inst.removeWalletWithType();
+            expect(JingchangWallet.get()).to.deep.equal(newWallet);
             try {
                 await inst.getWalletWithAddress(testAddress);
             } catch (error) {
@@ -693,7 +681,8 @@ describe("test JingchangWallet", function () {
             it("change whole password success", async function () {
                 this.timeout(5000);
                 await inst.importEthKeystore(testEthereumKeystore, testPassword, testEthereumPassword);
-                await inst.changeWholePassword(testPassword, "123");
+                const wallet = await inst.changeWholePassword(testPassword, "123");
+                expect(wallet).to.deep.equal(JingchangWallet.get());
                 const swtSecret = await inst.getSecretWithType("123");
                 const ethSecret = await inst.getSecretWithType("123", "eth");
                 expect(swtSecret).to.equal(testSecret);
@@ -736,7 +725,8 @@ describe("test JingchangWallet", function () {
                 this.timeout(5000);
                 await inst.importEthKeystore(testEthereumKeystore, testPassword, testEthereumPassword);
                 await inst.changePasswordWithAddress(testAddress, testPassword, "123");
-                await inst.changePasswordWithAddress(testEthereumAddress, testPassword, "1234");
+                const wallet = await inst.changePasswordWithAddress(testEthereumAddress, testPassword, "1234");
+                expect(wallet).to.deep.equal(JingchangWallet.get());
                 const swtSecret = await inst.getSecretWithType("123");
                 const ethSecret = await inst.getSecretWithType("1234", "eth");
                 expect(swtSecret).to.equal(testSecret);
@@ -769,7 +759,8 @@ describe("test JingchangWallet", function () {
             let newWallet = await inst.getWalletWithAddress(jingtumAddress);
             expect(defaultWallet.default).to.true;
             expect(newWallet.default).to.false;
-            await inst.setDefaultWallet(jingtumAddress);
+            const wallet = await inst.setDefaultWallet(jingtumAddress);
+            expect(wallet).to.deep.equal(JingchangWallet.get());
             newWallet = await inst.getWalletWithType();
             defaultWallet = await inst.getWalletWithAddress(testAddress);
             expect(defaultWallet.default).to.false;

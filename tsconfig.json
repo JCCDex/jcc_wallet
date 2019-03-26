@@ -8,10 +8,10 @@
         "rootDir": "src",
         "moduleResolution": "node",
         "noUnusedLocals": true,
+        "declaration": true,
         "noUnusedParameters": true,
         "experimentalDecorators": true,
-        "sourceMap": true,
-        "allowJs": true
+        "sourceMap": true
     },
     "include": [
         "src/**/*"

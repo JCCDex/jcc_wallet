@@ -9,7 +9,7 @@
   "scripts": {
     "deploy": "./publish.sh",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "build": "tsc && tsc -d --emitDeclarationOnly --allowJs false",
+    "build": "tsc",
     "test": "gulp",
     "tslint": "tslint --project tsconfig.json --config tslint.json"
   },
