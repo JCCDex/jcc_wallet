@@ -1,5 +1,13 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.3.1
+
+2019-03-26
+
+- Fixed compatibility with browser when validate and import ethereum & moac's secret
+
+[#1428a74](https://github.com/JCCDex/jcc_wallet/commit/1428a7472870ca0267db98315f8ea3e06ca38291)
+
 # 0.3.0
 
 2019-03-26
