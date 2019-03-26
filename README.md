@@ -51,6 +51,10 @@ For more see [deprecatedAPI](https://github.com/JCCDex/jcc_wallet/blob/master/de
 
 Support multiple wallet keystore for each type.
 
+### Structure of JingChang Wallet
+
+For more see [IJingchangWalletModel](https://github.com/JCCDex/jcc_wallet/blob/master/src/model/index.ts).
+
 ### Usage
 
 ```javascript
