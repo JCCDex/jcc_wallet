@@ -421,6 +421,7 @@ describe("test JingchangWallet", function () {
             });
 
             it("resolve new wallet if import etherum keystore success", async function () {
+                this.timeout(30000);
                 const wallet = await inst.importEthKeystore(testEthereumKeystore, testPassword, testEthereumPassword);
                 expect(wallet).to.deep.equal(JingchangWallet.get());
                 expect(JingchangWallet.get()).to.deep.equal(wallet);

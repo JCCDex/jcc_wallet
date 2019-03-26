@@ -14,7 +14,11 @@ const EC = new ec("secp256k1");
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-    return typeof secret === "string" && ethereumjsUtil.isValidPrivate(Buffer.from(filterOx(secret), "hex"));
+    try {
+        return ethereumjsUtil.isValidPrivate(Buffer.from(filterOx(secret), "hex"));
+    } catch (error) {
+        return false;
+    }
 };
 
 /**

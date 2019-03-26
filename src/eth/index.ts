@@ -17,7 +17,11 @@ const isObject = (obj: any): boolean => {
  */
 const isValidSecret = (secret: string): boolean => {
     secret = filterOx(secret);
-    return typeof secret === "string" && ethereumjsUtil.isValidPrivate(Buffer.from(secret, "hex"));
+    try {
+        return ethereumjsUtil.isValidPrivate(Buffer.from(secret, "hex"));
+    } catch (error) {
+        return false;
+    }
 };
 
 /**

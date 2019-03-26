@@ -84,6 +84,7 @@ describe("test jingchang", function () {
         });
 
         it("throw `secret is invalid` error", function (done) {
+            this.timeout(20000);
             let inst = new JcTool(testWallet);
             let getAddress = ethWallet.getAddress;
             inst.importSecret(testEthSecret.substring(1), "1qaz2WSX", "eth", getAddress).catch((error) => {

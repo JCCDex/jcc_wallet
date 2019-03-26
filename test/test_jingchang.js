@@ -126,13 +126,13 @@ describe("test jingchang", function () {
 
     describe("test getJCWallet, clearJCWallet and setJCWallet", function () {
         it("should return null when the wallet is invalid which is from localstorage", function () {
-            this.timeout(0);
+            jcWallet.clearJCWallet();
             let wallet = jcWallet.getJCWallet();
             expect(wallet).to.equal(null);
         });
 
         it("the wallet should be valid if we set valid wallet to localstorage", function (done) {
-            this.timeout(0);
+
             jcWallet.setJCWallet(testWallet, () => {
                 let wallet = jcWallet.getJCWallet();
                 let isValid = jcWallet.isValidJCKeystore(wallet);
@@ -142,7 +142,6 @@ describe("test jingchang", function () {
         });
 
         it("the wallet should be empty if we remove wallet from localstorage", function (done) {
-            this.timeout(0);
             jcWallet.setJCWallet(testWallet, () => {
                 let wallet = jcWallet.getJCWallet();
                 let isValid = jcWallet.isValidJCKeystore(JSON.stringify(wallet));
