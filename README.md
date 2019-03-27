@@ -31,15 +31,15 @@ npm install jcc_wallet
 
 - [JingchangWallet](#api-of-jingchangwallet)
 
-- [jtWallet](#api-of-jingtum-and-alliance-chains-Wallet)
+- [jtWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/jingtum.md)
 
-- [callWallet](#api-of-call-wallet)
+- [callWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/call.md)
 
-- [stmWallet](#api-of-stream-wallet)
+- [stmWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/stream.md)
 
-- [ethWallet](#api-of-ethereum-wallet)
+- [ethWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/ethereum.md)
 
-- [moacWallet](#api-of-moac-wallet)
+- [moacWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/moac.md)
 
 ## Deprecated API
 
