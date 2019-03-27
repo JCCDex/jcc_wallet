@@ -296,20 +296,6 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
 */
 ```
 
-### importEthKeystore
-
-```javascript
-/**
- * import ethereum keystore
- *
- * @param {*} keystore
- * @param {string} password
- * @param {string} ethPassword ethereum keystore's password
- * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
- * @memberof JingchangWallet
-*/
-```
-
 ### importSecret
 
 ```javascript

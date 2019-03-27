@@ -4,7 +4,6 @@ import { isEmptyObject } from "jcc_common";
 import Lockr = require("lockr");
 import sjcl = require("sjcl");
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
-import * as ethereumUtil from "../eth";
 import { createWallet, getAddress, isValidSecret } from "../jingtum";
 import { IJingchangWalletModel, IKeypairsModel, IKeystoreModel } from "../model";
 import { decrypt, encryptWallet } from "../util";
@@ -439,45 +438,6 @@ export default class JingchangWallet {
     }
 
     /**
-     * import ethereum keystore
-     *
-     * @param {*} keystore
-     * @param {string} password
-     * @param {string} ethPassword ethereum keystore's password
-     * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
-     * @memberof JingchangWallet
-     */
-    public importEthKeystore(keystore: any, password: string, ethPassword: string): Promise<IJingchangWalletModel> {
-
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (this._samePassword) {
-                    // validate password is rignt or not
-                    await this.getSecretWithType(password);
-                }
-                const secret = ethereumUtil.decryptKeystore(ethPassword, keystore);
-                const address = ethereumUtil.getAddress(secret);
-                const wallets = JingchangWallet.getWallets(this._jingchangWallet);
-                const wallet = wallets.find((w) => w.address === address);
-                if (wallet) {
-                    return reject(new Error(ADDRESS_IS_EXISTENT));
-                }
-                const keypairs = {
-                    address,
-                    alias: "eth wallet",
-                    secret,
-                    type: "eth"
-                };
-                this.saveWallet(password, keypairs).then((w) => {
-                    return resolve(w);
-                });
-            } catch (error) {
-                return reject(error);
-            }
-        });
-    }
-
-    /**
      * import secret
      *
      * @param {string} secret
@@ -491,6 +451,7 @@ export default class JingchangWallet {
         return new Promise(async (resolve, reject) => {
             try {
                 if (this._samePassword) {
+                    // validate default password of swt keystore is rignt or not
                     await this.getSecretWithType(password);
                 }
                 const address = retriveSecret(secret);
