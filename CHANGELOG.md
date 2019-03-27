@@ -1,5 +1,13 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.3.2
+
+2019-03-26
+
+- Removed api of importEthKeystore from JingchangWallet class
+
+[#bf41c89](https://github.com/JCCDex/jcc_wallet/commit/bf41c8933bd9610a5dbfd7654c7491d43a4fea9f)
+
 # 0.3.1
 
 2019-03-26
