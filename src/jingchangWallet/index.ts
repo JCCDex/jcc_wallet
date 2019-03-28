@@ -1,8 +1,8 @@
 import assert = require("assert");
 import cloneDeep = require("clone-deep");
+import crypto = require("crypto");
 import { isEmptyObject } from "jcc_common";
 import Lockr = require("lockr");
-import sjcl = require("sjcl");
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
 import { createWallet, getAddress, isValidSecret } from "../jingtum";
 import { IJingchangWalletModel, IKeypairsModel, IKeystoreModel } from "../model";
@@ -20,7 +20,7 @@ export default class JingchangWallet {
 
     public static readonly version = "1.0";
     private static readonly _name = "wallets";
-    private static readonly _walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(JingchangWallet._name.toLowerCase()));
+    private static readonly _walletID = crypto.createHash("sha256").update(JingchangWallet._name.toLowerCase()).digest("hex");
 
     private _jingchangWallet: IJingchangWalletModel;
     /**
@@ -454,7 +454,7 @@ export default class JingchangWallet {
                     // validate default password of swt keystore is rignt or not
                     await this.getSecretWithType(password);
                 }
-                const address = retriveSecret(secret);
+                const address = retriveSecret.call(null, secret);
                 if (!address) {
                     return reject(new Error(SECRET_IS_INVALID));
                 }

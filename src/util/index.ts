@@ -1,7 +1,8 @@
 import crypto = require("crypto");
 import { isEmptyObject } from "jcc_common";
 import createKeccakHash = require("keccak");
-import forge = require("node-forge");
+import forgeRandom = require("node-forge/lib/random");
+import forgeUtil = require("node-forge/lib/util");
 import scrypt = require("scryptsy");
 import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
 import { IEncryptModel, IKeypairsModel, IKeystoreModel } from "../model";
@@ -40,13 +41,13 @@ const decrypt = (password: string, encryptData: IKeystoreModel): string => {
  * @returns {IKeystoreModel}
  */
 const encrypt = (password: string, data: string, opts: IEncryptModel): IKeystoreModel => {
-    const iv = opts.iv || forge.util.bytesToHex(forge.random.getBytesSync(16));
+    const iv = opts.iv || forgeUtil.bytesToHex(forgeRandom.getBytesSync(16));
     const kdfparams = {
         dklen: opts.dklen || 32,
         n: opts.n || 4096,
         p: opts.p || 1,
         r: opts.r || 8,
-        salt: opts.salt || forge.util.bytesToHex(forge.random.getBytesSync(32))
+        salt: opts.salt || forgeUtil.bytesToHex(forgeRandom.getBytesSync(32))
     };
     const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     const cipher = crypto.createCipheriv(opts.cipher || "aes-128-ctr", derivedKey.slice(0, 16), Buffer.from(iv, "hex"));

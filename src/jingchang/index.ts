@@ -1,6 +1,6 @@
+import crypto = require("crypto");
 import { isEmptyObject } from "jcc_common";
 import Lockr = require("lockr");
-import sjcl = require("sjcl");
 import { WALLET_IS_EMPTY } from "../constant";
 import { isValidAddress, isValidSecret } from "../jingtum";
 import { IJingchangWalletModel, IWalletModel } from "../model";
@@ -34,7 +34,7 @@ const buildJCWallet = (password: string, wallet: IWalletModel, callback: (wallet
     let walletID;
     let jcWallet: any = {};
     while (!isValidAddress(address) || !isValidSecret(secret)) {
-        walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()));
+        walletID = crypto.createHash("sha256").update(WALLET_NAME.toLowerCase()).digest("hex");
         const keypairs: any = wallet;
         keypairs.type = "swt";
         const walletObj = encryptWallet(password, keypairs);
@@ -129,7 +129,7 @@ const getAddress = (jcWallet: IJingchangWalletModel, type: string = "swt"): stri
  * @returns {(IJingchangWalletModel | null)} return IJingchangWalletModel if success, otherwise return null
  */
 const getJCWallet = (): IJingchangWalletModel | null => {
-    const walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()));
+    const walletID = crypto.createHash("sha256").update(WALLET_NAME.toLowerCase()).digest("hex");
     const jcWallet = Lockr.get(walletID);
     if (!isValidJCWallet(jcWallet)) {
         return null;
@@ -145,7 +145,7 @@ const getJCWallet = (): IJingchangWalletModel | null => {
  * @param {(wallet: IJingchangWalletModel) => void} callback
  */
 const setJCWallet = (jcWallet: IJingchangWalletModel, callback: (wallet: IJingchangWalletModel) => void) => {
-    const walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()));
+    const walletID = crypto.createHash("sha256").update(WALLET_NAME.toLowerCase()).digest("hex");
     Lockr.set(walletID, jcWallet);
     callback(jcWallet);
 };
@@ -156,7 +156,7 @@ const setJCWallet = (jcWallet: IJingchangWalletModel, callback: (wallet: IJingch
  * @deprecated
  */
 const clearJCWallet = () => {
-    const walletID = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(WALLET_NAME.toLowerCase()));
+    const walletID = crypto.createHash("sha256").update(WALLET_NAME.toLowerCase()).digest("hex");
     Lockr.set(walletID, {});
 };
 
