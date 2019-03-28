@@ -43,19 +43,13 @@ npm install jcc_wallet
 
 - [moacWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/moac.md)
 
-## Deprecated API
+## Structure of Jingchang Wallet
 
-***Deprecated api will be removed after 2020.1.1, please update asap.***
-
-For more see [deprecatedAPI](https://github.com/JCCDex/jcc_wallet/blob/master/deprecatedAPI.md).
+For more see [IJingchangWalletModel](https://github.com/JCCDex/jcc_wallet/blob/master/src/model/index.ts).
 
 ## API of JingchangWallet
 
 Support multiple wallet keystore for each type.
-
-### Structure of JingChang Wallet
-
-For more see [IJingchangWalletModel](https://github.com/JCCDex/jcc_wallet/blob/master/src/model/index.ts).
 
 ### Usage
 
@@ -354,3 +348,9 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
  * @memberof JingchangWallet
 */
 ```
+
+## Deprecated API
+
+***Deprecated api will be removed after 2020.1.1, please update asap.***
+
+For more see [deprecatedAPI](https://github.com/JCCDex/jcc_wallet/blob/master/deprecatedAPI.md).
