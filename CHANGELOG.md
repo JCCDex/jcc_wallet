@@ -1,5 +1,13 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.3.3
+
+2019-03-28
+
+- Imported node-forge in demand & removed sjcl to reduce package size
+
+[#aac5897](https://github.com/JCCDex/jcc_wallet/commit/aac5897d4fe0ca237183cc1dcda4efcda30a7c32)
+
 # 0.3.2
 
 2019-03-26
