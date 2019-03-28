@@ -11,7 +11,7 @@
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "build": "tsc",
     "test": "gulp",
-    "test:node": "npm run build && nyc --reporter=html --reporter=text mocha --timeout=3000 test/test_*.js",
+    "test:node": "npm run build && nyc --reporter=html --reporter=text mocha --timeout=3000 test/*.spec.js",
     "test:browser": "npm run build && karma start karma.conf.js",
     "tslint": "tslint --project tsconfig.json --config tslint.json"
   },

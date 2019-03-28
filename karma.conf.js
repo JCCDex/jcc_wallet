@@ -2,12 +2,12 @@ module.exports = function (config) {
     config.set({
         frameworks: ["browserify", "detectBrowsers", "mocha"],
         files: [
-            "test/test_*.js"
+            "test/*.spec.js"
         ],
         preprocessors: {
             // don't use browserify, because it don't support dynamic require.
             // and some file is dynamic required in the `stm-lib` package.
-            "test/test_*.js": ["webpack"]
+            "test/*.spec.js": ["webpack"]
         },
         singleRun: true,
         plugins: [
@@ -26,7 +26,7 @@ module.exports = function (config) {
                 "child_process": "empty",
                 net: "empty"
             },
-            mode: "production"
+            mode: "development"
         },
         envPreprocessor: [
             "RANDOM_TESTS_REPEAT"
