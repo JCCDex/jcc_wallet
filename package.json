@@ -20,13 +20,17 @@
     "url": "git+https://github.com/JCCDex/jcc_wallet.git"
   },
   "keywords": [
-    "jcc",
+    "jccdex",
+    "blockchain",
     "wallet",
-    "tool",
-    "eth",
-    "stm",
-    "call",
-    "moac"
+    "ethereum",
+    "jingtum",
+    "moac",
+    "call-chain",
+    "bizain-chain",
+    "stream-chain",
+    "swtc-chain",
+    "keystore"
   ],
   "author": "JCCDex",
   "license": "MIT",
