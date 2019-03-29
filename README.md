@@ -64,8 +64,10 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
 /**
  * Creates an instance of JingchangWallet.
  * @param {IJingchangWalletModel} wallet
- * @param {boolean} [multiple=false] if the value is true, support save multiple wallet keystore for each type, otherwise only support one.
- * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password which be genarated in the beginning as password for other type.
+ * @param {boolean} [multiple=false] if the value is true, support save multiple wallet keystore
+ * for each type, otherwise only support one.
+ * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password
+ * which be genarated in the beginning as password for other type.
  * @memberof JingchangWallet
 */
 ```
@@ -234,7 +236,8 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
 
 ```javascript
 /**
- * change the whole jingchang wallet password, if you set property of _samePassword is false, will throw an error
+ * change the whole jingchang wallet password, if you set property of _samePassword is false,
+ * will throw an error
  *
  * @param {string} oldPassword
  * @param {string} newPassword
@@ -247,7 +250,8 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
 
 ```javascript
 /**
- * change the keystore password with address, if you set the property of _samePassword is true, will throw an error
+ * change the keystore password with address, if you set the property of _samePassword is true,
+ * will throw an error
  *
  * @param {string} address
  * @param {string} oldPassword
@@ -315,8 +319,8 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
  *
  * @protected
  * @param {(wallet: IKeystoreModel) => boolean} filter
- * @returns {IKeystoreModel} return wallet keystore if existent, otherwise throw `keystore is invalid` if the jingchang wallet is invalid
- * or throw `wallet is empty` if the wallet isn't existent
+ * @returns {IKeystoreModel} return wallet keystore if existent, otherwise throw `keystore is invalid`
+ * if the jingchang wallet is invalid or throw `wallet is empty` if the wallet isn't existent
  * @memberof JingchangWallet
 */
 ```
