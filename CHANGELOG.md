@@ -1,5 +1,13 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.3.4
+
+2019-03-30
+
+- Fixed jctool
+
+[#907b9a5](https://github.com/JCCDex/jcc_wallet/commit/907b9a5fb07ba813e13d7e42e6fcce4d66370d69)
+
 # 0.3.3
 
 2019-03-28
