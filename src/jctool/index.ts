@@ -6,10 +6,6 @@ import ethWallet = require("../eth");
 import jingchangWallet = require("../jingchang");
 import { IJingchangWalletModel, IKeypairsModel, IKeystoreModel } from "../model";
 
-const getWallets = Symbol("getWallets");
-const getEncryptData = Symbol("getEncryptData");
-const saveWallet = Symbol("saveWallet");
-
 /**
  * toolkit of opearating jichang wallet
  *
@@ -82,7 +78,7 @@ class JcWalletTool {
     public removeWallet(type: string = "swt"): Promise<IJingchangWalletModel> {
         return new Promise((resolve) => {
             const jcWallet = cloneDeep(this.jcWallet);
-            const wallets = this[getWallets](jcWallet);
+            const wallets = this.getWallets(jcWallet);
             let newWallet;
             if (type === "swt") {
                 // will clear jingchang wallet if the type is swt, because the wallet which type is swt is basic wallet.
@@ -119,7 +115,7 @@ class JcWalletTool {
             this.validatePassword(jcPassword).then(() => {
                 const secret = ethWallet.decryptKeystore(ethPassword, keystore);
                 const address = keystore.address;
-                this[saveWallet]("eth", secret, address, jcPassword).then((wallet) => {
+                this.saveWallet("eth", secret, address, jcPassword).then((wallet) => {
                     return resolve(wallet);
                 });
             }).catch((error) => {
@@ -146,7 +142,7 @@ class JcWalletTool {
                 return reject(new Error(SECRET_IS_INVALID));
             }
             this.validatePassword(jcPassword).then(() => {
-                this[saveWallet](type, secret, address, jcPassword).then((wallet) => {
+                this.saveWallet(type, secret, address, jcPassword).then((wallet) => {
                     return resolve(wallet);
                 });
             }).catch((error) => {
@@ -167,7 +163,7 @@ class JcWalletTool {
     public changePassword(oldPassword: string, newPassword: string): Promise<IJingchangWalletModel> {
         return new Promise(async (resolve, reject) => {
             const jcWallet = cloneDeep(this.jcWallet);
-            const wallets = this[getWallets](jcWallet);
+            const wallets = this.getWallets(jcWallet);
             try {
                 const arr = [];
                 for (const wallet of wallets) {
@@ -177,7 +173,7 @@ class JcWalletTool {
                     if (!address) {
                         continue;
                     }
-                    const newWallet = this[getEncryptData](type, secret, address, newPassword);
+                    const newWallet = this.getEncryptData(type, secret, address, newPassword);
                     arr.push(newWallet);
                 }
                 jcWallet.wallets = arr;
@@ -199,7 +195,7 @@ class JcWalletTool {
      * @returns {Array<IKeystoreModel>}
      * @memberof JcWalletTool
      */
-    private [getWallets](jcWallet: IJingchangWalletModel): Array<IKeystoreModel> {
+    private getWallets(jcWallet: IJingchangWalletModel): Array<IKeystoreModel> {
         let wallets;
         if (isEmptyObject(jcWallet)) {
             wallets = [];
@@ -221,7 +217,7 @@ class JcWalletTool {
      * @returns {IKeystoreModel}
      * @memberof JcWalletTool
      */
-    private [getEncryptData](type: string, secret: string, address: string, password: string): IKeystoreModel {
+    private getEncryptData(type: string, secret: string, address: string, password: string): IKeystoreModel {
         const keypairs: IKeypairsModel = {
             address,
             secret,
@@ -246,10 +242,10 @@ class JcWalletTool {
      * @returns {Promise<IJingchangWalletModel>}
      * @memberof JcWalletTool
      */
-    private [saveWallet](type: string, secret: string, address: string, password: string): Promise<IJingchangWalletModel> {
+    private saveWallet(type: string, secret: string, address: string, password: string): Promise<IJingchangWalletModel> {
         return new Promise((resolve) => {
             // support type: ethereum, stream, jingtum and call
-            const encryptData = this[getEncryptData](type, secret, address, password);
+            const encryptData = this.getEncryptData(type, secret, address, password);
             const jcwallet = cloneDeep(this.jcWallet);
             const wallets = jcwallet.wallets;
             const pre = wallets.findIndex((w) => {

@@ -45,7 +45,8 @@ export default class JingchangWallet {
      * Creates an instance of JingchangWallet.
      * @param {IJingchangWalletModel} wallet
      * @param {boolean} [multiple=false] if the value is true, support save multiple wallet keystore for each type, otherwise only support one.
-     * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password which be genarated in the beginning as password for other type.
+     * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password which be genarated
+     * in the beginning as password for other type.
      * @memberof JingchangWallet
      */
     constructor(wallet: IJingchangWalletModel, multiple: boolean = false, samePassword: boolean = true) {
@@ -366,6 +367,7 @@ export default class JingchangWallet {
 
     /**
      * remove default wallet keystore of the given type
+     *
      * @param {string} [type="swt"]
      * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
      * @memberof JingchangWallet
@@ -454,7 +456,7 @@ export default class JingchangWallet {
                     // validate default password of swt keystore is rignt or not
                     await this.getSecretWithType(password);
                 }
-                const address = retriveSecret.call(null, secret);
+                const address = retriveSecret(secret);
                 if (!address) {
                     return reject(new Error(SECRET_IS_INVALID));
                 }
