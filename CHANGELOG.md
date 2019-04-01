@@ -1,5 +1,13 @@
 <!-- markdownlint-disable MD024 -->
 
+# 0.3.5
+
+2019-04-01
+
+- Imported enc-hex、sha3 & ec in demand
+
+[#ac10545](https://github.com/JCCDex/jcc_wallet/commit/ac10545aa1e1c9093074e55886f4c76d811df078)
+
 # 0.3.4
 
 2019-03-30
