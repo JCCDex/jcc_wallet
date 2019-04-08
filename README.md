@@ -45,7 +45,7 @@ npm install jcc_wallet
 
 ## Structure of Jingchang Wallet
 
-For more see [IJingchangWalletModel](https://github.com/JCCDex/jcc_wallet/blob/master/src/model/index.ts).
+For more see [IJingchangWalletModel](https://github.com/JCCDex/jcc_wallet/blob/master/src/model/index.ts#L27).
 
 ## API of JingchangWallet
 
