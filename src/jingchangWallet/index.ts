@@ -453,7 +453,7 @@ export default class JingchangWallet {
         return new Promise(async (resolve, reject) => {
             try {
                 if (this._samePassword) {
-                    // validate default password of swt keystore is rignt or not
+                    // validate default password of swt keystore is right or not
                     await this.getSecretWithType(password);
                 }
                 const address = retriveSecret(secret);
