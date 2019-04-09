@@ -67,7 +67,7 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
  * @param {boolean} [multiple=false] if the value is true, support save multiple wallet keystore
  * for each type, otherwise only support one.
  * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password
- * which be genarated in the beginning as password for other type.
+ * which be generated in the beginning as password for other type.
  * @memberof JingchangWallet
 */
 ```

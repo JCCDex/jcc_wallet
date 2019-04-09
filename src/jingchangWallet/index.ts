@@ -33,7 +33,7 @@ export default class JingchangWallet {
     private _multiple: boolean;
 
     /**
-     * if the value is true, use the default swt keystore's password which be genarated in the beginning as password for other type.
+     * if the value is true, use the default swt keystore's password which be generated in the beginning as password for other type.
      *
      * @private
      * @type {boolean}
@@ -45,7 +45,7 @@ export default class JingchangWallet {
      * Creates an instance of JingchangWallet.
      * @param {IJingchangWalletModel} wallet
      * @param {boolean} [multiple=false] if the value is true, support save multiple wallet keystore for each type, otherwise only support one.
-     * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password which be genarated
+     * @param {boolean} [samePassword=true] if the value is true, use the default swt keystore's password which be generated
      * in the beginning as password for other type.
      * @memberof JingchangWallet
      */
