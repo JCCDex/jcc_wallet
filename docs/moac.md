@@ -11,9 +11,9 @@ const moacWallet = require('jcc_wallet').moacWallet
 
 ```javascript
 /**
- * check moac secret is valid or not
+ * check moac address is valid or not
  *
- * @param {string} secret
+ * @param {string} address
  * @returns {boolean} return true if valid
  */
 ```
@@ -22,9 +22,9 @@ const moacWallet = require('jcc_wallet').moacWallet
 
 ```javascript
 /**
- * check moac address is valid or not
+ * check moac secret is valid or not
  *
- * @param {string} address
+ * @param {string} secret
  * @returns {boolean} return true if valid
  */
 ```

@@ -11,9 +11,9 @@ const stmWallet = require('jcc_wallet').stmWallet
 
 ```javascript
 /**
- * check stream secret is valid or not
+ * check stream address is valid or not
  *
- * @param {string} secret
+ * @param {string} address
  * @returns {boolean} return true if valid
  */
 ```
@@ -22,9 +22,9 @@ const stmWallet = require('jcc_wallet').stmWallet
 
 ```javascript
 /**
- * check stream address is valid or not
+ * check stream secret is valid or not
  *
- * @param {string} address
+ * @param {string} secret
  * @returns {boolean} return true if valid
  */
 ```

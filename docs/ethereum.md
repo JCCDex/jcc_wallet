@@ -11,9 +11,9 @@ const ethWallet = require('jcc_wallet').ethWallet
 
 ```javascript
 /**
- * check eth secret is valid or not
+ * check eth address is valid or not
  *
- * @param {string} secret
+ * @param {string} address
  * @returns {boolean} return true if valid
  */
 ```
@@ -22,9 +22,9 @@ const ethWallet = require('jcc_wallet').ethWallet
 
 ```javascript
 /**
- * check eth address is valid or not
+ * check eth secret is valid or not
  *
- * @param {string} address
+ * @param {string} secret
  * @returns {boolean} return true if valid
  */
 ```
