@@ -17,7 +17,6 @@ const config = {
     alias: {
       "bn.js": path.resolve(__dirname, "node_modules/jcc_jingtum_base_lib/node_modules/bn.js"),
       "keccak": path.resolve(__dirname, "node_modules/keccak"),
-      "hash.js": path.resolve(__dirname, "node_modules/hash.js"),
       "base64-js": path.resolve(__dirname, "node_modules/base64-js"),
       "elliptic": path.resolve(__dirname, "node_modules/jcc_jingtum_base_lib/node_modules/elliptic/")
     }
