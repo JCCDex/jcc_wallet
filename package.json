@@ -13,7 +13,8 @@
     "test": "gulp",
     "test:node": "npm run build && nyc --reporter=html --reporter=text mocha --timeout=3000 test/*.spec.js",
     "test:browser": "npm run build && karma start karma.conf.js",
-    "tslint": "tslint --project tsconfig.json --config tslint.json"
+    "tslint": "tslint --project tsconfig.json --config tslint.json",
+    "compile": "webpack"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,8 @@
     "browserify": "^16.2.3",
     "chai": "^4.1.2",
     "coveralls": "^3.0.3",
+    "cross-env": "^5.2.0",
+    "duplicate-package-checker-webpack-plugin": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-shell": "^0.7.0",
     "jsdom": "^14.0.0",
@@ -55,15 +58,18 @@
     "karma-webpack": "^3.0.5",
     "mocha": "^6.0.2",
     "nyc": "^13.3.0",
+    "ts-loader": "^6.0.2",
     "tslint": "^5.14.0",
     "typescript": "^3.3.4000",
-    "webpack": "^4.29.6"
+    "webpack": "^4.29.6",
+    "webpack-bundle-analyzer": "^3.3.2",
+    "webpack-cli": "^3.3.2"
   },
   "dependencies": {
     "@types/node": "^11.11.6",
     "call-address-codec": "^0.1.0",
     "call-keypairs": "^0.1.0",
-    "chain3": "^0.1.16",
+    "chain3": "^0.1.18",
     "clone-deep": "^4.0.0",
     "ethereumjs-util": "^6.1.0",
     "jcc_common": "^0.1.0",

@@ -1,4 +1,6 @@
-module.exports = function (config) {
+const webpackConfig = require("./webpack.config");
+
+module.exports = function(config) {
     config.set({
         frameworks: ["browserify", "detectBrowsers", "mocha"],
         files: [
@@ -20,12 +22,8 @@ module.exports = function (config) {
             "karma-mocha"
         ],
         webpack: {
-            node: {
-                fs: "empty",
-                tls: "empty",
-                "child_process": "empty",
-                net: "empty"
-            },
+            node: webpackConfig.node,
+            resolve: webpackConfig.resolve,
             mode: "development"
         },
         envPreprocessor: [
@@ -40,7 +38,7 @@ module.exports = function (config) {
                 }
 
                 var browsers = ["Chrome", "Firefox"];
-                return browsers.filter(function (browser) {
+                return browsers.filter(function(browser) {
                     return availableBrowser.indexOf(browser) !== -1;
                 });
             }
