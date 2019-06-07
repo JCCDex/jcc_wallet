@@ -7,54 +7,64 @@ const moacWallet = require("../lib").moacWallet;
 let undefinedValue;
 
 let invalidAddresses = ["", null, undefinedValue, {},
-    [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456
+  [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456
 ];
 
 let invalidSecrets = ["", null, undefinedValue, {},
-    [], "xxxx", testSecret.substring(1), true, false, 123456
+  [], "xxxx", testSecret.substring(1), true, false, 123456
 ];
-describe("test moac", function () {
+describe("test moac", function() {
 
-    describe("test isValidAddress", function () {
-        it("should return true if the address is valid", function () {
-            let isvalid = moacWallet.isValidAddress(testAddress);
-            expect(isvalid).to.equal(true);
-        });
-
-        it("should return false if the address is not valid", function () {
-            for (let address of invalidAddresses) {
-                let isvalid = moacWallet.isValidAddress(address);
-                expect(isvalid).to.equal(false);
-            }
-        });
+  describe("test isValidAddress", function() {
+    it("should return true if the address is valid", function() {
+      let isvalid = moacWallet.isValidAddress(testAddress);
+      expect(isvalid).to.equal(true);
     });
 
-    describe("test isValidSecret", function () {
-        it("should return true if the secret is valid", function () {
-            let isvalid = moacWallet.isValidSecret(testSecret);
-            expect(isvalid).to.equal(true);
-        });
+    it("should return false if the address is not valid", function() {
+      for (let address of invalidAddresses) {
+        let isvalid = moacWallet.isValidAddress(address);
+        expect(isvalid).to.equal(false);
+      }
+    });
+  });
 
-        it("should return false if the secret is not valid", function () {
-            for (let secret of invalidSecrets) {
-                let isvalid = moacWallet.isValidSecret(secret);
-                expect(isvalid).to.equal(false);
-            }
-        });
+  describe("test isValidSecret", function() {
+    it("should return true if the secret is valid", function() {
+      let isvalid = moacWallet.isValidSecret(testSecret);
+      expect(isvalid).to.equal(true);
     });
 
-    describe("test getAddress", function () {
-        it("should return correct address if the secret is valid", function () {
-            let address = moacWallet.getAddress(testSecret);
-            expect(address).to.equal(testAddress);
-        });
+    it("should return false if the secret is not valid", function() {
+      for (let secret of invalidSecrets) {
+        let isvalid = moacWallet.isValidSecret(secret);
+        expect(isvalid).to.equal(false);
+      }
+    });
+  });
 
-        it("should return null if the secret is not valid", function () {
-            for (let secret of invalidSecrets) {
-                let address = moacWallet.getAddress(secret);
-                expect(address).to.equal(null);
-            }
-        });
+  describe("test getAddress", function() {
+    it("should return correct address if the secret is valid", function() {
+      let address = moacWallet.getAddress(testSecret);
+      expect(address).to.equal(testAddress);
     });
 
+    it("should return null if the secret is not valid", function() {
+      for (let secret of invalidSecrets) {
+        let address = moacWallet.getAddress(secret);
+        expect(address).to.equal(null);
+      }
+    });
+  });
+
+  describe("test create wallet", function() {
+    it("create wallet and validate it", function() {
+      let wallet = moacWallet.createWallet();
+      //   console.log(JSON.stringify(wallet), '-------------');
+      let isvalid = moacWallet.isValidAddress(wallet.address);
+      expect(isvalid).to.equal(true);
+      isvalid = moacWallet.isValidSecret(wallet.secret);
+      expect(isvalid).to.equal(true);
+    });
+  });
 });

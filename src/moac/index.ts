@@ -5,7 +5,9 @@ import Hex = require("crypto-js/enc-hex");
 import Sha3 = require("crypto-js/sha3");
 import ec = require("elliptic/lib/elliptic/ec");
 import ethereumjsUtil = require("ethereumjs-util");
+import Wallet = require("ethereumjs-wallet");
 import { filterOx } from "jcc_common";
+import { IWalletModel } from "../model";
 
 /**
  * check moac secret is valid or not
@@ -54,8 +56,19 @@ const getAddress = (secret: string): string | null => {
     return null;
 };
 
+/**
+ * create moac wallet
+ *
+ * @returns {IWalletModel}
+ */
+const createWallet = (): IWalletModel => {
+    const _w = Wallet.generate();
+    return { address: _w.getAddressString(), secret: _w.getPrivateKeyString() };
+};
+
 export {
     isValidSecret,
     isValidAddress,
-    getAddress
+    getAddress,
+    createWallet
 };

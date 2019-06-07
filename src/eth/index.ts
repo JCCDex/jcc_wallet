@@ -1,9 +1,11 @@
 import crypto = require("crypto");
 import ethereumjsUtil = require("ethereumjs-util");
+import Wallet = require("ethereumjs-wallet");
 import { filterOx, isEmptyObject } from "jcc_common";
 import createKeccakHash = require("keccak");
 import scrypt = require("scryptsy");
 import { ETH_PASSWORD_IS_WRONG, KEYSTORE_IS_INVALID } from "../constant";
+import { IWalletModel } from "../model";
 
 const isObject = (obj: any): boolean => {
     return Object.prototype.toString.call(obj) === "[object Object]";
@@ -78,9 +80,20 @@ const decryptKeystore = (password: string, encryptData: any): string => {
     return seed.toString("hex");
 };
 
+/**
+ * create eth wallet
+ *
+ * @returns {IWalletModel}
+ */
+const createWallet = (): IWalletModel => {
+    const _w = Wallet.generate();
+    return { address: _w.getAddressString(), secret: _w.getPrivateKeyString() };
+};
+
 export {
     isValidSecret,
     isValidAddress,
     getAddress,
-    decryptKeystore
+    decryptKeystore,
+    createWallet
 };
