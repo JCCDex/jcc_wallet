@@ -60,7 +60,6 @@ describe("test moac", function() {
   describe("test create wallet", function() {
     it("create wallet and validate it", function() {
       let wallet = moacWallet.createWallet();
-      //   console.log(JSON.stringify(wallet), '-------------');
       let isvalid = moacWallet.isValidAddress(wallet.address);
       expect(isvalid).to.equal(true);
       isvalid = moacWallet.isValidSecret(wallet.secret);

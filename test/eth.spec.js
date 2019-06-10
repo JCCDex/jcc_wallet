@@ -82,7 +82,6 @@ describe("test eth", function() {
   describe("test create wallet", function() {
     it("create wallet and validate it", function() {
       let wallet = ethWallet.createWallet();
-      //   console.log(JSON.stringify(wallet), '-------------');
       let isvalid = ethWallet.isValidAddress(wallet.address);
       expect(isvalid).to.equal(true);
       isvalid = ethWallet.isValidSecret(wallet.secret);

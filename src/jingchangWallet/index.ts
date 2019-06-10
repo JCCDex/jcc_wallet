@@ -537,6 +537,7 @@ export default class JingchangWallet {
             if (this._multiple) {
                 wallets.push(encryptData);
             } else {
+                /* istanbul ignore else */
                 if (pre >= 0) {
                     wallets.splice(pre, 1);
                 }

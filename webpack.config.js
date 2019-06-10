@@ -2,12 +2,11 @@ const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack
 const path = require("path");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const pkg = require("./package.json");
 
 const config = {
   entry: "./lib",
   output: {
-    filename: "jcc-wallet." + pkg.version + ".js",
+    filename: "jcc-wallet.min.js",
     path: path.resolve(__dirname, "./dist"),
     library: "jcc_wallet",
     libraryTarget: "umd"

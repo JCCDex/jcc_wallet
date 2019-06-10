@@ -27,6 +27,7 @@ import JingchangWallet from "./jingchangWallet";
 import * as jtWallet from "./jingtum";
 import * as moacWallet from "./moac";
 import * as stmWallet from "./stm";
+const version = "0.3.7";
 
 export {
     callWallet,
@@ -36,5 +37,6 @@ export {
     JingchangWallet,
     jtWallet,
     moacWallet,
-    stmWallet
+    stmWallet,
+    version
 };
