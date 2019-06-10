@@ -18,7 +18,9 @@ const config = {
       "bn.js": path.resolve(__dirname, "node_modules/jcc_jingtum_base_lib/node_modules/bn.js"),
       "keccak": path.resolve(__dirname, "node_modules/keccak"),
       "base64-js": path.resolve(__dirname, "node_modules/base64-js"),
-      "elliptic": path.resolve(__dirname, "node_modules/jcc_jingtum_base_lib/node_modules/elliptic/")
+      "elliptic": path.resolve(__dirname, "node_modules/jcc_jingtum_base_lib/node_modules/elliptic/"),
+      "bs58": path.resolve(__dirname, "node_modules/bs58/node_modules/base-x"),
+      "scryptsy": path.resolve(__dirname, "node_modules/scryptsy")
     }
   },
   mode: process.env.MODE === "dev" ? 'development' : "production",
