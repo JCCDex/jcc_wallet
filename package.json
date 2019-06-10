@@ -1,6 +1,6 @@
 {
   "name": "jcc_wallet",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Toolkit of wallet to manage multiple chains & support multiple keystores for each chain",
   "main": "lib/index.js",
   "unpkg": "dist/jcc-wallet.min.js",
@@ -62,7 +62,7 @@
     "karma-mocha": "^1.3.0",
     "karma-webpack": "^3.0.5",
     "mocha": "^6.1.4",
-    "nyc": "^14.1.1",
+    "nyc": "^13.3.0",
     "sinon": "^7.3.2",
     "ts-loader": "^6.0.2",
     "tslint": "^5.14.0",
