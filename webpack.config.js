@@ -19,7 +19,6 @@ const config = {
       "keccak": path.resolve(__dirname, "node_modules/keccak"),
       "base64-js": path.resolve(__dirname, "node_modules/base64-js"),
       "elliptic": path.resolve(__dirname, "node_modules/jcc_jingtum_base_lib/node_modules/elliptic/"),
-      "bs58": path.resolve(__dirname, "node_modules/bs58/node_modules/base-x"),
       "scryptsy": path.resolve(__dirname, "node_modules/scryptsy")
     }
   },
@@ -38,25 +37,28 @@ const config = {
     }]
   },
   plugins: [
-    new DuplicatePackageCheckerPlugin(),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          sequences: true,
-          dead_code: true,
-          drop_console: true,
-          drop_debugger: true,
-          unused: true
-        }
-      },
-      sourceMap: false,
-      parallel: true
-    })
+    new DuplicatePackageCheckerPlugin()
   ]
 };
 
 if (process.env.REPORT === "true") {
   config.plugins.push(new BundleAnalyzerPlugin())
+}
+
+if (process.env.MODE !== "dev") {
+  config.plugins.push(new UglifyJsPlugin({
+    uglifyOptions: {
+      compress: {
+        sequences: true,
+        dead_code: true,
+        drop_console: true,
+        drop_debugger: true,
+        unused: true
+      }
+    },
+    sourceMap: false,
+    parallel: true
+  }));
 }
 
 module.exports = config;
