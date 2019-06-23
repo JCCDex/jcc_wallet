@@ -29,6 +29,14 @@ JCCDex Tech support QQ group ID: 557524730
 npm install jcc_wallet
 ```
 
+## CDN
+
+`jcc_wallet` as a global variable
+
+```javascript
+<script src="https://unpkg.com/jcc_wallet/dist/jcc-wallet.min.js"></script>
+```
+
 ## Table of Contents
 
 - [JingchangWallet](#api-of-jingchangwallet)
