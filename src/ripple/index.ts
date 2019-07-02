@@ -1,6 +1,5 @@
-import { isValidAddress as isAddress } from "ripple-address-codec";
-import keypairs = require("ripple-keypairs");
-import { IWalletModel } from "../model";
+import { Wallet } from "swtc-factory";
+import { ICreateOptionsModel, IWalletModel } from "../model";
 
 /**
  * check ripple secret is valid or not
@@ -9,12 +8,7 @@ import { IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-    try {
-        keypairs.deriveKeypair(secret);
-        return true;
-    } catch (error) {
-        return false;
-    }
+    return Wallet.isValidSecret(secret, "xrp");
 };
 
 /**
@@ -24,7 +18,7 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-    return isAddress(address);
+    return Wallet.isValidAddress(address, "xrp");
 };
 
 /**
@@ -35,9 +29,8 @@ const isValidAddress = (address: string): boolean => {
  */
 const getAddress = (secret: string): string | null => {
     try {
-        const keypair = keypairs.deriveKeypair(secret);
-        const address = keypairs.deriveAddress(keypair.publicKey);
-        return address;
+        const wallet = Wallet.fromSecret(secret, "xrp");
+        return wallet.address;
     } catch (error) {
         return null;
     }
@@ -46,14 +39,13 @@ const getAddress = (secret: string): string | null => {
 /**
  * create ripple wallet
  *
+ * @param {ICreateOptionsModel} opt
  * @returns {IWalletModel}
  */
-const createWallet = (): IWalletModel => {
+const createWallet = (opt: ICreateOptionsModel): IWalletModel => {
     try {
-        const secret = keypairs.generateSeed();
-        const keypair = keypairs.deriveKeypair(secret);
-        const address = keypairs.deriveAddress(keypair.publicKey);
-        return { secret, address };
+        const wallet = Wallet.generate("xrp", opt);
+        return wallet;
     } catch (error) {
         return null;
     }

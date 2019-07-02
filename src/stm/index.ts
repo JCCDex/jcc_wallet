@@ -1,9 +1,6 @@
 "use strict";
-import { Base } from "stm-lib/src/js/stream/base";
-import { UInt160 } from "stm-lib/src/js/stream/uint160";
-import StmWallet = require("stm-lib/src/js/stream/wallet");
+import { Wallet } from "swtc-factory";
 import { IWalletModel } from "../model";
-
 /**
  * check stream secret is valid or not
  *
@@ -11,7 +8,7 @@ import { IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-    return !Number.isNaN(Base.decode_check(33, secret));
+    return Wallet.isValidSecret(secret, "stm");
 };
 
 /**
@@ -21,7 +18,7 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-    return UInt160.is_valid(String(address));
+    return Wallet.isValidAddress(address, "stm");
 };
 
 /**
@@ -30,8 +27,7 @@ const isValidAddress = (address: string): boolean => {
  * @returns {IWalletModel}
  */
 const createWallet = (): IWalletModel => {
-    const wallet = StmWallet.generate();
-    return wallet;
+    return Wallet.generate("stm");
 };
 
 /**
@@ -41,12 +37,12 @@ const createWallet = (): IWalletModel => {
  * @returns {(string | null)} return address if valid, otherwise return null
  */
 const getAddress = (secret: string): string | null => {
-    if (!isValidSecret(secret)) {
+    try {
+        const wallet = Wallet.fromSecret(secret, "stm");
+        return wallet.address;
+    } catch (error) {
         return null;
     }
-    const inst = new StmWallet(secret);
-    const obj = inst.getAddress();
-    return obj.value;
 };
 
 export {

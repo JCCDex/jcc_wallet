@@ -1,6 +1,5 @@
-import addressCodec = require("call-address-codec");
-import keypairs = require("call-keypairs");
-import { ICreateCallOptionsModel, IWalletModel } from "../model";
+import { Wallet } from "swtc-factory";
+import { ICreateOptionsModel, IWalletModel } from "../model";
 
 /**
  * check call address is valid or not
@@ -9,7 +8,7 @@ import { ICreateCallOptionsModel, IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-    return addressCodec.isValidAddress(address);
+    return Wallet.isValidAddress(address, "call");
 };
 
 /**
@@ -19,12 +18,7 @@ const isValidAddress = (address: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-    try {
-        keypairs.deriveKeypair(secret);
-        return true;
-    } catch (err) {
-        return false;
-    }
+    return Wallet.isValidSecret(secret, "call");
 };
 
 /**
@@ -35,9 +29,8 @@ const isValidSecret = (secret: string): boolean => {
  */
 const getAddress = (secret: string): string | null => {
     try {
-        const keypair = keypairs.deriveKeypair(secret);
-        const address = keypairs.deriveAddress(keypair.publicKey);
-        return address;
+        const wallet = Wallet.fromSecret(secret, "call");
+        return wallet.address;
     } catch (error) {
         return null;
     }
@@ -46,19 +39,13 @@ const getAddress = (secret: string): string | null => {
 /**
  * create call wallet
  *
- * @param {ICreateCallOptionsModel} [opt={}]
+ * @param {ICreateOptionsModel} [opt={}]
  * @returns {(IWalletModel | null)} return IWalletModel if succress, otherwise return null
  */
-const createWallet = (opt: ICreateCallOptionsModel = {}): IWalletModel | null => {
+const createWallet = (opt: ICreateOptionsModel = {}): IWalletModel | null => {
     let wallet: IWalletModel;
     try {
-        const secret = keypairs.generateSeed(opt);
-        const keypair = keypairs.deriveKeypair(secret);
-        const address = keypairs.deriveAddress(keypair.publicKey);
-        wallet = {
-            address,
-            secret
-        };
+        wallet = Wallet.generate("call", opt);
     } catch (error) {
         wallet = null;
     }

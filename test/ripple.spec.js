@@ -1,7 +1,6 @@
 const chai = require("chai");
 const sinon = require("sinon")
 const sandbox = sinon.createSandbox();
-const keypairs = require("ripple-keypairs");
 const expect = chai.expect;
 const testAddress = "r9q4ewefjyXNF1xaCKb19SZBjdTgkfTgAc";
 const testSecret = "ss8uEAWyPy6Fefo8QcCYyncUPfwhu";
@@ -70,11 +69,8 @@ describe("test ripple", function() {
     });
 
     it("return null if throw an error", function() {
-      const stub = sandbox.stub(keypairs, "generateSeed");
-      stub.throws();
-      const wallet = rippleWallet.createWallet();
+      const wallet = rippleWallet.createWallet(null);
       expect(wallet).to.null;
-      sandbox.restore();
     })
   });
 });

@@ -28,7 +28,6 @@ import * as jtWallet from "./jingtum";
 import * as moacWallet from "./moac";
 import * as rippleWallet from "./ripple";
 import * as stmWallet from "./stm";
-const version = "0.3.9";
 
 export {
     callWallet,
@@ -39,6 +38,5 @@ export {
     jtWallet,
     moacWallet,
     rippleWallet,
-    stmWallet,
-    version
+    stmWallet
 };

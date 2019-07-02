@@ -177,7 +177,7 @@ describe("test jingchang", function() {
   describe("test buildJCWallet", function() {
     it("the built wallet should be valid", function(done) {
       this.timeout(0);
-      const Wallet = require("jcc_jingtum_base_lib").Wallet;
+      const Wallet = require("swtc-factory").Wallet;
       let keypairs = Wallet.generate();
       jcWallet.buildJCWallet("1qaz2wsx", keypairs, (walletID, wallet) => {
         let address = jcWallet.getAddress(wallet);
@@ -189,7 +189,7 @@ describe("test jingchang", function() {
     });
 
     it("should break loop when count more than 30", function(done) {
-      const Wallet = require("jcc_jingtum_base_lib").Wallet;
+      const Wallet = require("swtc-factory").Wallet;
       let keypairs = Wallet.generate();
       keypairs.secret = keypairs.secret + "aaaa";
       this.timeout(0);

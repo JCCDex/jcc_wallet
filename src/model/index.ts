@@ -43,7 +43,7 @@ export interface IWalletModel {
     secret: string
 }
 
-export interface ICreateCallOptionsModel {
+export interface ICreateOptionsModel {
     algorithm?: "ed25519" | "secp256k1",
     entropy?: string
 }

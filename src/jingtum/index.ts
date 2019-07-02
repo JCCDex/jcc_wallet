@@ -1,4 +1,4 @@
-import { Wallet } from "jcc_jingtum_base_lib";
+import { Wallet } from "swtc-factory";
 import { IWalletModel } from "../model";
 
 /**

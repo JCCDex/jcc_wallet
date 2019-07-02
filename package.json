@@ -74,21 +74,17 @@
   },
   "dependencies": {
     "@types/node": "^11.11.6",
-    "call-address-codec": "^0.1.0",
-    "call-keypairs": "^0.1.0",
-    "chain3": "^0.1.18",
+    "bn.js": "^4.11.8",
     "clone-deep": "^4.0.0",
+    "elliptic": "^6.5.0",
     "ethereumjs-util": "^6.1.0",
     "ethereumjs-wallet": "^0.6.3",
     "jcc_common": "^0.1.0",
-    "jcc_jingtum_base_lib": "^1.1.1",
     "keccak": "^2.0.0",
     "lockr": "^0.8.4",
     "node-forge": "^0.8.2",
-    "ripple-address-codec": "^2.0.1",
-    "ripple-keypairs": "^0.11.0",
     "scryptsy": "^2.0.0",
-    "stm-lib": "0.0.2"
+    "swtc-factory": "^1.2.6"
   },
   "nyc": {
     "check-coverage": true,

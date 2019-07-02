@@ -15,10 +15,10 @@ const config = {
   resolve: {
     extensions: [".js", ".ts"],
     alias: {
-      "bn.js": path.resolve(__dirname, "node_modules/jcc_jingtum_base_lib/node_modules/bn.js"),
+      "bn.js": path.resolve(__dirname, "node_modules/bn.js"),
       "keccak": path.resolve(__dirname, "node_modules/keccak"),
       "base64-js": path.resolve(__dirname, "node_modules/base64-js"),
-      "elliptic": path.resolve(__dirname, "node_modules/jcc_jingtum_base_lib/node_modules/elliptic/"),
+      "elliptic": path.resolve(__dirname, "node_modules/elliptic"),
       "scryptsy": path.resolve(__dirname, "node_modules/scryptsy")
     }
   },
