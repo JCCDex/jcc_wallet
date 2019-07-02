@@ -82,7 +82,6 @@
     "jcc_common": "^0.1.0",
     "keccak": "^2.0.0",
     "lockr": "^0.8.4",
-    "node-forge": "^0.8.2",
     "scryptsy": "^2.0.0",
     "swtc-factory": "^1.2.6"
   },
