@@ -39,3 +39,13 @@ const moacWallet = require('jcc_wallet').moacWallet
  * @returns {(string | null)} return address if valid, otherwise return null
  */
 ```
+
+### createWallet
+
+```javascript
+/**
+ * create moac wallet
+ *
+ * @returns {IWalletModel}
+ */
+```

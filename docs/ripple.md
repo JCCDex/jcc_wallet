@@ -1,17 +1,17 @@
-# API of Stream Wallet
+# API of Ripple Wallet
 
 ## Usage
 
 ```javascript
-const stmWallet = require('jcc_wallet').stmWallet
-// import { stmWallet } from 'jcc_wallet'
+const rippleWallet = require('jcc_wallet').rippleWallet
+// import { rippleWallet } from 'jcc_wallet'
 ```
 
 ### isValidAddress
 
 ```javascript
 /**
- * check stream address is valid or not
+ * check ripple address is valid or not
  *
  * @param {string} address
  * @returns {boolean} return true if valid
@@ -22,7 +22,7 @@ const stmWallet = require('jcc_wallet').stmWallet
 
 ```javascript
 /**
- * check stream secret is valid or not
+ * check ripple secret is valid or not
  *
  * @param {string} secret
  * @returns {boolean} return true if valid
@@ -44,7 +44,7 @@ const stmWallet = require('jcc_wallet').stmWallet
 
 ```javascript
 /**
- * create stream wallet
+ * create ripple wallet
  *
  * @returns {IWalletModel}
  */

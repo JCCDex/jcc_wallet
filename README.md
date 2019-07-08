@@ -31,7 +31,7 @@ npm install jcc_wallet
 
 ## CDN
 
-`jcc_wallet` as a global variable
+`jcc_wallet` as a global variable.
 
 ```javascript
 <script src="https://unpkg.com/jcc_wallet/dist/jcc-wallet.min.js"></script>
@@ -50,6 +50,8 @@ npm install jcc_wallet
 - [ethWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/ethereum.md)
 
 - [moacWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/moac.md)
+
+- [rippleWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/ripple.md)
 
 ## Structure of Jingchang Wallet
 

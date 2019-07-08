@@ -51,3 +51,13 @@ const ethWallet = require('jcc_wallet').ethWallet
  * throws `ethereum password is wrong` if the password is wrong
  */
 ```
+
+### createWallet
+
+```javascript
+/**
+ * create ethereum wallet
+ *
+ * @returns {IWalletModel}
+ */
+```
