@@ -3,6 +3,7 @@
   "version": "0.4.1",
   "description": "Toolkit of wallet to manage multiple chains & support multiple keystores for each chain",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "unpkg": "dist/jcc-wallet.min.js",
   "files": [
     "lib",
@@ -93,7 +94,5 @@
     "functions": 99,
     "branches": 99
   },
-  "sideEffects": [
-    "./lib/**/*.js"
-  ]
+  "sideEffects": false
 }
