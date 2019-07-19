@@ -7,7 +7,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/14616fffd838456c8aaaef650be43dde)](https://www.codacy.com/app/GinMu/jcc_wallet?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JCCDex/jcc_wallet&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/JCCDex/jcc_wallet/badge.svg?branch=master)](https://coveralls.io/github/JCCDex/jcc_wallet?branch=master)
 [![Dependencies](https://img.shields.io/david/JCCDex/jcc_wallet.svg?style=flat-square)](https://david-dm.org/JCCDex/jcc_wallet)
-[![DevDependencies](https://img.shields.io/david/dev/JCCDex/jcc_wallet.svg?style=flat-square)](https://david-dm.org/JCCDex/jcc_wallet?type=dev)
 [![npm downloads](https://img.shields.io/npm/dm/jcc_wallet.svg)](http://npm-stat.com/charts.html?package=jcc_wallet)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
