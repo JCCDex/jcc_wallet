@@ -21,8 +21,6 @@
 
 import * as callWallet from "./call";
 import * as ethWallet from "./eth";
-import JcWalletTool from "./jctool";
-import * as jcWallet from "./jingchang";
 import JingchangWallet from "./jingchangWallet";
 import * as jtWallet from "./jingtum";
 import * as moacWallet from "./moac";
@@ -32,8 +30,6 @@ import * as stmWallet from "./stm";
 export {
     callWallet,
     ethWallet,
-    jcWallet,
-    JcWalletTool,
     JingchangWallet,
     jtWallet,
     moacWallet,
