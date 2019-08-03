@@ -319,7 +319,6 @@ export default class JingchangWallet {
                 }
                 jcWallet.wallets = arr;
                 this.setJingchangWallet(jcWallet);
-                JingchangWallet.save(jcWallet);
                 return resolve(jcWallet);
             } catch (error) {
                 return reject(error);
@@ -357,7 +356,6 @@ export default class JingchangWallet {
                 wallet.ciphertext = newWallet.ciphertext;
                 wallet.crypto = newWallet.crypto;
                 wallet.mac = newWallet.mac;
-                JingchangWallet.save(this._jingchangWallet);
                 return resolve(this._jingchangWallet);
             } catch (error) {
                 return reject(error);
@@ -405,7 +403,6 @@ export default class JingchangWallet {
                     next.default = true;
                 }
                 this.setJingchangWallet(jcWallet);
-                JingchangWallet.save(jcWallet);
                 return resolve(jcWallet);
 
             } catch (error) {
@@ -431,7 +428,6 @@ export default class JingchangWallet {
                 const defaultWallet = await this.getWalletWithType(wallet.type);
                 defaultWallet.default = false;
                 wallet.default = true;
-                JingchangWallet.save(this._jingchangWallet);
                 return resolve(this._jingchangWallet);
             } catch (error) {
                 return reject(error);
@@ -544,7 +540,6 @@ export default class JingchangWallet {
                 wallets.push(encryptData);
             }
             this.setJingchangWallet(jcWallet);
-            JingchangWallet.save(jcWallet);
             return resolve(jcWallet);
         });
     }
