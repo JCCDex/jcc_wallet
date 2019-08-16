@@ -1,6 +1,6 @@
 {
   "name": "jcc_wallet",
-  "version": "0.4.1",
+  "version": "1.0.0",
   "description": "Toolkit of wallet to manage multiple chains & support multiple keystores for each chain",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
