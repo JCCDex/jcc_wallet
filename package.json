@@ -1,6 +1,6 @@
 {
   "name": "jcc_wallet",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Toolkit of wallet to manage multiple chains & support multiple keystores for each chain",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -84,7 +84,8 @@
     "keccak": "^2.0.0",
     "lockr": "^0.8.5",
     "scryptsy": "^2.1.0",
-    "swtc-factory": "^1.2.6"
+    "swtc-chains": "^1.0.13",
+    "swtc-factory": "^1.2.8"
   },
   "nyc": {
     "check-coverage": true,
