@@ -457,7 +457,7 @@ export default class JingchangWallet {
                     return reject(new Error(SECRET_IS_INVALID));
                 }
                 const wallets = JingchangWallet.getWallets(this._jingchangWallet);
-                const wallet = wallets.find((w) => w.address === address);
+                const wallet = wallets.find((w) => w.address === address && w.type === type);
                 if (wallet) {
                     return reject(new Error(ADDRESS_IS_EXISTENT));
                 }

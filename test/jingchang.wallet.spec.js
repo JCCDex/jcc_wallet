@@ -4,6 +4,7 @@ const jsdom = require("jsdom");
 const JingchangWallet = require("../lib").JingchangWallet;
 const jtWallet = require("../lib").jtWallet;
 const ethereumWallet = require("../lib").ethWallet;
+const moacWallet = require("../lib").moacWallet;
 const Lockr = require("lockr");
 
 let testWallet = {
@@ -412,6 +413,15 @@ describe("test JingchangWallet", function() {
         const defaultAddress = await inst.getAddress();
         expect(defaultAddress).to.equal(testAddress);
       });
+
+      it("resolve new wallet if secret as two chains", async function() {
+        await inst.importSecret(testEthereumSecret, testPassword, "eth", ethereumWallet.getAddress);
+        const etherAddress = await inst.getAddress("eth");
+        expect(etherAddress).to.equal(testEthereumAddress);
+        await inst.importSecret(testEthereumSecret, testPassword, "moac", moacWallet.getAddress);
+        const moacAddress = await inst.getAddress("moac");
+        expect(moacAddress).to.equal(testEthereumAddress);
+      })
 
       it("reject `address is existent` if the address is existent", function(done) {
         inst.importSecret(jingtumSecret, testPassword, "swt", getSecret).catch((err) => {
