@@ -8,6 +8,7 @@ npx babel ./node_modules/swtc-keypairs --out-dir ./node_modules/swtc-keypairs
 npx babel ./node_modules/swtc-chains --out-dir ./node_modules/swtc-chains
 npx babel ./node_modules/swtc-address-codec --out-dir ./node_modules/swtc-address-codec
 npx babel ./node_modules/scryptsy --out-dir ./node_modules/scryptsy
+npx babel ./node_modules/eccrypto --out-dir ./node_modules/eccrypto
 
 ./node_modules/cross-env/dist/bin/cross-env-shell.js MODE=$1 REPORT=$2 webpack
 

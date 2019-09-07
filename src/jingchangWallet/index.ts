@@ -1,11 +1,13 @@
 import assert = require("assert");
 import cloneDeep = require("clone-deep");
 import crypto = require("crypto");
+import eccrypto = require("eccrypto");
 import { isEmptyObject } from "jcc_common";
 import Lockr = require("lockr");
+import { KeyPair } from "swtc-factory";
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
 import { createWallet, getAddress, isValidSecret } from "../jingtum";
-import { IJingchangWalletModel, IKeypairsModel, IKeystoreModel } from "../model";
+import { IEncrypt, IJingchangWalletModel, IKeyPair, IKeypairsModel, IKeystoreModel } from "../model";
 import { decrypt, encryptWallet } from "../util";
 
 Lockr.prefix = "jingchang_";
@@ -146,6 +148,64 @@ export default class JingchangWallet {
      */
     public static save(wallet: IJingchangWalletModel): void {
         Lockr.set(JingchangWallet._walletID, wallet);
+    }
+
+    /**
+     * derive key pair with secret
+     *
+     * @static
+     * @param {string} secret
+     * @param {string} [chain="swt"]
+     * @returns {IKeyPair} for privateKey, it's length should be 64 when call `decryptWithPrivateKey`, but the origin derived
+     * privateKey's length is 66 that contains prefix `00` for `secp256k1` or `ED` for `ed25519`, so removed it.
+     * @memberof JingchangWallet
+     */
+    public static deriveKeyPair(secret: string, chain = "swt"): IKeyPair {
+        const keyPair = new KeyPair(chain);
+        const pair = keyPair.deriveKeyPair(secret);
+        return {
+            privateKey: pair.privateKey.substring(2),
+            publicKey: pair.publicKey
+        };
+    }
+
+    /**
+     * encrypt data with public key
+     *
+     * @static
+     * @param {string} message
+     * @param {string} publicKey
+     * @returns {Promise<IEncrypt>}
+     * @memberof JingchangWallet
+     */
+    public static async encryptWithPublicKey(message: string, publicKey: string): Promise<IEncrypt> {
+        const encode = await eccrypto.encrypt(Buffer.from(publicKey, "hex"), Buffer.from(message));
+        return {
+            ciphertext: encode.ciphertext.toString("hex"),
+            ephemPublicKey: encode.ephemPublicKey.toString("hex"),
+            iv: encode.iv.toString("hex"),
+            mac: encode.mac.toString("hex")
+        };
+    }
+
+    /**
+     * decrypt data with private key
+     *
+     * @static
+     * @param {IEncrypt} message
+     * @param {string} privateKey the privateKey's length should be 64
+     * @returns {Promise<string>}
+     * @memberof JingchangWallet
+     */
+    public static async decryptWithPrivateKey(message: IEncrypt, privateKey: string): Promise<string> {
+        const encode = {
+            ciphertext: Buffer.from(message.ciphertext, "hex"),
+            ephemPublicKey: Buffer.from(message.ephemPublicKey, "hex"),
+            iv: Buffer.from(message.iv, "hex"),
+            mac: Buffer.from(message.mac, "hex")
+        };
+        const decode = await eccrypto.decrypt(Buffer.from(privateKey, "hex"), encode);
+        return decode.toString();
     }
 
     /**

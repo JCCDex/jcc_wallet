@@ -65,3 +65,15 @@ export interface IKeypairsModel {
     address: string,
     alias?: string
 }
+
+export interface IKeyPair {
+    privateKey: string,
+    publicKey: string
+}
+
+export interface IEncrypt {
+    iv: string,
+    ephemPublicKey: string,
+    ciphertext: string,
+    mac: string
+}
