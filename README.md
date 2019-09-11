@@ -143,6 +143,49 @@ const JingchangWallet = require('jcc_wallet').JingchangWallet
 */
 ```
 
+### deriveKeyPair
+
+```javascript
+/**
+ * derive key pair with secret
+ *
+ * @static
+ * @param {string} secret
+ * @param {string} [chain="swt"]
+ * @returns {IKeyPair} for privateKey, it's length should be 64 when call `decryptWithPrivateKey`, but the origin derived
+ * privateKey's length is 66 that contains prefix `00` for `secp256k1` or `ED` for `ed25519`, so removed it.
+ * @memberof JingchangWallet
+ */
+```
+
+### encryptWithPublicKey
+
+```javascript
+/**
+ * encrypt data with public key
+ *
+ * @static
+ * @param {string} message
+ * @param {string} publicKey
+ * @returns {Promise<IEncrypt>}
+ * @memberof JingchangWallet
+ */
+```
+
+### decryptWithPrivateKey
+
+```javascript
+/**
+ * decrypt data with private key
+ *
+ * @static
+ * @param {IEncrypt} message
+ * @param {string} privateKey the privateKey's length should be 64
+ * @returns {Promise<string>}
+ * @memberof JingchangWallet
+ */
+```
+
 ### getWallets
 
 ```javascript
