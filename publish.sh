@@ -7,6 +7,12 @@ if test "$username" = "jccdex"; then
     else
         npm version $1 --no-git-tag-version
     fi
+    if [ -d "dist" ];then
+        rm -r dist
+    fi
+    if [ -d "lib" ];then
+        rm -r lib
+    fi
     npm run compile
     npm publish
 else
