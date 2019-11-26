@@ -105,6 +105,10 @@ export default class JingchangWallet {
             keypairs.alias = "swt wallet";
             const jcWallet: IJingchangWalletModel = {};
             const walletObj = encryptWallet(password, keypairs);
+            walletObj.didDoc = {
+                "@context": "https://www.w3.org/ns/did/v1",
+                "id": JingchangWallet.generateId(keypairs.address, keypairs.type)
+            };
             jcWallet.version = JingchangWallet.version;
             jcWallet.id = JingchangWallet._walletID;
             jcWallet.contact = {};
@@ -224,6 +228,10 @@ export default class JingchangWallet {
             wallets = [];
         }
         return wallets;
+    }
+
+    protected static generateId(address: string, type: string): string {
+        return `did:v1:${type}:${address}`;
     }
 
     /**
@@ -569,6 +577,10 @@ export default class JingchangWallet {
      */
     protected getEncryptData(password: string, keypairs: IKeypairsModel): IKeystoreModel {
         const encryptData = encryptWallet(password, keypairs, {});
+        encryptData.didDoc = {
+            "@context": "https://www.w3.org/ns/did/v1",
+            "id": JingchangWallet.generateId(keypairs.address, keypairs.type)
+        };
         return encryptData;
     }
 

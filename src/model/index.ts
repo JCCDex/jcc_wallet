@@ -21,7 +21,13 @@ export interface IKeystoreModel {
     default?: boolean,
     mac: string,
     type?: string,
-    crypto: ICryptoModel
+    crypto: ICryptoModel,
+    didDoc?: IDid
+}
+
+export interface IDid {
+    "@context": string | Array<string>,
+    id: string
 }
 
 export interface IJingchangWalletModel {
