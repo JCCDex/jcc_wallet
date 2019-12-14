@@ -139,7 +139,7 @@ describe("test JingchangWallet", function() {
   describe("static: test encryptWithPublicKey & decryptWithPrivateKey api", function() {
     it("encrypt & decrypt should be successful", async function() {
       const keypair = JingchangWallet.deriveKeyPair(testSecret);
-      const message = new Array(100).fill("test").join("");
+      const message = new Array(100).fill("test测试").join("");
       const encode = await JingchangWallet.encryptWithPublicKey(message, keypair.publicKey);
       expect(encode).to.have.all.keys("ciphertext", "ephemPublicKey", "iv", "mac");
       const decode = await JingchangWallet.decryptWithPrivateKey(encode, keypair.privateKey);
