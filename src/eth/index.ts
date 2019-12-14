@@ -8,7 +8,7 @@ import { ETH_PASSWORD_IS_WRONG, KEYSTORE_IS_INVALID } from "../constant";
 import { IWalletModel } from "../model";
 
 const isObject = (obj: any): boolean => {
-    return Object.prototype.toString.call(obj) === "[object Object]";
+  return Object.prototype.toString.call(obj) === "[object Object]";
 };
 
 /**
@@ -18,12 +18,12 @@ const isObject = (obj: any): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-    secret = filterOx(secret);
-    try {
-        return ethereumjsUtil.isValidPrivate(Buffer.from(secret, "hex"));
-    } catch (error) {
-        return false;
-    }
+  secret = filterOx(secret);
+  try {
+    return ethereumjsUtil.isValidPrivate(Buffer.from(secret, "hex"));
+  } catch (error) {
+    return false;
+  }
 };
 
 /**
@@ -33,7 +33,7 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-    return ethereumjsUtil.isValidAddress(address);
+  return ethereumjsUtil.isValidAddress(address);
 };
 
 /**
@@ -42,13 +42,13 @@ const isValidAddress = (address: string): boolean => {
  * @returns {string | null} return address if valid, otherwise return null
  */
 const getAddress = (secret: string): string | null => {
-    secret = filterOx(secret);
-    if (!isValidSecret(secret)) {
-        return null;
-    }
-    const buffer = ethereumjsUtil.privateToAddress(Buffer.from(secret, "hex"));
-    const decodeAddress = ethereumjsUtil.bufferToHex(buffer);
-    return decodeAddress;
+  secret = filterOx(secret);
+  if (!isValidSecret(secret)) {
+    return null;
+  }
+  const buffer = ethereumjsUtil.privateToAddress(Buffer.from(secret, "hex"));
+  const decodeAddress = ethereumjsUtil.bufferToHex(buffer);
+  return decodeAddress;
 };
 
 /**
@@ -60,24 +60,26 @@ const getAddress = (secret: string): string | null => {
  * throws `ethereum password is wrong` if the password is wrong
  */
 const decryptKeystore = (password: string, encryptData: any): string => {
-    if (!isObject(encryptData)) {
-        throw new Error(KEYSTORE_IS_INVALID);
-    }
-    const cryptoData = encryptData.Crypto || encryptData.crypto;
-    if (isEmptyObject(cryptoData) || isEmptyObject(cryptoData.cipherparams) || isEmptyObject(cryptoData.kdfparams)) {
-        throw new Error(KEYSTORE_IS_INVALID);
-    }
-    const iv = Buffer.from(cryptoData.cipherparams.iv, "hex");
-    const kdfparams = cryptoData.kdfparams;
-    const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
-    const ciphertext = Buffer.from(cryptoData.ciphertext, "hex");
-    const mac = createKeccakHash("keccak256").update(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).digest();
-    if (mac.toString("hex") !== cryptoData.mac) {
-        throw new Error(ETH_PASSWORD_IS_WRONG);
-    }
-    const decipher = crypto.createDecipheriv("aes-128-ctr", derivedKey.slice(0, 16), iv);
-    const seed = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
-    return seed.toString("hex");
+  if (!isObject(encryptData)) {
+    throw new Error(KEYSTORE_IS_INVALID);
+  }
+  const cryptoData = encryptData.Crypto || encryptData.crypto;
+  if (isEmptyObject(cryptoData) || isEmptyObject(cryptoData.cipherparams) || isEmptyObject(cryptoData.kdfparams)) {
+    throw new Error(KEYSTORE_IS_INVALID);
+  }
+  const iv = Buffer.from(cryptoData.cipherparams.iv, "hex");
+  const kdfparams = cryptoData.kdfparams;
+  const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+  const ciphertext = Buffer.from(cryptoData.ciphertext, "hex");
+  const mac = createKeccakHash("keccak256")
+    .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
+    .digest();
+  if (mac.toString("hex") !== cryptoData.mac) {
+    throw new Error(ETH_PASSWORD_IS_WRONG);
+  }
+  const decipher = crypto.createDecipheriv("aes-128-ctr", derivedKey.slice(0, 16), iv);
+  const seed = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+  return seed.toString("hex");
 };
 
 /**
@@ -86,14 +88,8 @@ const decryptKeystore = (password: string, encryptData: any): string => {
  * @returns {IWalletModel}
  */
 const createWallet = (): IWalletModel => {
-    const _w = Wallet.generate();
-    return { address: _w.getAddressString(), secret: _w.getPrivateKeyString() };
+  const _w = Wallet.generate();
+  return { address: _w.getAddressString(), secret: _w.getPrivateKeyString() };
 };
 
-export {
-    isValidSecret,
-    isValidAddress,
-    getAddress,
-    decryptKeystore,
-    createWallet
-};
+export { isValidSecret, isValidAddress, getAddress, decryptKeystore, createWallet };

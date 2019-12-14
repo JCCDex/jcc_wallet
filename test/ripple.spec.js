@@ -1,5 +1,5 @@
 const chai = require("chai");
-const sinon = require("sinon")
+const sinon = require("sinon");
 const sandbox = sinon.createSandbox();
 const expect = chai.expect;
 const testAddress = "r9q4ewefjyXNF1xaCKb19SZBjdTgkfTgAc";
@@ -8,15 +8,10 @@ const rippleWallet = require("../lib").rippleWallet;
 
 let undefinedValue;
 
-let invalidAddresses = ["", null, undefinedValue, {},
-  [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456
-];
+let invalidAddresses = ["", null, undefinedValue, {}, [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456];
 
-let invalidSecrets = ["", null, undefinedValue, {},
-  [], "xxxx", testSecret.substring(1), true, false, 123456
-];
+let invalidSecrets = ["", null, undefinedValue, {}, [], "xxxx", testSecret.substring(1), true, false, 123456];
 describe("test ripple", function() {
-
   describe("test isValidAddress", function() {
     it("should return true if the address is valid", function() {
       let isvalid = rippleWallet.isValidAddress(testAddress);
@@ -71,6 +66,6 @@ describe("test ripple", function() {
     it("return null if throw an error", function() {
       const wallet = rippleWallet.createWallet(null);
       expect(wallet).to.null;
-    })
+    });
   });
 });

@@ -8,7 +8,7 @@ import { IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-    return Wallet.isValidSecret(secret, "stm");
+  return Wallet.isValidSecret(secret, "stm");
 };
 
 /**
@@ -18,7 +18,7 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-    return Wallet.isValidAddress(address, "stm");
+  return Wallet.isValidAddress(address, "stm");
 };
 
 /**
@@ -27,7 +27,7 @@ const isValidAddress = (address: string): boolean => {
  * @returns {IWalletModel}
  */
 const createWallet = (): IWalletModel => {
-    return Wallet.generate("stm");
+  return Wallet.generate("stm");
 };
 
 /**
@@ -37,17 +37,12 @@ const createWallet = (): IWalletModel => {
  * @returns {(string | null)} return address if valid, otherwise return null
  */
 const getAddress = (secret: string): string | null => {
-    try {
-        const wallet = Wallet.fromSecret(secret, "stm");
-        return wallet.address;
-    } catch (error) {
-        return null;
-    }
+  try {
+    const wallet = Wallet.fromSecret(secret, "stm");
+    return wallet.address;
+  } catch (error) {
+    return null;
+  }
 };
 
-export {
-    isValidSecret,
-    isValidAddress,
-    createWallet,
-    getAddress
-};
+export { isValidSecret, isValidAddress, createWallet, getAddress };

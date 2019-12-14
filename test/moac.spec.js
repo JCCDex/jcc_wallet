@@ -6,15 +6,10 @@ const moacWallet = require("../lib").moacWallet;
 
 let undefinedValue;
 
-let invalidAddresses = ["", null, undefinedValue, {},
-  [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456
-];
+let invalidAddresses = ["", null, undefinedValue, {}, [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456];
 
-let invalidSecrets = ["", null, undefinedValue, {},
-  [], "xxxx", testSecret.substring(1), true, false, 123456
-];
+let invalidSecrets = ["", null, undefinedValue, {}, [], "xxxx", testSecret.substring(1), true, false, 123456];
 describe("test moac", function() {
-
   describe("test isValidAddress", function() {
     it("should return true if the address is valid", function() {
       let isvalid = moacWallet.isValidAddress(testAddress);

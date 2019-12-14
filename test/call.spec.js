@@ -5,23 +5,15 @@ const testSecret = "shaXxkbcS8NoHrL1TzTfWBRCbsD2K";
 const testAddress = "c3oPNfL3k3EUTBQMFQ2LTZM5W5TUM7Qq5N";
 let undefinedValue;
 
-let invalidAddresses = ["", null, undefinedValue, {},
-  [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456
-];
+let invalidAddresses = ["", null, undefinedValue, {}, [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456];
 
-let invalidSecrets = ["", null, undefinedValue, {},
-  [], "xxxx", testSecret.substring(1), testSecret + "a", true, false, 123456
-];
+let invalidSecrets = ["", null, undefinedValue, {}, [], "xxxx", testSecret.substring(1), testSecret + "a", true, false, 123456];
 
 describe("test call", function() {
-
   describe("test createWallet", function() {
     it("the wallet should be valid when create call wallet successfully", function() {
       let wallet = callWallet.createWallet();
-      let {
-        secret,
-        address
-      } = wallet;
+      let { secret, address } = wallet;
       let a = callWallet.isValidAddress(address);
       let b = callWallet.isValidSecret(secret);
       expect(a).to.equal(true);
@@ -75,5 +67,4 @@ describe("test call", function() {
       }
     });
   });
-
 });

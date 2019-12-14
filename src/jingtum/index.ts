@@ -10,7 +10,7 @@ import { IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string, chain = "swt"): boolean => {
-    return Wallet.isValidAddress(address, chain);
+  return Wallet.isValidAddress(address, chain);
 };
 
 /**
@@ -22,7 +22,7 @@ const isValidAddress = (address: string, chain = "swt"): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string, chain: string = "swt"): boolean => {
-    return Wallet.isValidSecret(secret, chain);
+  return Wallet.isValidSecret(secret, chain);
 };
 
 /**
@@ -34,12 +34,12 @@ const isValidSecret = (secret: string, chain: string = "swt"): boolean => {
  * @returns {(string | null)} return address if valid, otherwise return null
  */
 const getAddress = (secret: string, chain: string = "swt"): string | null => {
-    try {
-        const wallet = Wallet.fromSecret(secret, chain);
-        return wallet.address;
-    } catch (error) {
-        return null;
-    }
+  try {
+    const wallet = Wallet.fromSecret(secret, chain);
+    return wallet.address;
+  } catch (error) {
+    return null;
+  }
 };
 
 /**
@@ -50,13 +50,8 @@ const getAddress = (secret: string, chain: string = "swt"): string | null => {
  * @returns {IWalletModel}
  */
 const createWallet = (chain: string = "swt"): IWalletModel => {
-    const wallet = Wallet.generate(chain);
-    return wallet;
+  const wallet = Wallet.generate(chain);
+  return wallet;
 };
 
-export {
-    isValidAddress,
-    isValidSecret,
-    getAddress,
-    createWallet
-};
+export { isValidAddress, isValidSecret, getAddress, createWallet };

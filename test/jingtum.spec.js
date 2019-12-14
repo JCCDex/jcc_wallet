@@ -9,15 +9,10 @@ let testBizainSecret = "ssySqG4BhxpngV2FjAe1SJYFD4dcm";
 
 let undefinedValue;
 
-let invalidAddresses = ["", null, undefinedValue, {},
-  [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456
-];
+let invalidAddresses = ["", null, undefinedValue, {}, [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456];
 
-let invalidSecrets = ["", null, undefinedValue, {},
-  [], "xxxx", testSecret.substring(1), testSecret + "a", true, false, 123456
-];
+let invalidSecrets = ["", null, undefinedValue, {}, [], "xxxx", testSecret.substring(1), testSecret + "a", true, false, 123456];
 describe("test jingtum", function() {
-
   describe("test isValidAddress", function() {
     it("should return true when the jingtum address is valid", function() {
       let isValid = jtWallet.isValidAddress(testAddress);
@@ -69,10 +64,7 @@ describe("test jingtum", function() {
   describe("test createWallet", function() {
     it("the wallet should be valid when create jingtum wallet successfully", function() {
       let wallet = jtWallet.createWallet();
-      let {
-        secret,
-        address
-      } = wallet;
+      let { secret, address } = wallet;
       let a = jtWallet.isValidAddress(address);
       let b = jtWallet.isValidSecret(secret);
       expect(a).to.equal(true);
@@ -84,5 +76,4 @@ describe("test jingtum", function() {
       expect(b).to.equal(true);
     });
   });
-
 });

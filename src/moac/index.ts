@@ -12,11 +12,11 @@ import { IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-    try {
-        return ethereumjsUtil.isValidPrivate(Buffer.from(filterOx(secret), "hex"));
-    } catch (error) {
-        return false;
-    }
+  try {
+    return ethereumjsUtil.isValidPrivate(Buffer.from(filterOx(secret), "hex"));
+  } catch (error) {
+    return false;
+  }
 };
 
 /**
@@ -26,7 +26,7 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-    return /^(0x)?[0-9a-fA-F]{40}$/.test(filterOx(address));
+  return /^(0x)?[0-9a-fA-F]{40}$/.test(filterOx(address));
 };
 
 /**
@@ -36,13 +36,13 @@ const isValidAddress = (address: string): boolean => {
  * @returns {(string | null)} return address if valid, otherwise return null
  */
 const getAddress = (secret: string): string | null => {
-    secret = filterOx(secret);
-    if (!isValidSecret(secret)) {
-        return null;
-    }
-    const buffer = ethereumjsUtil.privateToAddress(Buffer.from(secret, "hex"));
-    const decodeAddress = ethereumjsUtil.bufferToHex(buffer);
-    return decodeAddress;
+  secret = filterOx(secret);
+  if (!isValidSecret(secret)) {
+    return null;
+  }
+  const buffer = ethereumjsUtil.privateToAddress(Buffer.from(secret, "hex"));
+  const decodeAddress = ethereumjsUtil.bufferToHex(buffer);
+  return decodeAddress;
 };
 
 /**
@@ -51,13 +51,8 @@ const getAddress = (secret: string): string | null => {
  * @returns {IWalletModel}
  */
 const createWallet = (): IWalletModel => {
-    const _w = Wallet.generate();
-    return { address: _w.getAddressString(), secret: _w.getPrivateKeyString() };
+  const _w = Wallet.generate();
+  return { address: _w.getAddressString(), secret: _w.getPrivateKeyString() };
 };
 
-export {
-    isValidSecret,
-    isValidAddress,
-    getAddress,
-    createWallet
-};
+export { isValidSecret, isValidAddress, getAddress, createWallet };

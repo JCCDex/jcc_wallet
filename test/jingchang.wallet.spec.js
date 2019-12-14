@@ -8,29 +8,31 @@ const moacWallet = require("../lib").moacWallet;
 const Lockr = require("lockr");
 
 let testWallet = {
-  "version": "1.0",
-  "id": "4085118690b6b24a58e8b9a2e26a15a31f2dfbd9e6280752a04af70e3a5389cc",
-  "contact": {},
-  "wallets": [{
-    "ciphertext": "29cdfe6d2b2b7bbcbfea5b6d5c165043cc84b086b65aba4386841e4484",
-    "mac": "2f23bf8bcb2253d79169a74594a186323fef94b0c42d4d071db119962528d7b6",
-    "crypto": {
-      "iv": "3086c27f1997601b3c43d34954dca2ed",
-      "cipher": "aes-128-ctr",
-      "kdf": "scrypt",
-      "kdfparams": {
-        "dklen": 32,
-        "salt": "555cd56e274acb61623c28be6ab72f421675d6480ca4a1b6aa8da765fcd79edb",
-        "n": 4096,
-        "r": 8,
-        "p": 1
-      }
-    },
-    "type": "swt",
-    "address": "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH",
-    "default": true,
-    "alias": "默认钱包"
-  }]
+  version: "1.0",
+  id: "4085118690b6b24a58e8b9a2e26a15a31f2dfbd9e6280752a04af70e3a5389cc",
+  contact: {},
+  wallets: [
+    {
+      ciphertext: "29cdfe6d2b2b7bbcbfea5b6d5c165043cc84b086b65aba4386841e4484",
+      mac: "2f23bf8bcb2253d79169a74594a186323fef94b0c42d4d071db119962528d7b6",
+      crypto: {
+        iv: "3086c27f1997601b3c43d34954dca2ed",
+        cipher: "aes-128-ctr",
+        kdf: "scrypt",
+        kdfparams: {
+          dklen: 32,
+          salt: "555cd56e274acb61623c28be6ab72f421675d6480ca4a1b6aa8da765fcd79edb",
+          n: 4096,
+          r: 8,
+          p: 1
+        }
+      },
+      type: "swt",
+      address: "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH",
+      default: true,
+      alias: "默认钱包"
+    }
+  ]
 };
 
 let testPassword = "1qaz2WSX";
@@ -42,17 +44,12 @@ const testEthereumSecret = "ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c
 const testEthereumAddress = "0x2995c1376a852e4040caf9dbae2c765e24c37a15";
 
 describe("test JingchangWallet", function() {
-
   before(function() {
-    const {
-      JSDOM
-    } = jsdom;
+    const { JSDOM } = jsdom;
     const a = new JSDOM("<!doctype html><html><body></body></html>", {
-      url: "https://localhost",
+      url: "https://localhost"
     });
-    const {
-      window
-    } = a;
+    const { window } = a;
     global.localStorage = window.localStorage;
   });
 
@@ -133,8 +130,8 @@ describe("test JingchangWallet", function() {
     it("return IKeyPair if success that chain is ripple", function() {
       const keypair = JingchangWallet.deriveKeyPair("ss8uEAWyPy6Fefo8QcCYyncUPfwhu", "xrp");
       expect(keypair).to.deep.equal({
-        "privateKey": "1A9AC58B7A2B6A9F00BC655B6EB5A21D1415A621FFB148B05E1BA674B2B2E53D",
-        "publicKey": "024E88BD20C8E6BC00BAD53CD72BAD68BF31335E9520090BD902A25D0CFFFF206D"
+        privateKey: "1A9AC58B7A2B6A9F00BC655B6EB5A21D1415A621FFB148B05E1BA674B2B2E53D",
+        publicKey: "024E88BD20C8E6BC00BAD53CD72BAD68BF31335E9520090BD902A25D0CFFFF206D"
       });
     });
   });
@@ -289,7 +286,6 @@ describe("test JingchangWallet", function() {
     });
   });
 
-
   describe("instance: test getSecretWithType api", function() {
     let inst;
     before(() => {
@@ -331,22 +327,26 @@ describe("test JingchangWallet", function() {
     });
 
     it("reject `keystore is invalid` if the keystore is invalid", function(done) {
-      inst.setJingchangWallet(Object.assign({}, testWallet, {
-        wallets: [{
-          "ciphertext": "29cdfe6d2b2b7bbcbfea5b6d5c165043cc84b086b65aba4386841e4484",
-          "mac": "2f23bf8bcb2253d79169a74594a186323fef94b0c42d4d071db119962528d7b6",
-          "crypto": {
-            "iv": "3086c27f1997601b3c43d34954dca2ed",
-            "cipher": "aes-128-ctr",
-            "kdf": "scrypt",
-            "kdfparams": {}
-          },
-          "type": "swt",
-          "address": "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH",
-          "default": true,
-          "alias": "默认钱包"
-        }]
-      }));
+      inst.setJingchangWallet(
+        Object.assign({}, testWallet, {
+          wallets: [
+            {
+              ciphertext: "29cdfe6d2b2b7bbcbfea5b6d5c165043cc84b086b65aba4386841e4484",
+              mac: "2f23bf8bcb2253d79169a74594a186323fef94b0c42d4d071db119962528d7b6",
+              crypto: {
+                iv: "3086c27f1997601b3c43d34954dca2ed",
+                cipher: "aes-128-ctr",
+                kdf: "scrypt",
+                kdfparams: {}
+              },
+              type: "swt",
+              address: "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH",
+              default: true,
+              alias: "默认钱包"
+            }
+          ]
+        })
+      );
       inst.getSecretWithType(testPassword).catch((err) => {
         expect(err.message).to.equal("keystore is invalid");
         done();
@@ -415,7 +415,6 @@ describe("test JingchangWallet", function() {
   });
 
   describe("instance: test importSecret api", function() {
-
     const getSecret = jtWallet.getAddress;
     const jingtumSecret = "ssRFxQRCdmGgAg2QRe9QEoH1ZSFKu";
     const jingtumAddress = "jEMKvdukvtKuTZEdRWVSzaRkCF1hjuAXxh";
@@ -450,7 +449,7 @@ describe("test JingchangWallet", function() {
         await inst.importSecret(testEthereumSecret, testPassword, "moac", moacWallet.getAddress);
         const moacAddress = await inst.getAddress("moac");
         expect(moacAddress).to.equal(testEthereumAddress);
-      })
+      });
 
       it("reject `address is existent` if the address is existent", function(done) {
         inst.importSecret(jingtumSecret, testPassword, "swt", getSecret).catch((err) => {
@@ -502,7 +501,6 @@ describe("test JingchangWallet", function() {
       });
 
       it("resolve new wallet and remove previous existent swt wallet", async function() {
-
         let defaultWallet = await inst.getWalletWithType();
         expect(defaultWallet.address).to.equal(testAddress);
         await inst.importSecret(jingtumSecret, testPassword, "swt", getSecret);
@@ -517,9 +515,7 @@ describe("test JingchangWallet", function() {
     });
   });
 
-
   describe("instance: test removeWalletWithType and removeWalletWithAddress api", function() {
-
     const getSecret = jtWallet.getAddress;
     const jingtumSecret = "ssRFxQRCdmGgAg2QRe9QEoH1ZSFKu";
     const jingtumAddress = "jEMKvdukvtKuTZEdRWVSzaRkCF1hjuAXxh";
@@ -573,7 +569,6 @@ describe("test JingchangWallet", function() {
   });
 
   describe("instance: test changeWholePassword api", function() {
-
     describe("when the _samePassword is false", function() {
       let inst;
       before(() => {
@@ -619,7 +614,6 @@ describe("test JingchangWallet", function() {
   });
 
   describe("instance: test changePasswordWithAddress api", function() {
-
     describe("when the _samePassword is true", function() {
       let inst;
       before(() => {
@@ -708,5 +702,4 @@ describe("test JingchangWallet", function() {
       }
     });
   });
-
 });

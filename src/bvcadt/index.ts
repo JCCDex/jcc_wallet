@@ -8,7 +8,7 @@ import { ICreateOptionsModel, IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-    return Wallet.isValidAddress(address, "bvcadt");
+  return Wallet.isValidAddress(address, "bvcadt");
 };
 
 /**
@@ -18,7 +18,7 @@ const isValidAddress = (address: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-    return Wallet.isValidSecret(secret, "bvcadt");
+  return Wallet.isValidSecret(secret, "bvcadt");
 };
 
 /**
@@ -28,12 +28,12 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {(string | null)} return address if valid, otherwise return null
  */
 const getAddress = (secret: string): string | null => {
-    try {
-        const wallet = Wallet.fromSecret(secret, "bvcadt");
-        return wallet.address;
-    } catch (error) {
-        return null;
-    }
+  try {
+    const wallet = Wallet.fromSecret(secret, "bvcadt");
+    return wallet.address;
+  } catch (error) {
+    return null;
+  }
 };
 
 /**
@@ -43,18 +43,13 @@ const getAddress = (secret: string): string | null => {
  * @returns {(IWalletModel | null)} return IWalletModel if succress, otherwise return null
  */
 const createWallet = (opt: ICreateOptionsModel = {}): IWalletModel | null => {
-    let wallet: IWalletModel;
-    try {
-        wallet = Wallet.generate("bvcadt", opt);
-    } catch (error) {
-        wallet = null;
-    }
-    return wallet;
+  let wallet: IWalletModel;
+  try {
+    wallet = Wallet.generate("bvcadt", opt);
+  } catch (error) {
+    wallet = null;
+  }
+  return wallet;
 };
 
-export {
-    isValidAddress,
-    isValidSecret,
-    getAddress,
-    createWallet
-};
+export { isValidAddress, isValidSecret, getAddress, createWallet };
