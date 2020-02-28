@@ -1,5 +1,6 @@
-import { Wallet } from "swtc-factory";
-import { ICreateOptionsModel, IWalletModel } from "../model";
+import { Factory as WalletFactory } from "@swtc/wallet";
+import { ICreateOptionsModel, IWalletModel } from "../types";
+const Wallet = WalletFactory("call");
 
 /**
  * check call address is valid or not
@@ -8,7 +9,7 @@ import { ICreateOptionsModel, IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-  return Wallet.isValidAddress(address, "call");
+  return Wallet.isValidAddress(address);
 };
 
 /**
@@ -18,7 +19,7 @@ const isValidAddress = (address: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-  return Wallet.isValidSecret(secret, "call");
+  return Wallet.isValidSecret(secret);
 };
 
 /**
@@ -29,7 +30,7 @@ const isValidSecret = (secret: string): boolean => {
  */
 const getAddress = (secret: string): string | null => {
   try {
-    const wallet = Wallet.fromSecret(secret, "call");
+    const wallet = Wallet.fromSecret(secret);
     return wallet.address;
   } catch (error) {
     return null;
@@ -45,7 +46,7 @@ const getAddress = (secret: string): string | null => {
 const createWallet = (opt: ICreateOptionsModel = {}): IWalletModel | null => {
   let wallet: IWalletModel;
   try {
-    wallet = Wallet.generate("call", opt);
+    wallet = Wallet.generate(opt);
   } catch (error) {
     wallet = null;
   }

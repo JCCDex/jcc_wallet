@@ -1,5 +1,6 @@
-import { Wallet } from "swtc-factory";
-import { ICreateOptionsModel, IWalletModel } from "../model";
+import { Factory as WalletFactory } from "@swtc/wallet";
+import { ICreateOptionsModel, IWalletModel } from "../types";
+const Wallet = WalletFactory("xrp");
 
 /**
  * check ripple secret is valid or not
@@ -8,7 +9,7 @@ import { ICreateOptionsModel, IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-  return Wallet.isValidSecret(secret, "xrp");
+  return Wallet.isValidSecret(secret);
 };
 
 /**
@@ -18,7 +19,7 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-  return Wallet.isValidAddress(address, "xrp");
+  return Wallet.isValidAddress(address);
 };
 
 /**
@@ -29,7 +30,7 @@ const isValidAddress = (address: string): boolean => {
  */
 const getAddress = (secret: string): string | null => {
   try {
-    const wallet = Wallet.fromSecret(secret, "xrp");
+    const wallet = Wallet.fromSecret(secret);
     return wallet.address;
   } catch (error) {
     return null;
@@ -44,7 +45,7 @@ const getAddress = (secret: string): string | null => {
  */
 const createWallet = (opt: ICreateOptionsModel): IWalletModel => {
   try {
-    const wallet = Wallet.generate("xrp", opt);
+    const wallet = Wallet.generate(opt);
     return wallet;
   } catch (error) {
     return null;

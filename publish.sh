@@ -3,9 +3,9 @@ username=$(npm whoami)
 echo $username
 if test "$username" = "jccdex"; then
     if test "$1" = "";then
-        npm version patch --no-git-tag-version
+        npm version patch
     else
-        npm version $1 --no-git-tag-version
+        npm version $1
     fi
     if [ -d "dist" ];then
         rm -r dist

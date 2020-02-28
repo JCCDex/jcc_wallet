@@ -4,10 +4,10 @@ import crypto = require("crypto");
 import eccrypto = require("eccrypto");
 import { isEmptyObject } from "jcc_common";
 import Lockr = require("lockr");
-import { KeyPair } from "swtc-factory";
+import { Factory as KeypairsFactory } from "@swtc/keypairs";
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
 import { createWallet, getAddress, isValidSecret } from "../jingtum";
-import { IEncrypt, IJingchangWalletModel, IKeyPair, IKeypairsModel, IKeystoreModel } from "../model";
+import { IEncrypt, IJingchangWalletModel, IKeyPair, IKeypairsModel, IKeystoreModel } from "../types";
 import { decrypt, encryptWallet } from "../util";
 
 Lockr.prefix = "jingchang_";
@@ -163,7 +163,7 @@ export default class JingchangWallet {
    * @memberof JingchangWallet
    */
   public static deriveKeyPair(secret: string, chain = "swt"): IKeyPair {
-    const keyPair = new KeyPair(chain);
+    const keyPair = KeypairsFactory(chain);
     const pair = keyPair.deriveKeyPair(secret);
     return {
       privateKey: pair.privateKey.substring(2),

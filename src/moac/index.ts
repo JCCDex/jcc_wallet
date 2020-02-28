@@ -3,7 +3,7 @@
 import ethereumjsUtil = require("ethereumjs-util");
 import Wallet = require("ethereumjs-wallet");
 import { filterOx } from "jcc_common";
-import { IWalletModel } from "../model";
+import { IWalletModel } from "../types";
 
 /**
  * check moac secret is valid or not

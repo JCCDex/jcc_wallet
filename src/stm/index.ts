@@ -1,6 +1,7 @@
 "use strict";
-import { Wallet } from "swtc-factory";
-import { IWalletModel } from "../model";
+import { Factory as WalletFactory } from "@swtc/wallet";
+import { IWalletModel } from "../types";
+const Wallet = WalletFactory("stm");
 /**
  * check stream secret is valid or not
  *
@@ -8,7 +9,7 @@ import { IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
-  return Wallet.isValidSecret(secret, "stm");
+  return Wallet.isValidSecret(secret);
 };
 
 /**
@@ -18,7 +19,7 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-  return Wallet.isValidAddress(address, "stm");
+  return Wallet.isValidAddress(address);
 };
 
 /**
@@ -27,7 +28,7 @@ const isValidAddress = (address: string): boolean => {
  * @returns {IWalletModel}
  */
 const createWallet = (): IWalletModel => {
-  return Wallet.generate("stm");
+  return Wallet.generate();
 };
 
 /**
@@ -38,7 +39,7 @@ const createWallet = (): IWalletModel => {
  */
 const getAddress = (secret: string): string | null => {
   try {
-    const wallet = Wallet.fromSecret(secret, "stm");
+    const wallet = Wallet.fromSecret(secret);
     return wallet.address;
   } catch (error) {
     return null;

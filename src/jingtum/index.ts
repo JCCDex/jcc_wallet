@@ -1,5 +1,5 @@
-import { Wallet } from "swtc-factory";
-import { IWalletModel } from "../model";
+import { Factory as WalletFactory } from "@swtc/wallet";
+import { IWalletModel } from "../types";
 
 /**
  * check swtc or bizain address is valid or not
@@ -10,7 +10,7 @@ import { IWalletModel } from "../model";
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string, chain = "swt"): boolean => {
-  return Wallet.isValidAddress(address, chain);
+  return WalletFactory(chain).isValidAddress(address);
 };
 
 /**
@@ -22,7 +22,7 @@ const isValidAddress = (address: string, chain = "swt"): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string, chain: string = "swt"): boolean => {
-  return Wallet.isValidSecret(secret, chain);
+  return WalletFactory(chain).isValidSecret(secret);
 };
 
 /**
@@ -35,7 +35,7 @@ const isValidSecret = (secret: string, chain: string = "swt"): boolean => {
  */
 const getAddress = (secret: string, chain: string = "swt"): string | null => {
   try {
-    const wallet = Wallet.fromSecret(secret, chain);
+    const wallet = WalletFactory(chain).fromSecret(secret);
     return wallet.address;
   } catch (error) {
     return null;
@@ -50,7 +50,7 @@ const getAddress = (secret: string, chain: string = "swt"): string | null => {
  * @returns {IWalletModel}
  */
 const createWallet = (chain: string = "swt"): IWalletModel => {
-  const wallet = Wallet.generate(chain);
+  const wallet = WalletFactory(chain).generate();
   return wallet;
 };
 
