@@ -20,7 +20,7 @@ const config = {
       "base64-js": path.resolve(__dirname, "node_modules/base64-js"),
       elliptic: path.resolve(__dirname, "node_modules/elliptic"),
       scryptsy: path.resolve(__dirname, "node_modules/scryptsy"),
-      "base-x": path.resolve(__dirname, "node_modules/@swtc/address-codec/node_modules/base-x")
+      "base-x": path.resolve(__dirname, "node_modules/base-x")
     }
   },
   mode: process.env.MODE === "dev" ? "development" : "production",
