@@ -1,6 +1,7 @@
 "use strict";
+/// <reference path = "../types/index.ts" />
+
 import { Factory as WalletFactory } from "@swtc/wallet";
-import { IWalletModel } from "../types";
 const Wallet = WalletFactory("stm");
 /**
  * check stream secret is valid or not

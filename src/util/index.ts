@@ -1,10 +1,11 @@
+/// <reference path = "../types/index.ts" />
+
 import crypto = require("crypto");
 import { isEmptyObject } from "jcc_common";
 import createKeccakHash = require("keccak");
 import randombytes = require("randombytes");
 import scrypt = require("scryptsy");
 import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
-import { IEncryptModel, IKeypairsModel, IKeystoreModel } from "../types";
 
 /**
  * decrypt wallet with password

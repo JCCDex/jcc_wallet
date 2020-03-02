@@ -1,5 +1,6 @@
+/// <reference path = "../types/index.ts" />
+
 import { Factory as WalletFactory } from "@swtc/wallet";
-import { ICreateOptionsModel, IWalletModel } from "../types";
 const Wallet = WalletFactory("xrp");
 
 /**

@@ -1,4 +1,4 @@
-export interface IKdfparamsModel {
+declare interface IKdfparamsModel {
   dklen: number;
   n: number;
   p: number;
@@ -6,14 +6,14 @@ export interface IKdfparamsModel {
   salt: string;
 }
 
-export interface ICryptoModel {
+declare interface ICryptoModel {
   cipher: string;
   iv: string;
   kdf: string;
   kdfparams: IKdfparamsModel;
 }
 
-export interface IKeystoreModel {
+declare interface IKeystoreModel {
   address?: string;
   alias?: string;
   ciphertext: string;
@@ -23,7 +23,7 @@ export interface IKeystoreModel {
   crypto: ICryptoModel;
 }
 
-export interface IJingchangWalletModel {
+declare interface IJingchangWalletModel {
   id?: string;
   version?: string;
   contact?: any;
@@ -37,17 +37,17 @@ export interface IJingchangWalletModel {
  * @member address
  * @member secret
  */
-export interface IWalletModel {
+declare interface IWalletModel {
   address: string;
   secret: string;
 }
 
-export interface ICreateOptionsModel {
-  algorithm?: "ed25519" | "secp256k1";
-  entropy?: string;
+declare interface ICreateOptionsModel {
+  algorithm?: "ed25519" | "ecdsa-secp256k1";
+  entropy?: Uint8Array;
 }
 
-export interface IEncryptModel {
+declare interface IEncryptModel {
   cipher?: string;
   dklen?: number;
   iv?: string;
@@ -57,7 +57,7 @@ export interface IEncryptModel {
   salt?: string;
 }
 
-export interface IKeypairsModel {
+declare interface IKeypairsModel {
   secret: string;
   default?: boolean;
   type?: string;
@@ -65,12 +65,12 @@ export interface IKeypairsModel {
   alias?: string;
 }
 
-export interface IKeyPair {
+declare interface IKeyPair {
   privateKey: string;
   publicKey: string;
 }
 
-export interface IEncrypt {
+declare interface IEncrypt {
   iv: string;
   ephemPublicKey: string;
   ciphertext: string;

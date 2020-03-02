@@ -1,3 +1,5 @@
+/// <reference path = "../types/index.ts" />
+
 import crypto = require("crypto");
 import ethereumjsUtil = require("ethereumjs-util");
 import Wallet = require("ethereumjs-wallet");
@@ -5,7 +7,6 @@ import { filterOx, isEmptyObject } from "jcc_common";
 import createKeccakHash = require("keccak");
 import scrypt = require("scryptsy");
 import { ETH_PASSWORD_IS_WRONG, KEYSTORE_IS_INVALID } from "../constant";
-import { IWalletModel } from "../types";
 
 const isObject = (obj: any): boolean => {
   return Object.prototype.toString.call(obj) === "[object Object]";

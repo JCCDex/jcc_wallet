@@ -1,3 +1,5 @@
+/// <reference path = "../types/index.ts" />
+
 import assert = require("assert");
 import cloneDeep = require("clone-deep");
 import crypto = require("crypto");
@@ -7,7 +9,6 @@ import Lockr = require("lockr");
 import { Factory as KeypairsFactory } from "@swtc/keypairs";
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
 import { createWallet, getAddress, isValidSecret } from "../jingtum";
-import { IEncrypt, IJingchangWalletModel, IKeyPair, IKeypairsModel, IKeystoreModel } from "../types";
 import { decrypt, encryptWallet } from "../util";
 
 Lockr.prefix = "jingchang_";

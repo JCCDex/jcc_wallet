@@ -1,5 +1,6 @@
+/// <reference path = "../types/index.ts" />
+
 import { Factory as WalletFactory } from "@swtc/wallet";
-import { IWalletModel } from "../types";
 
 /**
  * check swtc or bizain address is valid or not

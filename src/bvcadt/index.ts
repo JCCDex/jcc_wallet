@@ -1,5 +1,6 @@
+/// <reference path = "../types/index.ts" />
+
 import { Factory as WalletFactory } from "@swtc/wallet";
-import { ICreateOptionsModel, IWalletModel } from "../types";
 const Wallet = WalletFactory("bvcadt");
 /**
  * check bvcadt address is valid or not
