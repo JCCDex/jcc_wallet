@@ -22,7 +22,7 @@
         "order": ["public-static-field", "public-instance-field", "private-static-field", "private-instance-field", "public-constructor", "private-constructor", "public-instance-method", "protected-instance-method", "private-instance-method"]
       }
     ],
-    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
     "space-before-function-paren": [
       true,
       {
@@ -32,6 +32,7 @@
         "constructor": "never"
       }
     ],
-    "array-type": [true, "generic"]
+    "array-type": [true, "generic"],
+    "no-reference": false
   }
 }
