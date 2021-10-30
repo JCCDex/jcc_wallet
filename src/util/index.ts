@@ -1,10 +1,8 @@
-/// <reference path = "../types/index.ts" />
-
-import crypto = require("crypto");
+import crypto from "crypto";
 import { isEmptyObject } from "jcc_common";
-import createKeccakHash = require("keccak");
-import randombytes = require("randombytes");
-import scrypt = require("scryptsy");
+import createKeccakHash from "keccak";
+import randombytes from "randombytes";
+import scrypt from "scryptsy";
 import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
 
 /**

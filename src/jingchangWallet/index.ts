@@ -1,11 +1,9 @@
-/// <reference path = "../types/index.ts" />
-
-import assert = require("assert");
-import cloneDeep = require("clone-deep");
-import crypto = require("crypto");
-import eccrypto = require("eccrypto");
+import assert from "assert";
+import cloneDeep from "clone-deep";
+import crypto from "crypto";
+import eccrypto from "eccrypto";
 import { isEmptyObject } from "jcc_common";
-import Lockr = require("lockr");
+import Lockr from "lockr";
 import { Factory as KeypairsFactory } from "@swtc/keypairs";
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
 import { createWallet, getAddress, isValidSecret } from "../jingtum";

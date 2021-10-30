@@ -1,8 +1,6 @@
 "use strict";
-/// <reference path = "../types/index.ts" />
-
-import ethereumjsUtil = require("ethereumjs-util");
-import Wallet = require("ethereumjs-wallet");
+import { isValidPrivate, privateToAddress, bufferToHex } from "ethereumjs-util";
+import Wallet from "ethereumjs-wallet";
 import { filterOx } from "jcc_common";
 
 /**
@@ -13,7 +11,7 @@ import { filterOx } from "jcc_common";
  */
 const isValidSecret = (secret: string): boolean => {
   try {
-    return ethereumjsUtil.isValidPrivate(Buffer.from(filterOx(secret), "hex"));
+    return isValidPrivate(Buffer.from(filterOx(secret), "hex"));
   } catch (error) {
     return false;
   }
@@ -40,8 +38,8 @@ const getAddress = (secret: string): string | null => {
   if (!isValidSecret(secret)) {
     return null;
   }
-  const buffer = ethereumjsUtil.privateToAddress(Buffer.from(secret, "hex"));
-  const decodeAddress = ethereumjsUtil.bufferToHex(buffer);
+  const buffer = privateToAddress(Buffer.from(secret, "hex"));
+  const decodeAddress = bufferToHex(buffer);
   return decodeAddress;
 };
 

@@ -1,6 +1,4 @@
 "use strict";
-/// <reference path = "../types/index.ts" />
-
 import { Factory as WalletFactory } from "@swtc/wallet";
 const Wallet = WalletFactory("stm");
 /**

@@ -11,7 +11,8 @@
     "declaration": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*"

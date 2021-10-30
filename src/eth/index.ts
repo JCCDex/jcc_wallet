@@ -1,11 +1,10 @@
-/// <reference path = "../types/index.ts" />
 
-import crypto = require("crypto");
-import ethereumjsUtil = require("ethereumjs-util");
-import Wallet = require("ethereumjs-wallet");
+import crypto from "crypto";
+import { isValidPrivate, isValidAddress as isValidEthereumAddress, privateToAddress, bufferToHex } from "ethereumjs-util";
+import Wallet from "ethereumjs-wallet";
 import { filterOx, isEmptyObject } from "jcc_common";
-import createKeccakHash = require("keccak");
-import scrypt = require("scryptsy");
+import createKeccakHash from "keccak";
+import scrypt from "scryptsy";
 import { ETH_PASSWORD_IS_WRONG, KEYSTORE_IS_INVALID } from "../constant";
 
 const isObject = (obj: any): boolean => {
@@ -21,7 +20,7 @@ const isObject = (obj: any): boolean => {
 const isValidSecret = (secret: string): boolean => {
   secret = filterOx(secret);
   try {
-    return ethereumjsUtil.isValidPrivate(Buffer.from(secret, "hex"));
+    return isValidPrivate(Buffer.from(secret, "hex"));
   } catch (error) {
     return false;
   }
@@ -34,7 +33,7 @@ const isValidSecret = (secret: string): boolean => {
  * @returns {boolean} return true if valid
  */
 const isValidAddress = (address: string): boolean => {
-  return ethereumjsUtil.isValidAddress(address);
+  return isValidEthereumAddress(address);
 };
 
 /**
@@ -47,8 +46,8 @@ const getAddress = (secret: string): string | null => {
   if (!isValidSecret(secret)) {
     return null;
   }
-  const buffer = ethereumjsUtil.privateToAddress(Buffer.from(secret, "hex"));
-  const decodeAddress = ethereumjsUtil.bufferToHex(buffer);
+  const buffer = privateToAddress(Buffer.from(secret, "hex"));
+  const decodeAddress = bufferToHex(buffer);
   return decodeAddress;
 };
 
