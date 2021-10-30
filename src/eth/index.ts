@@ -1,6 +1,10 @@
-
 import crypto from "crypto";
-import { isValidPrivate, isValidAddress as isValidEthereumAddress, privateToAddress, bufferToHex } from "ethereumjs-util";
+import {
+  isValidPrivate,
+  isValidAddress as isValidEthereumAddress,
+  privateToAddress,
+  bufferToHex
+} from "ethereumjs-util";
 import Wallet from "ethereumjs-wallet";
 import { filterOx, isEmptyObject } from "jcc_common";
 import createKeccakHash from "keccak";
@@ -69,7 +73,14 @@ const decryptKeystore = (password: string, encryptData: any): string => {
   }
   const iv = Buffer.from(cryptoData.cipherparams.iv, "hex");
   const kdfparams = cryptoData.kdfparams;
-  const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+  const derivedKey = scrypt(
+    Buffer.from(password),
+    Buffer.from(kdfparams.salt, "hex"),
+    kdfparams.n,
+    kdfparams.r,
+    kdfparams.p,
+    kdfparams.dklen
+  );
   const ciphertext = Buffer.from(cryptoData.ciphertext, "hex");
   const mac = createKeccakHash("keccak256")
     .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))

@@ -9,9 +9,33 @@ let testBizainSecret = "ssySqG4BhxpngV2FjAe1SJYFD4dcm";
 
 let undefinedValue;
 
-let invalidAddresses = ["", null, undefinedValue, {}, [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456];
+let invalidAddresses = [
+  "",
+  null,
+  undefinedValue,
+  {},
+  [],
+  "xxxx",
+  testAddress.substring(1),
+  testAddress + "a",
+  true,
+  false,
+  123456
+];
 
-let invalidSecrets = ["", null, undefinedValue, {}, [], "xxxx", testSecret.substring(1), testSecret + "a", true, false, 123456];
+let invalidSecrets = [
+  "",
+  null,
+  undefinedValue,
+  {},
+  [],
+  "xxxx",
+  testSecret.substring(1),
+  testSecret + "a",
+  true,
+  false,
+  123456
+];
 describe("test jingtum", function() {
   describe("test isValidAddress", function() {
     it("should return true when the jingtum address is valid", function() {

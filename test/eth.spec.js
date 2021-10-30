@@ -27,7 +27,19 @@ const testSecret = "ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c250a883e
 const testAddress = "0x2995c1376a852e4040caf9dbae2c765e24c37a15";
 
 let undefinedValue;
-let invalidAddresses = ["", null, undefinedValue, {}, [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456];
+let invalidAddresses = [
+  "",
+  null,
+  undefinedValue,
+  {},
+  [],
+  "xxxx",
+  testAddress.substring(1),
+  testAddress + "a",
+  true,
+  false,
+  123456
+];
 
 let invalidSecrets = ["", null, undefinedValue, {}, [], "xxxx", testSecret.substring(1), true, false, 123456];
 

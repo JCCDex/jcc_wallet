@@ -396,7 +396,11 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  public changePasswordWithAddress(address: string, oldPassword: string, newPassword: string): Promise<IJingchangWalletModel> {
+  public changePasswordWithAddress(
+    address: string,
+    oldPassword: string,
+    newPassword: string
+  ): Promise<IJingchangWalletModel> {
     return new Promise(async (resolve, reject) => {
       if (this._samePassword) {
         return reject(new Error("the property of _samePassword is true, so please don't call this function!"));
@@ -504,7 +508,12 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  public importSecret(secret: string, password: string, type: string, retriveSecret: (secret: string) => string): Promise<IJingchangWalletModel> {
+  public importSecret(
+    secret: string,
+    password: string,
+    type: string,
+    retriveSecret: (secret: string) => string
+  ): Promise<IJingchangWalletModel> {
     return new Promise(async (resolve, reject) => {
       try {
         if (this._samePassword) {

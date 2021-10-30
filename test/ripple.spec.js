@@ -8,7 +8,19 @@ const rippleWallet = require("../lib").rippleWallet;
 
 let undefinedValue;
 
-let invalidAddresses = ["", null, undefinedValue, {}, [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456];
+let invalidAddresses = [
+  "",
+  null,
+  undefinedValue,
+  {},
+  [],
+  "xxxx",
+  testAddress.substring(1),
+  testAddress + "a",
+  true,
+  false,
+  123456
+];
 
 let invalidSecrets = ["", null, undefinedValue, {}, [], "xxxx", testSecret.substring(1), true, false, 123456];
 describe("test ripple", function() {

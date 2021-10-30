@@ -5,9 +5,33 @@ const testAddress = "vaFtuK2skLZUCcqHvsFk2BMKpzQmJbQsXa";
 const testSecret = "sp5KqpgwuHo3ejF5Bf9kDSJPivEYV";
 
 let undefinedValue;
-let invalidAddresses = ["", null, undefinedValue, {}, [], "xxxx", testAddress.substring(1), testAddress + "a", true, false, 123456];
+let invalidAddresses = [
+  "",
+  null,
+  undefinedValue,
+  {},
+  [],
+  "xxxx",
+  testAddress.substring(1),
+  testAddress + "a",
+  true,
+  false,
+  123456
+];
 
-let invalidSecrets = ["", null, undefinedValue, {}, [], "xxxx", testSecret.substring(1), testSecret + "a", true, false, 123456];
+let invalidSecrets = [
+  "",
+  null,
+  undefinedValue,
+  {},
+  [],
+  "xxxx",
+  testSecret.substring(1),
+  testSecret + "a",
+  true,
+  false,
+  123456
+];
 
 describe("test stm", function() {
   describe("test createWallet", function() {
