@@ -6,7 +6,7 @@ import { isEmptyObject } from "jcc_common";
 import Lockr from "lockr";
 import { Factory as KeypairsFactory } from "@swtc/keypairs";
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
-import { createWallet, getAddress, isValidSecret } from "../jingtum";
+import { jtWallet } from "../x-wallet";
 import { decrypt, encryptWallet } from "../util";
 
 Lockr.prefix = "jingchang_";
@@ -91,14 +91,14 @@ export default class JingchangWallet {
     return new Promise((resolve, reject) => {
       const keypairs: any = {};
       if (secret === undefined) {
-        const wallet = createWallet();
+        const wallet = jtWallet.createWallet();
         secret = wallet.secret;
         keypairs.address = wallet.address;
       } else {
-        if (!isValidSecret(secret)) {
+        if (!jtWallet.isValidSecret(secret)) {
           return reject(new Error(SECRET_IS_INVALID));
         }
-        keypairs.address = getAddress(secret);
+        keypairs.address = jtWallet.getAddress(secret);
       }
       keypairs.secret = secret;
       keypairs.type = "swt";

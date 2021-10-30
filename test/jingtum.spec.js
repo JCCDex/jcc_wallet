@@ -3,7 +3,8 @@ const expect = chai.expect;
 const jtWallet = require("../lib").jtWallet;
 let testAddress = "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH";
 let testSecret = "snfXQMEVbbZng84CcfdKDASFRi4Hf";
-
+const XWallet = require("../lib").XWallet;
+const bizainWallet = XWallet("bizain");
 let testBizainAddress = "bMAy4Pu8CSf5apR44HbYyLFKeC9Dbau16Q";
 let testBizainSecret = "ssySqG4BhxpngV2FjAe1SJYFD4dcm";
 
@@ -41,7 +42,7 @@ describe("test jingtum", function() {
     it("should return true when the jingtum address is valid", function() {
       let isValid = jtWallet.isValidAddress(testAddress);
       expect(isValid).to.equal(true);
-      isValid = jtWallet.isValidAddress(testBizainAddress, "bwt");
+      isValid = bizainWallet.isValidAddress(testBizainAddress);
       expect(isValid).to.equal(true);
     });
 
@@ -57,7 +58,7 @@ describe("test jingtum", function() {
     it("should return true when the jingtum secret is valid", function() {
       let isValid = jtWallet.isValidSecret(testSecret);
       expect(isValid).to.equal(true);
-      isValid = jtWallet.isValidSecret(testBizainSecret, "bwt");
+      isValid = bizainWallet.isValidSecret(testBizainSecret);
       expect(isValid).to.equal(true);
     });
 
@@ -73,7 +74,7 @@ describe("test jingtum", function() {
     it("should return correct address if the secret is valid", function() {
       let address = jtWallet.getAddress(testSecret);
       expect(address).to.equal(testAddress);
-      address = jtWallet.getAddress(testBizainSecret, "bwt");
+      address = bizainWallet.getAddress(testBizainSecret);
       expect(address).to.equal(testBizainAddress);
     });
 
@@ -93,9 +94,9 @@ describe("test jingtum", function() {
       let b = jtWallet.isValidSecret(secret);
       expect(a).to.equal(true);
       expect(b).to.equal(true);
-      wallet = jtWallet.createWallet("bwt");
-      a = jtWallet.isValidAddress(wallet.address, "bwt");
-      b = jtWallet.isValidSecret(wallet.secret, "bwt");
+      wallet = bizainWallet.createWallet();
+      a = bizainWallet.isValidAddress(wallet.address);
+      b = bizainWallet.isValidSecret(wallet.secret);
       expect(a).to.equal(true);
       expect(b).to.equal(true);
     });

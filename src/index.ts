@@ -19,22 +19,9 @@
  * @author https://github.com/GinMu
  */
 
-import * as bvcadtWallet from "./bvcadt";
-import * as callWallet from "./call";
 import * as ethWallet from "./eth";
 import JingchangWallet from "./jingchangWallet";
-import * as jtWallet from "./jingtum";
 import * as moacWallet from "./moac";
-import * as rippleWallet from "./ripple";
-import * as stmWallet from "./stm";
+export * from "./x-wallet";
 
-export {
-    bvcadtWallet,
-    callWallet,
-    ethWallet,
-    JingchangWallet,
-    jtWallet,
-    moacWallet,
-    rippleWallet,
-    stmWallet
-};
+export { ethWallet, JingchangWallet, moacWallet };
