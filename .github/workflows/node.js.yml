@@ -29,7 +29,16 @@ jobs:
     - run: npm ci
     - run: npm run test:node
     - run: npm run tslint
-    - run: npm run coveralls
+    
+  finish:
+    needs: node-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
  
   headless-test:
     strategy:
