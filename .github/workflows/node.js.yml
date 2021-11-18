@@ -43,19 +43,22 @@ jobs:
 #       with:
 #         github-token: ${{ secrets.github_token }}
  
-#   headless-test:
-#     strategy:
-#       matrix:
-#         os: [macos-latest, ubuntu-latest, windows-latest]
-#     runs-on: ${{ matrix.os }}
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v2
-#       - name: Run headless test
-#         uses: GabrielBB/xvfb-action@v1
-#         with:
-#           run: npm run test:browser
-#           working-directory: ./
+  headless-test:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node-version: [16.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run headless test
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run test:browser
     
   
     
