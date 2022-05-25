@@ -22,6 +22,8 @@
 import * as ethWallet from "./eth";
 import JingchangWallet from "./jingchangWallet";
 import * as moacWallet from "./moac";
+import * as hdWallet from "./hd";
+
 export * from "./x-wallet";
 
-export { ethWallet, JingchangWallet, moacWallet };
+export { ethWallet, JingchangWallet, moacWallet, hdWallet };
