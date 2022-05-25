@@ -2,44 +2,9 @@ const chai = require("chai");
 const { hdWallet } = require("../lib");
 const expect = chai.expect;
 const jtWallet = require("../lib").jtWallet;
-let testAddress = "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH";
-let testSecret1 = "snfXQMEVbbZng84CcfdKDASFRi4Hf";
-const XWallet = require("../lib").XWallet;
-const HDWallet = require("../lib").hdWallet;
-const bizainWallet = XWallet("bizain");
-
-let testBizainAddress = "bMAy4Pu8CSf5apR44HbYyLFKeC9Dbau16Q";
-let testBizainSecret = "ssySqG4BhxpngV2FjAe1SJYFD4dcm";
 
 let undefinedValue;
 
-let invalidAddresses = [
-  "",
-  null,
-  undefinedValue,
-  {},
-  [],
-  "xxxx",
-  testAddress.substring(1),
-  testAddress + "a",
-  true,
-  false,
-  123456
-];
-
-let invalidSecrets = [
-  "",
-  null,
-  undefinedValue,
-  {},
-  [],
-  "xxxx",
-  testSecret1.substring(1),
-  testSecret1 + "a",
-  true,
-  false,
-  123456
-];
 let testMnemonic = [
   "monkey",
   "engage",
@@ -118,7 +83,7 @@ describe("test hd create", function() {
       chain = hdWallet.getBIP44Chain(CHAIN.BSC);
       expect(chain[0][1]).to.equal("BSC");
 
-      let swtc1_kp = hdWallet.getHDKeypair(testSecret, CHAIN.SWTC, undefined, 0);
+      let swtc1_kp = hdWallet.getHDKeypair(testSecret, CHAIN.SWTC, undefinedValue, 0);
       expect(swtc1_kp.privateKey).to.equal(swtc_keypairs[0].privateKey);
       let bsc1_kp = hdWallet.getHDKeypair(testSecret, CHAIN.BSC, 0, 0);
       expect(bsc1_kp.privateKey).to.equal(bsc_keypairs[0].privateKey);
