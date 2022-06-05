@@ -76,3 +76,44 @@ declare interface IEncrypt {
   ciphertext: string;
   mac: string;
 }
+
+declare interface IMnemonic {
+  mnemonic: string;
+  language: string;
+}
+
+declare interface IBIP44Path {
+  chain: number;
+  account: number;
+  change: number;
+  index: number;
+}
+
+/**
+ * hd wallet interface
+ *
+ * @export
+ * @interface IHDWallet
+ * @member address
+ * @member secret
+ * @member keyPair
+ * @member type ethereum, swtc, btc etc.
+ * @member derivationPath for bip44 m/44'/60'/0'/0 means ethereum wallet
+ */
+declare interface IHDWallet {
+  // address: string;
+  secret?: string;
+  // mnemonic?: string;
+  // keyPair?: IKeyPair;
+  // type?: string;
+  // derivationPath?: string;
+}
+
+declare interface IHDPlugin {
+  address(...args): string;
+  // generate(...args): IHDWallet;
+  // fromMnemonic(mnemonic: string): IHDWallet;
+  // fromSecret(secret: string): IHDWallet;
+  // sign(...args): any;
+  // getHDWallet(...args): IHDWallet;
+}

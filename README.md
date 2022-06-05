@@ -403,6 +403,37 @@ const JingchangWallet = require("jcc_wallet").JingchangWallet;
  */
 ```
 
+## HD Wallet
+
+create from Mnemonic or secret
+
+generate to multichain & purpose wallet
+
+sign message & sign tx
+
+get address no secret, raw public and private key
+
+used in code
+
+hd = create...
+eth_hd = create..path
+wallet 要有 keypair, 链类型， path 信息
+
+```javascript
+// 典型的hdwallet操作
+IHDWallet hd = HDWallet.generate(...args);
+
+hd.deriveWallet(...args) // path, chain code
+hd.getAddress();
+
+hd.validAddress(...args) //chain code
+hd.validSecret(...args) // chaincode
+hd.getKeyPair();
+hd.sign(...args);
+hd.signTx(...args);
+
+```
+
 ## Deprecated API
 
 **_Deprecated api will be removed after 2020.1.1, please update asap._**
