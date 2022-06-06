@@ -3,6 +3,7 @@ const expect = chai.expect;
 const jtWallet = require("../lib").jtWallet;
 const { Wallet, KeyPair } = require("@swtc/wallet");
 const { HDWallet, BIP44Chain } = require("../lib").hdWallet;
+
 let undefinedValue;
 
 let testMnemonic = [
@@ -31,6 +32,7 @@ let swtc_keypairs = [
     publicKey: "02957E4B1DF22FDE4A083F2C552A9F1D608FBEE39D148C7F6E6E24BA2FE36F7655"
   }
 ];
+let root_account = "jN2NEAiZpNYHYbFUdZbkCpEcxDTWBJ6AvA";
 let swtc_account = [
   { address: "jUhKMKuvBCckGF99AsmaFkxn9fchcH93Af" },
   { address: "jHos7UKbM2ZXruUptboo2mM3ZrJkfryqAw" }
@@ -75,6 +77,7 @@ describe("test hd create", function() {
     it("derive HDWallet test", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       expect(hd.secret()).to.equal(testSecret);
+      expect(hd.isRoot()).to.equal(true);
 
       let swtcHd = hd.deriveWallet({ chain: BIP44Chain.SWTC, account: 0, index: 0 });
       expect(swtcHd.keypair().privateKey).to.equal(swtc_keypairs[0].privateKey);
@@ -83,6 +86,7 @@ describe("test hd create", function() {
 
       let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
       expect(bscHd.keypair().privateKey).to.equal(bsc_keypairs[0].privateKey);
+      expect(bscHd.isRoot()).to.equal(false);
       let bscAddress = bscHd.address();
       expect(bscAddress).to.equal(bsc_account[0].address);
 
@@ -90,6 +94,75 @@ describe("test hd create", function() {
       expect(bscHd2.keypair().privateKey).to.equal(bsc_keypairs[1].privateKey);
       let bscAddress2 = bscHd2.address();
       expect(bscAddress2).to.equal(bsc_account[1].address);
+    });
+  });
+  describe("test swtc plugin", function() {
+    it("test swtc plugin invalid pair", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      let rootAddress = hd.address();
+      expect(rootAddress).to.equal(root_account);
+
+      let swtcHd = hd.deriveWallet({ chain: BIP44Chain.SWTC, account: 0, index: 0 });
+      // set invalid keypair
+      swtcHd.setKeypair({ privateKey: "", publicKey: "" });
+      let swtcAddress = swtcHd.address();
+      expect(swtcAddress).to.equal(null);
+    });
+    it("test deriveWallet invalid options", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+
+      let bscHd = hd.deriveWallet({ chain: "bsc", account: 0, index: 0 });
+      expect(bscHd).to.equal(null);
+    });
+    it("test getHDKeypair invalid chain", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+
+      let pair = HDWallet.getHDKeypair(hd.secret(), 1234, 0, 0);
+      expect(pair).to.equal(null);
+    });
+    it("test generate without options", function() {
+      let hd = HDWallet.generate();
+      let mnemonic = hd.mnemonic().mnemonic.split(" ");
+      expect(mnemonic.length).to.equal(12);
+    });
+    it("test create HDWallet without options", function() {
+      try {
+        let hd = new HDWallet({});
+      } catch (e) {
+        expect(e.message.length > 0).to.equal(true);
+      }
+      try {
+        let hd = new HDWallet();
+      } catch (e) {
+        expect(e.message.length > 0).to.equal(true);
+      }
+    });
+    it("test getAddress with 64 length privatekey", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+
+      let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
+      let keypair = bscHd.keypair();
+      keypair.privateKey = keypair.privateKey.substring(2);
+      let bscAddress = bscHd.address();
+      expect(bscAddress).to.equal(bsc_account[0].address);
+      // get again cover all condition
+      bscAddress = bscHd.address();
+      expect(bscAddress).to.equal(bsc_account[0].address);
+    });
+    it("test generate without parameters", function() {
+      let mnemonic = HDWallet.generateMnemonic().split(" ");
+      expect(mnemonic.length).to.equal(12);
+
+      mnemonic = HDWallet.generateMnemonic(128).split(" ");
+      expect(mnemonic.length).to.equal(12);
+    });
+    it("test get mnemonic with language parameters", function() {
+      let mnemonic = HDWallet.getMnemonicFromSecret(testSecret, "english").split(" ");
+      expect(mnemonic.length).to.equal(12);
+    });
+    it("test get keypair without account parameter", function() {
+      let keypair = HDWallet.getHDKeypair(testSecret, BIP44Chain.BSC, undefinedValue, 0);
+      expect(keypair.privateKey).to.equal(bsc_keypairs[0].privateKey);
     });
   });
   describe("test swtc hd create&recover&sign", function() {

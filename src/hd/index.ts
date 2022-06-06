@@ -3,7 +3,6 @@ import * as BIP39 from "bip39";
 import BIP32Factory from "bip32";
 import * as ecc from "tiny-secp256k1";
 import { BIP44Chain, BIP44ChainMap, getBIP44Chain } from "./constant";
-// import { hdkey } from 'ethereumjs-wallet'
 import { getPluginByType } from "./plugins";
 
 const addressCodec = KeyPair.addressCodec;
@@ -153,6 +152,10 @@ export class HDWallet {
    * @returns {object} return hd wallet object
    */
   constructor(opt: any) {
+    if (!opt) {
+      throw new Error("undefined parameters: " + opt);
+    }
+
     this._path = {
       chain: 0,
       account: 0,
@@ -188,7 +191,7 @@ export class HDWallet {
     }
 
     // parameter error;
-    return null;
+    throw new Error("invalid parameters: " + opt);
   }
 
   /**
@@ -233,7 +236,7 @@ export class HDWallet {
   };
   public address = (): string => {
     if (!this._address) {
-      const chain = BIP44ChainMap.get(this._path.chain);
+      const chain = this.isRoot() ? BIP44ChainMap.get(BIP44Chain.SWTC) : BIP44ChainMap.get(this._path.chain);
       this._address = getPluginByType(chain).address(this._secret ? this._secret : this._keypair.privateKey, chain);
     }
 
@@ -241,5 +244,8 @@ export class HDWallet {
   };
   public keypair = (): IKeyPair => {
     return this._keypair;
+  };
+  public setKeypair = (keypair: IKeyPair): void => {
+    this._keypair = keypair;
   };
 }

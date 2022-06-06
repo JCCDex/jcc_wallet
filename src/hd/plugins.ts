@@ -25,6 +25,6 @@ const pluginMap: IPluginMap = {
   jingtum: swtcPlugin
 };
 
-export function getPluginByType<T extends IHDPlugin>(type = "swtc"): T {
+export function getPluginByType<T extends IHDPlugin>(type: string): T {
   return pluginMap[type] as T;
 }
