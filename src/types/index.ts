@@ -110,7 +110,13 @@ declare interface IHDWallet {
 }
 
 declare interface IHDPlugin {
-  address(...args): string;
+  address(key: IKeyPair | string, ...args): string;
+  isValidAddress(...args): boolean;
+  isValidSecret(...args): boolean;
+  hash(message: string, ...args): string;
+  sign(message: string, ...args): string;
+  verify(messgae: string, signature: string, address: string, ...args): boolean;
+  proxy(functionName: string, ...args): any;
   // generate(...args): IHDWallet;
   // fromMnemonic(mnemonic: string): IHDWallet;
   // fromSecret(secret: string): IHDWallet;

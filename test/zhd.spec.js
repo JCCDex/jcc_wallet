@@ -2,6 +2,7 @@ const chai = require("chai");
 const expect = chai.expect;
 const jtWallet = require("../lib").jtWallet;
 const { Wallet, KeyPair } = require("@swtc/wallet");
+const { hdWallet } = require("../lib");
 const { HDWallet, BIP44Chain } = require("../lib").hdWallet;
 
 let undefinedValue;
@@ -41,9 +42,12 @@ let bsc_keypairs = [
   {
     privateKey: "00403D510E3864CAA16F00BE92782F130B3F4215369C281B963682E268BC0DF309",
     publicKey: "023C236C9AA6A34033808E5F2408D7264250F6EC29E189C01559B57DD4E590B73E"
+    // 在ethereum中利用privateKey生成的publicKey 完整内容如下，swtc lib对其内容进行了截断
+    //            3C236C9AA6A34033808E5F2408D7264250F6EC29E189C01559B57DD4E590B73ECF2761AAB655454C6880D736C5778E6DC42DF95B2A411785828570B9C06A4B6E
   },
   {
     privateKey: "00B2ED76D75561443F1E900DACE35301C3CDE52E0AAC5786D7A860B367D8EAE892",
+    //0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318
     publicKey: "026E6B82354F8293B766960A3EBF87D850B98BD53C2AAF8F73B574F755816520F8"
   }
 ];
@@ -165,6 +169,160 @@ describe("test hd create", function() {
       expect(keypair.privateKey).to.equal(bsc_keypairs[0].privateKey);
     });
   });
+  describe("test plugin isValidAddress and isValidSecret", function() {
+    it("test swtc isValidAddress", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      let ret = hd.isValidAddress(root_account);
+      expect(ret).to.equal(true);
+      ret = hd.isValidAddress("jN2NEAiZpNYHYbFUdZbkCpEcxDTWBJ6Avs");
+      expect(ret).to.equal(false);
+
+      // test xrp
+      let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
+      ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBTE");
+      expect(ret).to.equal(true);
+      ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
+      expect(ret).to.equal(false);
+
+      // test eth like
+      let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
+      ret = bscHd.isValidAddress(bsc_account[0].address);
+      expect(ret).to.equal(true);
+      ret = bscHd.isValidAddress("0xf56a34e674d5ea95385c588e21906a43e7e22a7c1");
+      expect(ret).to.equal(false);
+    });
+    it("test swtc isValidSecret", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      let ret = hd.isValidSecret(hd.secret());
+      expect(ret).to.equal(true);
+      ret = hd.isValidSecret("shgy1jjPkx1Z75zKsSit5TuAsKV86");
+      expect(ret).to.equal(false);
+
+      // test xrp
+      let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
+      let api = hd.getWalletApi();
+      ret = xrpHd.isValidSecret("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
+      expect(ret).to.equal(false);
+      ret = api.isValidSecret("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
+      expect(ret).to.equal(false);
+      ret = api.proxy("isValidSecret", "rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
+      expect(ret).to.equal(false);
+
+      // test eth like
+      let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
+      api = bscHd.getWalletApi();
+      ret = bscHd.isValidSecret("0xf56a34e674d5ea95385c588e21906a43e7e22a7c1");
+      expect(ret).to.equal(false);
+      ret = api.isValidSecret("0x394e6e30a85375daab1940ec9ec5c6200ed85a479fdff45bcbcd81f5e73af18b");
+      expect(ret).to.equal(true);
+
+      ret = bscHd.isValidChecksumAddress(bscHd.address());
+      expect(ret).to.equal(false);
+    });
+  });
+
+  describe("test plugin hash&sign&verify", function() {
+    it("test swtc hash & sign & verify", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonic.join(" "), language: "english" });
+      hd.address();
+      let hash = hd.hash("234");
+      expect(hash).to.equal("6BB558F2A3F586D106FE800F8AD67B263DAF8F41CC2FACB04431E871143B87F3");
+      // message will be hashed in keypair module
+      let signed = hd.sign("234");
+      expect(signed).to.equal(
+        "30440220587D8CEDABCD642F1D25A4EFA5BC054C85F676C0AEF731B9CBDA0766B543B38B02201E731CF458162B0DE6DA94C472F70127AF62AC0563023832049E076FC63E35C4"
+      );
+
+      let verify = hd.verify("234", signed);
+      expect(verify).to.equal(true);
+
+      // test xrp
+      let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
+      hash = xrpHd.hash("234");
+      expect(hash).to.equal("6BB558F2A3F586D106FE800F8AD67B263DAF8F41CC2FACB04431E871143B87F3");
+      signed = xrpHd.sign("234");
+      expect(signed).to.equal(
+        "3045022100ADB86E642174EBDA51D7E40BA65083F38200A8364918827F1C374981F086ADEE0220590FAF6003DCFB73EF18D11C336EAFBF3D91A0EF2895511B2932B06A9BEDD526"
+      );
+
+      verify = xrpHd.verify("234", signed, xrpHd.address(), xrpHd.keypair());
+      expect(verify).to.equal(true);
+
+      verify = xrpHd.verify("234", signed, xrpHd.address(), {
+        privateKey: "",
+        publicKey: "028D99A9A1AE990ED89C5A94E200715D023AF06A626F4E0E92A6C258B790AE08FF"
+      });
+      expect(verify).to.equal(true);
+
+      verify = xrpHd.verify("234", signed, xrpHd.address(), {
+        privateKey: "0023D6E38372CC93AE3B128975462024CD0ED35F330AD2E81AC9089672A617E818",
+        publicKey: ""
+      });
+      expect(verify).to.equal(true);
+
+      verify = xrpHd.verify("234", signed, "rwggk3hXKzGsNwQtZEoDTygixVqKradBT1", xrpHd.keypair());
+      expect(verify).to.equal(false);
+
+      api = xrpHd.getWalletApi();
+      address = api.address({
+        privateKey: "",
+        publicKey: "028D99A9A1AE990ED89C5A94E200715D023AF06A626F4E0E92A6C258B790AE08FF"
+      });
+      expect(address).to.equal("rwggk3hXKzGsNwQtZEoDTygixVqKradBTE");
+      address = api.address("ragy1jjPkx1Z75zKsSit5TuAsKV85");
+      expect(address).to.equal(null);
+
+      // test eth like
+      let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
+      let rawMessage = "Some data";
+      let web3Message = "\x19Ethereum Signed Message:\n" + rawMessage.length + rawMessage;
+      hash = bscHd.hash(web3Message);
+      expect(hash).to.equal("1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655");
+      signed = bscHd.sign(web3Message);
+      expect(signed).to.equal(
+        "75e6b11135309fd872db0d28a7d45c032e7fe443e847d4ea52063388fdd113c04985e074b398f32ca2baff8c34e806200bd15916fdadb9f4eadf8cad37962ace1b"
+      );
+      verify = bscHd.verify(web3Message, signed);
+      expect(verify).to.equal(true);
+      // 0x3c236c9aa6a34033808e5f2408d7264250f6ec29e189c01559b57dd4e590b73ecf2761aab655454c6880d736c5778e6dc42df95b2a411785828570b9c06a4b6e
+
+      // test signed like web3.accounts.sign
+      // https://web3js.readthedocs.io/en/v1.7.3/web3-eth-accounts.html#sign
+      api = bscHd.getWalletApi();
+      rawMessage = "Some data";
+      web3Message = "\x19Ethereum Signed Message:\n" + rawMessage.length + rawMessage;
+      signed = api.sign(web3Message, "0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318");
+      expect(signed).to.equal(
+        "b91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c"
+      );
+      verify = api.verify(web3Message, signed, "0x2c7536e3605d9c16a7a3d7b1898e529396a65c23", {
+        privateKey: "0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318",
+        publicKey: ""
+      });
+      expect(verify).to.equal(true);
+
+      address = api.address({
+        publicKey:
+          "3c236c9aa6a34033808e5f2408d7264250f6ec29e189c01559b57dd4e590b73ecf2761aab655454c6880d736c5778e6dc42df95b2a411785828570b9c06a4b6e",
+        privateKey: ""
+      });
+      expect(address).to.equal(bsc_account[0].address);
+      address = api.address({ publicKey: "", privateKey: "" });
+      expect(address).to.equal(null);
+
+      // // ret = bscHd.sign("Some data");
+      // // console.log("sign:", ret);
+
+      // ret = api.sign('Some data', "0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318");
+      // console.log("sign:", ret);
+
+      // // web3.sha3 equal etheruem-utils.keccak256
+      // // "c1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79"
+      // console.log(api.proxy("keccak256", Buffer.from("234", "utf-8")).toString("hex"));
+      // console.log(api.proxy("keccak256", Buffer.from("Some data", "utf-8")).toString("hex"));
+    });
+  });
+
   describe("test swtc hd create&recover&sign", function() {
     // 分层钱包签名
     // it("hdwallet address & sign", function() {

@@ -428,8 +428,11 @@ hd.getAddress();
 
 hd.validAddress(...args) //chain code
 hd.validSecret(...args) // chaincode
-hd.getKeyPair();
+
+作为文档要完善 proxy和接口的不同定位
+
 hd.sign(...args);
+hd.vrify(...args);
 hd.signTx(...args);
 
 ```

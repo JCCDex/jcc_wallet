@@ -4,6 +4,7 @@ import BIP32Factory from "bip32";
 import * as ecc from "tiny-secp256k1";
 import { BIP44Chain, BIP44ChainMap, getBIP44Chain } from "./constant";
 import { getPluginByType } from "./plugins";
+// import {hdkey} from "ethereumjs-wallet";
 
 const addressCodec = KeyPair.addressCodec;
 
@@ -61,9 +62,7 @@ export class HDWallet {
    * @returns {object} return keypair object
    */
   public static getKeypairFromSecret = (secret: string): any => {
-    const entropy = addressCodec.decodeSeed(secret).bytes;
-    const privateKey = Buffer.from(KeyPair.hash(entropy)).toString("hex");
-    return KeyPair.deriveKeypair(privateKey);
+    return KeyPair.deriveKeypair(secret);
   };
 
   /**
@@ -96,7 +95,7 @@ export class HDWallet {
     // const hdKey = hdkey.fromMasterSeed(seed);
     // const derivedHdKey = hdKey.derivePath(`m/44'/${chainIdx}'/${account}'/0`).deriveChild(index);
     // let wallet = derivedHdKey.getWallet();
-    // // console.log("wallet.privateKey:", wallet.getPrivateKeyString(), derivedHdKey);
+    // console.log("wallet:", wallet.getPrivateKeyString(), wallet.getPublicKeyString(), wallet.getAddressString());
     // if (wallet) {wallet = null;}
 
     return KeyPair.deriveKeypair(privateKey.toString("hex"));
@@ -234,14 +233,50 @@ export class HDWallet {
   public mnemonic = (): IMnemonic => {
     return this._mnemonic;
   };
+
+  public chain = (): string => {
+    return this.isRoot() ? BIP44ChainMap.get(BIP44Chain.SWTC) : BIP44ChainMap.get(this._path.chain);
+  };
+
   public address = (): string => {
     if (!this._address) {
-      const chain = this.isRoot() ? BIP44ChainMap.get(BIP44Chain.SWTC) : BIP44ChainMap.get(this._path.chain);
-      this._address = getPluginByType(chain).address(this._secret ? this._secret : this._keypair.privateKey, chain);
+      const chain = this.chain();
+      this._address = getPluginByType(chain).address(this._secret ? this._secret : this._keypair, chain);
     }
 
     return this._address;
   };
+
+  public isValidAddress = (address: string): boolean => {
+    return getPluginByType(this.chain()).isValidAddress(address);
+  };
+
+  public isValidSecret = (address: string): boolean => {
+    return getPluginByType(this.chain()).isValidSecret(address);
+  };
+  public hash = (message: string): string => {
+    return getPluginByType(this.chain()).hash(message);
+  };
+  public sign = (message: string): string => {
+    return getPluginByType(this.chain()).sign(message, this._keypair.privateKey);
+  };
+  public verify = (messgae: string, signature: string, address: string, keypair: IKeyPair): boolean => {
+    if (!address) {
+      address = this.address();
+    }
+    if (!keypair) {
+      keypair = this._keypair;
+    }
+    return getPluginByType(this.chain()).verify(messgae, signature, address, keypair);
+  };
+  public getWalletApi = (): IHDPlugin => {
+    return getPluginByType(this.chain());
+  };
+
+  public isValidChecksumAddress = (address: string): boolean => {
+    return getPluginByType(this.chain()).proxy("isValidChecksumAddress", address);
+  };
+
   public keypair = (): IKeyPair => {
     return this._keypair;
   };
