@@ -4,7 +4,6 @@ import BIP32Factory from "bip32";
 import * as ecc from "tiny-secp256k1";
 import { BIP44Chain, BIP44ChainMap, getBIP44Chain } from "./constant";
 import { getPluginByType } from "./plugins";
-// import {hdkey} from "ethereumjs-wallet";
 
 const addressCodec = KeyPair.addressCodec;
 
@@ -90,14 +89,6 @@ export class HDWallet {
     const b32 = bip32.fromSeed(seed);
     const privateKey = b32.derivePath(`m/44'/${chainIdx}'/${account}'/0/${index}`).privateKey;
 
-    // console.log("privateKey:", privateKey.toString("hex"));
-
-    // const hdKey = hdkey.fromMasterSeed(seed);
-    // const derivedHdKey = hdKey.derivePath(`m/44'/${chainIdx}'/${account}'/0`).deriveChild(index);
-    // let wallet = derivedHdKey.getWallet();
-    // console.log("wallet:", wallet.getPrivateKeyString(), wallet.getPublicKeyString(), wallet.getAddressString());
-    // if (wallet) {wallet = null;}
-
     return KeyPair.deriveKeypair(privateKey.toString("hex"));
   };
 
@@ -120,14 +111,34 @@ export class HDWallet {
     return new HDWallet({ mnemonic, language: opt.language });
   };
 
+  /**
+   * create hd wallet from secret
+   *
+   * @param {string} secret secret string
+   * @returns {object} return hd wallet object
+   */
   public static fromSecret = (secret: string): HDWallet => {
     return new HDWallet({ secret });
   };
 
+  /**
+   * create hd wallet from mnemonic
+   *
+   * @param {IMnemonic} mnemonic object like
+   *                    {mnemonic: "abc abc ...", language: "english"}
+   * @returns {object} return hd wallet object
+   */
   public static fromMnemonic = (mnemonic: IMnemonic): HDWallet => {
     return new HDWallet({ mnemonic: mnemonic.mnemonic, language: mnemonic.language });
   };
 
+  /**
+   * create hd wallet from keypair
+   *
+   * @param {IKeyPair} keypair object like
+   *                    {publicKey: "public key...", privateKey: "private key..."}
+   * @returns {object} return hd wallet object
+   */
   public static fromKeypair = (keypair: IKeyPair): HDWallet => {
     return new HDWallet({ keypair });
   };
@@ -203,7 +214,7 @@ export class HDWallet {
   };
 
   /**
-   * generate hd wallet
+   * generate hd wallet by derive path, obey BIP44 protocol
    *
    * @param {any} opt options of derive, like:
    *                  {
@@ -227,17 +238,38 @@ export class HDWallet {
     });
   };
 
+  /**
+   * get wallet secret
+   *
+   * @returns {string} return wallet secret
+   */
   public secret = (): string => {
     return this._secret;
   };
+
+  /**
+   * get wallet mnemonic
+   *
+   * @returns {IMnemonic} return IMnemonic object
+   */
   public mnemonic = (): IMnemonic => {
     return this._mnemonic;
   };
 
+  /**
+   * get chain of hd wallet
+   *
+   * @returns {string} return chain of hd wallet
+   */
   public chain = (): string => {
     return this.isRoot() ? BIP44ChainMap.get(BIP44Chain.SWTC) : BIP44ChainMap.get(this._path.chain);
   };
 
+  /**
+   * get address of hd wallet
+   *
+   * @returns {string} return address of hd wallet
+   */
   public address = (): string => {
     if (!this._address) {
       const chain = this.chain();
@@ -247,20 +279,55 @@ export class HDWallet {
     return this._address;
   };
 
+  /**
+   * check address valid or not
+   *
+   * @returns {boolean} true valid, false invalid
+   */
   public isValidAddress = (address: string): boolean => {
     return getPluginByType(this.chain()).isValidAddress(address);
   };
 
+  /**
+   * check secret valid or not
+   *
+   * @returns {boolean} true valid, false invalid
+   */
   public isValidSecret = (address: string): boolean => {
     return getPluginByType(this.chain()).isValidSecret(address);
   };
+
+  /**
+   * hash message
+   *
+   * @returns {string} return hash of message
+   */
   public hash = (message: string): string => {
     return getPluginByType(this.chain()).hash(message);
   };
+
+  /**
+   * sign message
+   * @notice how to operate message(raw or hashed) is different in native sdk of different chain
+   *         to avoid confusion, we assume that native sdk will automatically hashed message
+   *         if not the case of native sdk, we hash this message in lower level(plugin), for example ethereum sdk
+   * @returns {string} return signature string
+   */
   public sign = (message: string): string => {
     return getPluginByType(this.chain()).sign(message, this._keypair.privateKey);
   };
-  public verify = (messgae: string, signature: string, address: string, keypair: IKeyPair): boolean => {
+
+  /**
+   * verify signature valid or not
+   *
+   * @param {string} message origin message
+   * @param {string} signature signature
+   * @param {string} address account which sign
+   * @param {IKeyPair} keypair keypair object, usually to provide public key, private key not required
+   *
+   * @returns {boolean} true valid, false invalid
+   */
+  public verify = (messgae: string, signature: string, address?: string, keypair?: IKeyPair): boolean => {
     if (!address) {
       address = this.address();
     }
@@ -269,17 +336,29 @@ export class HDWallet {
     }
     return getPluginByType(this.chain()).verify(messgae, signature, address, keypair);
   };
+
+  /**
+   * get specified chain wallet api
+   *
+   * @returns {IHDPlugin} return hd plugin object
+   */
   public getWalletApi = (): IHDPlugin => {
     return getPluginByType(this.chain());
   };
 
-  public isValidChecksumAddress = (address: string): boolean => {
-    return getPluginByType(this.chain()).proxy("isValidChecksumAddress", address);
-  };
-
+  /**
+   * get keypair of hd wallet
+   *
+   * @returns {IKeyPair} return keypair of message
+   */
   public keypair = (): IKeyPair => {
     return this._keypair;
   };
+
+  /**
+   * set keypair
+   * @param {IKeyPair} keypair
+   */
   public setKeypair = (keypair: IKeyPair): void => {
     this._keypair = keypair;
   };

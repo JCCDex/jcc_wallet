@@ -69,19 +69,4 @@ export const plugin: IEthereumPlugin = {
   proxy(functionName, ...args): any {
     return ethUtil[functionName](...args);
   }
-  // generate(language: string = "english"): IHDWallet {
-  //   return null;
-  // },
-  // fromMnemonic(mnemonic: string): IHDWallet {
-  //   return null;
-  // },
-  // fromSecret(secret: string): IHDWallet {
-  //   return null;
-  // },
-  // sign(...args): any {
-
-  // },
-  // getHDWallet(...args): IHDWallet {
-  //   return null;
-  // }
 };

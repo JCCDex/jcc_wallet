@@ -9,6 +9,13 @@ export interface ISwtcPlugin extends IHDPlugin {
 const XWallet = (chain: string): ISwtcPlugin => {
   return {
     wallet: WalletFactory(chain),
+    /**
+     * get address of  wallet
+     *
+     * @param {IKeyPair | string} key is a keypair object or secret
+     *
+     * @returns {string} return address of wallet, return null if failed
+     */
     address(key: IKeyPair | string): string {
       try {
         if (typeof key === "string") {
@@ -40,9 +47,11 @@ const XWallet = (chain: string): ISwtcPlugin => {
     hash(message: string): string {
       return bytesToHex(this.wallet.hash(message));
     },
+
     sign(message: string, privateKey: string): string {
       return this.wallet.KeyPair.sign(message, privateKey);
     },
+
     verify(message: string, signature: string, address: string, keypair: IKeyPair): boolean {
       if (address !== this.address(keypair)) {
         return false;

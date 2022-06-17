@@ -216,7 +216,8 @@ describe("test hd create", function() {
       ret = api.isValidSecret("0x394e6e30a85375daab1940ec9ec5c6200ed85a479fdff45bcbcd81f5e73af18b");
       expect(ret).to.equal(true);
 
-      ret = bscHd.isValidChecksumAddress(bscHd.address());
+      // show how to use proxy function
+      ret = api.proxy("isValidChecksumAddress", bscHd.address());
       expect(ret).to.equal(false);
     });
   });
@@ -309,32 +310,6 @@ describe("test hd create", function() {
       expect(address).to.equal(bsc_account[0].address);
       address = api.address({ publicKey: "", privateKey: "" });
       expect(address).to.equal(null);
-
-      // // ret = bscHd.sign("Some data");
-      // // console.log("sign:", ret);
-
-      // ret = api.sign('Some data', "0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318");
-      // console.log("sign:", ret);
-
-      // // web3.sha3 equal etheruem-utils.keccak256
-      // // "c1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79"
-      // console.log(api.proxy("keccak256", Buffer.from("234", "utf-8")).toString("hex"));
-      // console.log(api.proxy("keccak256", Buffer.from("Some data", "utf-8")).toString("hex"));
     });
-  });
-
-  describe("test swtc hd create&recover&sign", function() {
-    // 分层钱包签名
-    // it("hdwallet address & sign", function() {
-    //   // 按照BIP32/44标准生成分层钱包的keypair
-    //   const BIP44Chain = hdWallet.BIP44Chain;
-    //   let swtc1_kp = hdWallet.getHDKeypair(testSecret, BIP44Chain.SWTC, 0, 0);
-    //   let swtc2_kp = hdWallet.getHDKeypair(testSecret, BIP44Chain.SWTC, 0, 1);
-    //   expect(jtWallet.getAddress(swtc1_kp.privateKey)).to.equal(swtc_account[0].address);
-    //   expect(jtWallet.getAddress(swtc2_kp.privateKey)).to.equal(swtc_account[1].address);
-    //   const wallet = new Wallet(swtc1_kp.privateKey);
-    //   const signText = wallet.sign("hello, world!");
-    //   expect(signText).to.equal("3045022100BF0BEE671160D8FF1FFFEC281DD52F2952D12D4A53F2C491A0C993861CA65A7502206C8349F537A4B597AC6B99493B900A22DBC4C7F1A861FE95F47FF8CBC162DB08");
-    // });
   });
 });

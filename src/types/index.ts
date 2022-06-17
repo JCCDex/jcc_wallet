@@ -89,26 +89,6 @@ declare interface IBIP44Path {
   index: number;
 }
 
-/**
- * hd wallet interface
- *
- * @export
- * @interface IHDWallet
- * @member address
- * @member secret
- * @member keyPair
- * @member type ethereum, swtc, btc etc.
- * @member derivationPath for bip44 m/44'/60'/0'/0 means ethereum wallet
- */
-declare interface IHDWallet {
-  // address: string;
-  secret?: string;
-  // mnemonic?: string;
-  // keyPair?: IKeyPair;
-  // type?: string;
-  // derivationPath?: string;
-}
-
 declare interface IHDPlugin {
   address(key: IKeyPair | string, ...args): string;
   isValidAddress(...args): boolean;
@@ -117,9 +97,4 @@ declare interface IHDPlugin {
   sign(message: string, ...args): string;
   verify(messgae: string, signature: string, address: string, ...args): boolean;
   proxy(functionName: string, ...args): any;
-  // generate(...args): IHDWallet;
-  // fromMnemonic(mnemonic: string): IHDWallet;
-  // fromSecret(secret: string): IHDWallet;
-  // sign(...args): any;
-  // getHDWallet(...args): IHDWallet;
 }
