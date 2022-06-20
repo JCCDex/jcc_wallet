@@ -96,5 +96,6 @@ declare interface IHDPlugin {
   hash(message: string, ...args): string;
   sign(message: string, ...args): string;
   verify(messgae: string, signature: string, address: string, ...args): boolean;
+  recover(message: string, signature: string, ...args): string;
   proxy(functionName: string, ...args): any;
 }

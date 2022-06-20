@@ -62,6 +62,9 @@ const XWallet = (chain: string): ISwtcPlugin => {
       }
       return this.wallet.KeyPair.verify(message, signature, keypair.publicKey);
     },
+    recover(): string {
+      return "swtclib does not support.";
+    },
     proxy(functionName, ...args): any {
       return this.wallet[functionName](...args);
     }

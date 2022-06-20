@@ -222,8 +222,8 @@ describe("test hd create", function() {
     });
   });
 
-  describe("test plugin hash&sign&verify", function() {
-    it("test swtc hash & sign & verify", function() {
+  describe("test plugin hash&sign&verify&recover", function() {
+    it("test swtc hash & sign & verify & reocover", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonic.join(" "), language: "english" });
       hd.address();
       let hash = hd.hash("234");
@@ -245,6 +245,9 @@ describe("test hd create", function() {
       expect(signed).to.equal(
         "3045022100ADB86E642174EBDA51D7E40BA65083F38200A8364918827F1C374981F086ADEE0220590FAF6003DCFB73EF18D11C336EAFBF3D91A0EF2895511B2932B06A9BEDD526"
       );
+
+      recover = xrpHd.recover("234", signed);
+      expect(recover).to.equal("swtclib does not support.");
 
       verify = xrpHd.verify("234", signed, xrpHd.address(), xrpHd.keypair());
       expect(verify).to.equal(true);
@@ -283,6 +286,10 @@ describe("test hd create", function() {
       expect(signed).to.equal(
         "75e6b11135309fd872db0d28a7d45c032e7fe443e847d4ea52063388fdd113c04985e074b398f32ca2baff8c34e806200bd15916fdadb9f4eadf8cad37962ace1b"
       );
+
+      recover = bscHd.recover(web3Message, signed);
+      expect(recover).to.equal(bscHd.address());
+
       verify = bscHd.verify(web3Message, signed);
       expect(verify).to.equal(true);
       // 0x3c236c9aa6a34033808e5f2408d7264250f6ec29e189c01559b57dd4e590b73ecf2761aab655454c6880d736c5778e6dc42df95b2a411785828570b9c06a4b6e

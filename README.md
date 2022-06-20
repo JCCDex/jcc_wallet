@@ -405,35 +405,32 @@ const JingchangWallet = require("jcc_wallet").JingchangWallet;
 
 ## HD Wallet
 
-create from Mnemonic or secret
+jcc wallet support BIP32/39/44 standard.
 
-generate to multichain & purpose wallet
-
-sign message & sign tx
-
-get address no secret, raw public and private key
-
-used in code
-
-hd = create...
-eth_hd = create..path
-wallet 要有 keypair, 链类型， path 信息
+more detail see test/hd.spec.js test case.
 
 ```javascript
-// 典型的hdwallet操作
-IHDWallet hd = HDWallet.generate(...args);
+// normally hd maniuplate
+IHDWallet hd = HDWallet.generate({ language: "chinese_simplified" });
 
-hd.deriveWallet(...args) // path, chain code
+// derive bsc wallet
+hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 })
 hd.getAddress();
 
-hd.validAddress(...args) //chain code
-hd.validSecret(...args) // chaincode
+// don't worry about address/secret format, hd object have chain type attribute, check it by native chain sdk
+hd.validAddress("your address, like jxxxxx or 0x1234");
+hd.validSecret("your secret");
 
-作为文档要完善 proxy和接口的不同定位
+// default encode utf-8
+hd.hash("message text");
 
-hd.sign(...args);
-hd.vrify(...args);
-hd.signTx(...args);
+// sign by hd private key automatically
+hd.sign("message text");
+
+// verify message signature is sign address signed or not
+hd.verify("message text", signature, signAddress);
+// or if you don't passby address, you can passby keypair
+hd.verify("message test", signature, null, keypair)
 
 ```
 

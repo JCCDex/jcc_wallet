@@ -338,6 +338,17 @@ export class HDWallet {
   };
 
   /**
+   * recover address/account from signature
+   *
+   * @param {string} message origin message
+   * @param {string} signature signature
+   *
+   * @returns {string} return address
+   */
+  public recover = (messgae: string, signature: string): string => {
+    return getPluginByType(this.chain()).recover(messgae, signature);
+  };
+  /**
    * get specified chain wallet api
    *
    * @returns {IHDPlugin} return hd plugin object

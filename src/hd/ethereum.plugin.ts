@@ -1,5 +1,4 @@
 import Wallet from "ethereumjs-wallet";
-// import { isValidAddress, isValidPrivate } from "ethereumjs-util";
 import * as ethUtil from "ethereumjs-util";
 import { filterOx } from "jcc_common";
 
@@ -56,15 +55,16 @@ export const plugin: IEthereumPlugin = {
 
     return signed.r.toString("hex") + signed.s.toString("hex") + signed.v.toString(16);
   },
-  verify(message: string, signature: string, address: string /*, keypair: IKeyPair*/): boolean {
+  verify(message: string, signature: string, address: string): boolean {
+    return this.recover(message, signature) === address;
+  },
+  recover(message: string, signature: string): string {
     const hash = ethUtil.keccak256(Buffer.from(message, "utf-8"));
     const r = Buffer.from(Buffer.from(signature.substring(0, 64), "hex"));
     const s = Buffer.from(Buffer.from(signature.substring(64, 128), "hex"));
     const v = "0x" + signature.substring(128, 130);
     const pk = ethUtil.ecrecover(hash, v, r, s);
-    const signer = ethUtil.bufferToHex(ethUtil.publicToAddress(pk));
-
-    return signer === address;
+    return ethUtil.bufferToHex(ethUtil.publicToAddress(pk));
   },
   proxy(functionName, ...args): any {
     return ethUtil[functionName](...args);
