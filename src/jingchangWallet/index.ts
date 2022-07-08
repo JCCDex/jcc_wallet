@@ -429,6 +429,37 @@ export default class JingchangWallet {
   }
 
   /**
+   * replace keystore, if forget password
+   *
+   * @param {string} secret
+   * @param {string} password
+   * @param {(secret: string) => string} retriveSecret
+   * @returns {Promise<IJingchangWalletModel>}
+   * @memberof JingchangWallet
+   */
+  public async replaceKeystore(
+    secret: string,
+    password: string,
+    retriveSecret: (secret: string) => string
+  ): Promise<IJingchangWalletModel> {
+    const address = retriveSecret(secret);
+    const wallet = this.findWallet((w) => w.address === address);
+    const keypairs = {
+      address: wallet.address,
+      alias: wallet.alias,
+      default: wallet.default,
+      secret,
+      type: wallet.type
+    };
+    const newWallet = this.getEncryptData(password, keypairs);
+    // shadow copy
+    wallet.ciphertext = newWallet.ciphertext;
+    wallet.crypto = newWallet.crypto;
+    wallet.mac = newWallet.mac;
+    return this._jingchangWallet;
+  }
+
+  /**
    * remove default wallet keystore of the given type
    *
    * @param {string} [type="swt"]
