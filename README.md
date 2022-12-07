@@ -38,6 +38,8 @@ npm install jcc_wallet
 
 - [JingchangWallet](#api-of-jingchangwallet)
 
+- [hdWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/hd.md)
+
 - [jtWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/jingtum.md)
 
 - [callWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/call.md)
@@ -407,7 +409,7 @@ const JingchangWallet = require("jcc_wallet").JingchangWallet;
 
 jcc wallet support BIP32/39/44 standard.
 
-more detail see test/hd.spec.js test case.
+more detail see [test/hd.spec.js](https://github.com/JCCDex/jcc_wallet/blob/master/test/hd.spec.js) test case.
 
 ```javascript
 // normally hd maniuplate

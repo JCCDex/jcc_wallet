@@ -19,6 +19,7 @@ export class HDWallet {
   /**
    * generate mnemonic
    *
+   * @static
    * @param {number} len strength of random bytes, default 128
    * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
    * @returns {string} return mnemonic string, spilt by blank
@@ -31,6 +32,7 @@ export class HDWallet {
   /**
    * get secret from mnemonic, obey encode rule base58 for jingtum
    *
+   * @static
    * @param {string} mnemonic mnemonic words
    * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
    * @returns {string} return secret string
@@ -44,6 +46,7 @@ export class HDWallet {
   /**
    * get mnemonic from secret, obey encode rule base58 for jingtum
    *
+   * @static
    * @param {string} secret secret string
    * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
    * @returns {string} return mnemonic word list
@@ -57,6 +60,7 @@ export class HDWallet {
   /**
    * get keypair from secret
    *
+   * @static
    * @param {string} secret secret string
    * @returns {object} return keypair object
    */
@@ -67,6 +71,7 @@ export class HDWallet {
   /**
    * get hd wallet key pair
    *
+   * @static
    * @param {string} rootSecret root secret
    * @param {number} chain chain index number
    * @param {number} account bip44 account index for purpose
@@ -95,6 +100,7 @@ export class HDWallet {
   /**
    * generate hd wallet
    *
+   * @static
    * @param {any} opt options of generate, like:
    *                  {
    *                    len: 128/160/192/224/256, default is 128, determines number of mnemonic word
@@ -114,6 +120,7 @@ export class HDWallet {
   /**
    * create hd wallet from secret
    *
+   * @static
    * @param {string} secret secret string
    * @returns {object} return hd wallet object
    */
@@ -124,6 +131,7 @@ export class HDWallet {
   /**
    * create hd wallet from mnemonic
    *
+   * @static
    * @param {IMnemonic} mnemonic object like
    *                    {mnemonic: "abc abc ...", language: "english"}
    * @returns {object} return hd wallet object
@@ -135,6 +143,7 @@ export class HDWallet {
   /**
    * create hd wallet from keypair
    *
+   * @static
    * @param {IKeyPair} keypair object like
    *                    {publicKey: "public key...", privateKey: "private key..."}
    * @returns {object} return hd wallet object
@@ -281,7 +290,7 @@ export class HDWallet {
 
   /**
    * check address valid or not
-   *
+   * @param {string} address
    * @returns {boolean} true valid, false invalid
    */
   public isValidAddress = (address: string): boolean => {
@@ -291,6 +300,7 @@ export class HDWallet {
   /**
    * check secret valid or not
    *
+   * @param {string} secret
    * @returns {boolean} true valid, false invalid
    */
   public isValidSecret = (address: string): boolean => {
@@ -300,6 +310,7 @@ export class HDWallet {
   /**
    * hash message
    *
+   * @param {string} message
    * @returns {string} return hash of message
    */
   public hash = (message: string): string => {
@@ -311,6 +322,7 @@ export class HDWallet {
    * @notice how to operate message(raw or hashed) is different in native sdk of different chain
    *         to avoid confusion, we assume that native sdk will automatically hashed message
    *         if not the case of native sdk, we hash this message in lower level(plugin), for example ethereum sdk
+   * @param {string} message
    * @returns {string} return signature string
    */
   public sign = (message: string): string => {
@@ -364,6 +376,15 @@ export class HDWallet {
    */
   public keypair = (): IKeyPair => {
     return this._keypair;
+  };
+
+  /**
+   * get path of hd wallet
+   *
+   * @returns {IBIP44Path} return path of wallet
+   */
+  public path = (): IBIP44Path => {
+    return this._path;
   };
 
   /**
