@@ -76,3 +76,26 @@ declare interface IEncrypt {
   ciphertext: string;
   mac: string;
 }
+
+declare interface IMnemonic {
+  mnemonic: string;
+  language: string;
+}
+
+declare interface IBIP44Path {
+  chain: number;
+  account: number;
+  change: number;
+  index: number;
+}
+
+declare interface IHDPlugin {
+  address(key: IKeyPair | string, ...args): string;
+  isValidAddress(...args): boolean;
+  isValidSecret(...args): boolean;
+  hash(message: string, ...args): string;
+  sign(message: string, ...args): string;
+  verify(messgae: string, signature: string, address: string, ...args): boolean;
+  recover(message: string, signature: string, ...args): string;
+  proxy(functionName: string, ...args): any;
+}

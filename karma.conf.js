@@ -10,7 +10,20 @@ module.exports = function(config) {
       "test/*.spec.js": ["webpack"]
     },
     singleRun: true,
-    plugins: ["karma-webpack", "karma-browserify", "karma-chrome-launcher", "karma-env-preprocessor", "karma-firefox-launcher", "karma-detect-browsers", "karma-mocha"],
+    client: {
+      mocha: {
+        timeout: 6000 // 6 seconds - upped from 2 seconds
+      }
+    },
+    plugins: [
+      "karma-webpack",
+      "karma-browserify",
+      "karma-chrome-launcher",
+      "karma-env-preprocessor",
+      "karma-firefox-launcher",
+      "karma-detect-browsers",
+      "karma-mocha"
+    ],
     webpack: {
       node: webpackConfig.node,
       resolve: webpackConfig.resolve,

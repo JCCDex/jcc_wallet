@@ -38,6 +38,8 @@ npm install jcc_wallet
 
 - [JingchangWallet](#api-of-jingchangwallet)
 
+- [hdWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/hd.md)
+
 - [jtWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/jingtum.md)
 
 - [callWallet](https://github.com/JCCDex/jcc_wallet/blob/master/docs/call.md)
@@ -401,6 +403,37 @@ const JingchangWallet = require("jcc_wallet").JingchangWallet;
  * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
  * @memberof JingchangWallet
  */
+```
+
+## HD Wallet
+
+jcc wallet support BIP32/39/44 standard.
+
+more detail see [test/hd.spec.js](https://github.com/JCCDex/jcc_wallet/blob/master/test/hd.spec.js) test case.
+
+```javascript
+// normally hd maniuplate
+IHDWallet hd = HDWallet.generate({ language: "chinese_simplified" });
+
+// derive bsc wallet
+hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 })
+hd.getAddress();
+
+// don't worry about address/secret format, hd object have chain type attribute, check it by native chain sdk
+hd.validAddress("your address, like jxxxxx or 0x1234");
+hd.validSecret("your secret");
+
+// default encode utf-8
+hd.hash("message text");
+
+// sign by hd private key automatically
+hd.sign("message text");
+
+// verify message signature is sign address signed or not
+hd.verify("message text", signature, signAddress);
+// or if you don't passby address, you can passby keypair
+hd.verify("message test", signature, null, keypair)
+
 ```
 
 ## Deprecated API
