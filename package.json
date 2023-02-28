@@ -80,7 +80,7 @@
   "dependencies": {
     "@swtc/wallet": "^1.1.1",
     "@types/node": "^16.11.6",
-    "bip32": "^3.0.1",
+    "bip32": "^4.0.0",
     "bip39": "^3.0.4",
     "bip44-constants": "^123.0.0",
     "bn.js": "^5.1.1",
