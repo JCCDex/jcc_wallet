@@ -1,6 +1,6 @@
 "use strict";
-import { isValidPrivate, privateToAddress, bufferToHex } from "ethereumjs-util";
-import Wallet from "ethereumjs-wallet";
+import { isValidPrivate } from "@ethereumjs/util";
+import { Wallet } from "@ethereumjs/wallet";
 import { filterOx } from "jcc_common";
 
 /**
@@ -10,8 +10,9 @@ import { filterOx } from "jcc_common";
  * @returns {boolean} return true if valid
  */
 const isValidSecret = (secret: string): boolean => {
+  secret = filterOx(secret);
   try {
-    return isValidPrivate(Buffer.from(filterOx(secret), "hex"));
+    return isValidPrivate(Buffer.from(secret, "hex"));
   } catch (error) {
     return false;
   }
@@ -38,9 +39,8 @@ const getAddress = (secret: string): string | null => {
   if (!isValidSecret(secret)) {
     return null;
   }
-  const buffer = privateToAddress(Buffer.from(secret, "hex"));
-  const decodeAddress = bufferToHex(buffer);
-  return decodeAddress;
+  const wallet = Wallet.fromPrivateKey(Buffer.from(secret, "hex"));
+  return wallet.getAddressString();
 };
 
 /**

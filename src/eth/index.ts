@@ -1,11 +1,6 @@
 import crypto from "crypto";
-import {
-  isValidPrivate,
-  isValidAddress as isValidEthereumAddress,
-  privateToAddress,
-  bufferToHex
-} from "ethereumjs-util";
-import Wallet from "ethereumjs-wallet";
+import { isValidPrivate, isValidAddress as isValidEthereumAddress } from "@ethereumjs/util";
+import { Wallet } from "@ethereumjs/wallet";
 import { filterOx, isEmptyObject } from "jcc_common";
 import createKeccakHash from "keccak";
 import scrypt from "scryptsy";
@@ -50,9 +45,8 @@ const getAddress = (secret: string): string | null => {
   if (!isValidSecret(secret)) {
     return null;
   }
-  const buffer = privateToAddress(Buffer.from(secret, "hex"));
-  const decodeAddress = bufferToHex(buffer);
-  return decodeAddress;
+  const wallet = Wallet.fromPrivateKey(Buffer.from(secret, "hex"));
+  return wallet.getAddressString();
 };
 
 /**

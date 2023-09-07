@@ -1,5 +1,6 @@
-import Wallet from "ethereumjs-wallet";
-import * as ethUtil from "ethereumjs-util";
+import { Wallet } from "@ethereumjs/wallet";
+import * as ethUtil from "@ethereumjs/util";
+import { keccak256 } from "ethereum-cryptography/keccak.js";
 import { filterOx } from "jcc_common";
 
 export interface IEthereumPlugin extends IHDPlugin {
@@ -22,7 +23,8 @@ export const plugin: IEthereumPlugin = {
     if (key.publicKey) {
       // TODO: length of ethereum publick key of keypaire is 128, but swtc lib keypair is 64
       // so, if you want get address from public key, get it from private first
-      return ethUtil.bufferToHex(ethUtil.publicToAddress(Buffer.from(key.publicKey, "hex")));
+      const wallet = Wallet.fromPublicKey(Buffer.from(key.publicKey, "hex"));
+      return wallet.getAddressString();
     }
     return null;
   },
@@ -39,7 +41,8 @@ export const plugin: IEthereumPlugin = {
     }
   },
   hash(message: string): string {
-    return ethUtil.keccak256(Buffer.from(message, "utf-8")).toString("hex");
+    const hash = ethUtil.bytesToHex(keccak256(Buffer.from(message, "utf-8")));
+    return ethUtil.stripHexPrefix(hash);
   },
   /**
    *
@@ -50,21 +53,26 @@ export const plugin: IEthereumPlugin = {
   sign(message: string, privateKey: string): string {
     const key = this.checkPrivateKey(privateKey).toLowerCase();
 
-    const hash = ethUtil.keccak256(Buffer.from(message, "utf-8"));
+    const hash = keccak256(Buffer.from(message, "utf-8"));
     const signed = ethUtil.ecsign(hash, Buffer.from(key, "hex"));
 
-    return signed.r.toString("hex") + signed.s.toString("hex") + signed.v.toString(16);
+    return (
+      ethUtil.stripHexPrefix(ethUtil.bytesToHex(signed.r)) +
+      ethUtil.stripHexPrefix(ethUtil.bytesToHex(signed.s)) +
+      signed.v.toString(16)
+    );
   },
   verify(message: string, signature: string, address: string): boolean {
     return this.recover(message, signature) === address;
   },
   recover(message: string, signature: string): string {
-    const hash = ethUtil.keccak256(Buffer.from(message, "utf-8"));
+    const hash = keccak256(Buffer.from(message, "utf-8"));
     const r = Buffer.from(Buffer.from(signature.substring(0, 64), "hex"));
     const s = Buffer.from(Buffer.from(signature.substring(64, 128), "hex"));
-    const v = "0x" + signature.substring(128, 130);
-    const pk = ethUtil.ecrecover(hash, v, r, s);
-    return ethUtil.bufferToHex(ethUtil.publicToAddress(pk));
+    const bytes = ethUtil.hexToBytes("0x" + signature.substring(128, 130));
+    const pk = ethUtil.ecrecover(hash, ethUtil.bytesToBigInt(bytes), r, s);
+    const wallet = Wallet.fromPublicKey(pk);
+    return wallet.getAddressString();
   },
   proxy(functionName, ...args): any {
     return ethUtil[functionName](...args);

@@ -33,11 +33,11 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.(ts|tsx)$/,
         use: "ts-loader"
       },
       {
-        test: /\.js$/,
+        test: /\.(cjs|mjs|js|jsx)$/,
         loader: "babel-loader"
       }
     ]
