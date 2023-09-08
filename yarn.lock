@@ -2822,7 +2822,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bindings@npm:^1.5.0":
+"bindings@npm:^1.3.0, bindings@npm:^1.5.0":
   version: 1.5.0
   resolution: "bindings@npm:1.5.0"
   dependencies:
@@ -6629,7 +6629,7 @@ __metadata:
     pretty-quick: "npm:^2.0.1"
     scryptsy: "npm:^2.1.0"
     sinon: "npm:^9.0.0"
-    tiny-secp256k1: "npm:^2.2.3"
+    tiny-secp256k1: "npm:^1.1.6"
     ts-loader: "npm:^6.2.1"
     tslint: "npm:^6.0.0"
     typescript: "npm:^5.2.2"
@@ -7779,7 +7779,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nan@npm:^2.12.1, nan@npm:^2.14.0":
+"nan@npm:^2.12.1, nan@npm:^2.13.2, nan@npm:^2.14.0":
   version: 2.17.0
   resolution: "nan@npm:2.17.0"
   dependencies:
@@ -10196,12 +10196,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tiny-secp256k1@npm:^2.2.3":
-  version: 2.2.3
-  resolution: "tiny-secp256k1@npm:2.2.3"
+"tiny-secp256k1@npm:^1.1.6":
+  version: 1.1.6
+  resolution: "tiny-secp256k1@npm:1.1.6"
   dependencies:
-    uint8array-tools: "npm:0.0.7"
-  checksum: 84ca5b88e90fc2a89b90814cec2394716393a9325f318ffede0cb99ff79aa4a63d609c76fc596727fd53192d9163ccaf690dc6817d3e571c625e3668d01177aa
+    bindings: "npm:^1.3.0"
+    bn.js: "npm:^4.11.8"
+    create-hmac: "npm:^1.1.7"
+    elliptic: "npm:^6.4.0"
+    nan: "npm:^2.13.2"
+    node-gyp: "npm:latest"
+  checksum: b47ceada38f6fa65190906e8a98b58d1584b0640383f04db8196a7098c726e926cfba6271a53e97d98d4c67e2b364618d7b3d7e402f63e44f0e07a4aca82ac8b
   languageName: node
   linkType: hard
 
@@ -10521,13 +10526,6 @@ __metadata:
   peerDependencies:
     webpack: ^2.0.0 || ^3.0.0 || ^4.0.0
   checksum: d10ae2ac25f64afddff328fbaa58640450c099c53e44d66829681a5415ef72aa2563d1e5ed43e0e9c409db869575fd914293faaa39288e21da518084878de413
-  languageName: node
-  linkType: hard
-
-"uint8array-tools@npm:0.0.7":
-  version: 0.0.7
-  resolution: "uint8array-tools@npm:0.0.7"
-  checksum: 7d67aef80f3b6417c1dacc6505d5d82e3441bc6c1706b43698c5322e6fe7078a13a737efa8fcbd0884bd4b589511cc0a90cf4fe7cdd1b62b16007f1b0811ce36
   languageName: node
   linkType: hard
 
