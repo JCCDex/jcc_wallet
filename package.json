@@ -93,7 +93,8 @@
     "keccak": "^3.0.0",
     "lockr": "^0.8.5",
     "scryptsy": "^2.1.0",
-    "tiny-secp256k1": "1.1.6"
+    "tiny-secp256k1": "1.1.6",
+    "tronweb": "^5.3.1"
   },
   "nyc": {
     "check-coverage": true,
