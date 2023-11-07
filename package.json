@@ -16,10 +16,11 @@
     "build": "tsc",
     "test": "npm run test:node && npm run test:browser",
     "test:node": "npm run build && nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout=3000 test/*.spec.js",
-    "test:browser": "npm run build && karma start karma.conf.js",
+    "test:browser": "npm run babel && npm run build && karma start karma.conf.js",
     "tslint": "tslint --project tsconfig.json --config tslint.json",
-    "compile": "./compile.sh",
-    "pretty": "pretty-quick --staged"
+    "compile": "npm run babel && ./compile.sh",
+    "pretty": "pretty-quick --staged",
+    "babel": "babel --plugins @babel/plugin-transform-optional-chaining node_modules/tronweb/node_modules/@noble/curves/abstract/weierstrass.js -o node_modules/tronweb/node_modules/@noble/curves/abstract/weierstrass.js"
   },
   "repository": {
     "type": "git",
@@ -45,10 +46,11 @@
   },
   "homepage": "https://github.com/JCCDex/jcc_wallet#readme",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.6",
-    "@babel/preset-env": "^7.8.6",
-    "babel-loader": "^8.0.6",
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.2",
+    "@babel/plugin-transform-optional-chaining": "^7.23.0",
+    "@babel/preset-env": "^7.23.2",
+    "babel-loader": "^8.3.0",
     "browserify": "^16.5.0",
     "chai": "^4.2.0",
     "coveralls": "^3.0.9",
@@ -80,7 +82,7 @@
   "dependencies": {
     "@swtc/wallet": "^1.1.1",
     "@types/node": "^16.11.6",
-    "bip32": "^3.0.1",
+    "bip32": "^4.0.0",
     "bip39": "^3.0.4",
     "bip44-constants": "^123.0.0",
     "bn.js": "^5.1.1",

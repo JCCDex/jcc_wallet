@@ -4,6 +4,7 @@ import BIP32Factory from "bip32";
 import * as ecc from "tiny-secp256k1";
 import { BIP44Chain, BIP44ChainMap, getBIP44Chain } from "./constant";
 import { getPluginByType } from "./plugins";
+const bip32 = BIP32Factory(ecc);
 
 const addressCodec = KeyPair.addressCodec;
 
@@ -88,8 +89,6 @@ export class HDWallet {
     const chainIdx = (bip44Chain[0][0] << 1) >> 1;
     const mnemonic = HDWallet.getMnemonicFromSecret(rootSecret);
     const seed = BIP39.mnemonicToSeedSync(mnemonic);
-
-    const bip32 = BIP32Factory(ecc);
 
     const b32 = bip32.fromSeed(seed);
     const privateKey = b32.derivePath(`m/44'/${chainIdx}'/${account}'/0/${index}`).privateKey;
