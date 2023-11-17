@@ -17,7 +17,7 @@
     "test": "npm run test:node && npm run test:browser",
     "test:node": "npm run build && nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout=3000 test/*.spec.js",
     "test:browser": "npm run build && karma start karma.conf.js",
-    "tslint": "tslint --project tsconfig.json --config tslint.json",
+    "tslint": "tslint --version",
     "compile": "./compile.sh",
     "pretty": "pretty-quick --staged"
   },
@@ -95,7 +95,8 @@
     "keccak": "^3.0.3",
     "lockr": "^0.8.5",
     "scryptsy": "^2.1.0",
-    "tiny-secp256k1": "^1.1.6"
+    "tiny-secp256k1": "^1.1.6",
+    "tronweb": "^5.3.1"
   },
   "nyc": {
     "check-coverage": true,
