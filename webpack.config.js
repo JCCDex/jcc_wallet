@@ -1,7 +1,8 @@
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const path = require("path");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 const config = {
   entry: "./lib",
@@ -21,15 +22,19 @@ const config = {
       elliptic: path.resolve(__dirname, "node_modules/elliptic"),
       scryptsy: path.resolve(__dirname, "node_modules/scryptsy"),
       "base-x": path.resolve(__dirname, "node_modules/base-x")
+    },
+    fallback: {
+      tls: false,
+      net: false,
+      fs: false,
+      child_process: false
     }
   },
-  mode: process.env.MODE === "dev" ? "development" : "production",
-  node: {
-    fs: "empty",
-    tls: "empty",
-    child_process: "empty",
-    net: "empty"
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()]
   },
+  mode: process.env.MODE === "dev" ? "development" : "production",
   module: {
     rules: [
       {
@@ -42,29 +47,11 @@ const config = {
       }
     ]
   },
-  plugins: [new DuplicatePackageCheckerPlugin()]
+  plugins: [new DuplicatePackageCheckerPlugin(), new NodePolyfillPlugin()]
 };
 
 if (process.env.REPORT === "true") {
   config.plugins.push(new BundleAnalyzerPlugin());
-}
-
-if (process.env.MODE !== "dev") {
-  config.plugins.push(
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          sequences: true,
-          dead_code: true,
-          drop_console: true,
-          drop_debugger: true,
-          unused: true
-        }
-      },
-      sourceMap: false,
-      parallel: true
-    })
-  );
 }
 
 module.exports = config;

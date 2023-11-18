@@ -1,5 +1,6 @@
 const webpackConfig = require("./webpack.config");
-
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const webpack = require("webpack");
 module.exports = function(config) {
   config.set({
     frameworks: ["browserify", "detectBrowsers", "mocha"],
@@ -27,7 +28,14 @@ module.exports = function(config) {
     webpack: {
       node: webpackConfig.node,
       resolve: webpackConfig.resolve,
-      mode: "development"
+      mode: "development",
+      plugins: [
+        new NodePolyfillPlugin(),
+        new webpack.IgnorePlugin({
+          resourceRegExp: /canvas/,
+          contextRegExp: /jsdom$/
+        })
+      ]
     },
     envPreprocessor: ["RANDOM_TESTS_REPEAT"],
     detectBrowsers: {
