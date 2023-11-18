@@ -1,4 +1,4 @@
-import TronWeb from "tronweb";
+const TronWeb = require("tronweb");
 
 export interface ITronPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
@@ -19,8 +19,8 @@ export const plugin: ITronPlugin = {
       // TODO: length of ethereum publick key of keypaire is 128, but swtc lib keypair is 64
       // so, if you want get address from public key, get it from private first
       const pubBytes = TronWeb.utils.code.hexStr2byteArray(key.publicKey);
-      const com_addressBytes = TronWeb.utils.crypto.computeAddress(pubBytes);
-      return TronWeb.utils.crypto.getBase58CheckAddress(com_addressBytes);
+      const comCddressBytes = TronWeb.utils.crypto.computeAddress(pubBytes);
+      return TronWeb.utils.crypto.getBase58CheckAddress(comCddressBytes);
     }
     return null;
   },
@@ -31,10 +31,10 @@ export const plugin: ITronPlugin = {
 
   isValidSecret(secret: string): boolean {
     try {
-      const com_priKeyBytes = TronWeb.utils.code.hexStr2byteArray(this.checkPrivateKey(secret));
-      const pubBytes = TronWeb.utils.crypto.getPubKeyFromPriKey(com_priKeyBytes);
-      const com_addressBytes = TronWeb.utils.crypto.computeAddress(pubBytes);
-      const address = TronWeb.utils.crypto.getBase58CheckAddress(com_addressBytes);
+      const comPriKeyBytes = TronWeb.utils.code.hexStr2byteArray(this.checkPrivateKey(secret));
+      const pubBytes = TronWeb.utils.crypto.getPubKeyFromPriKey(comPriKeyBytes);
+      const comCddressBytes = TronWeb.utils.crypto.computeAddress(pubBytes);
+      const address = TronWeb.utils.crypto.getBase58CheckAddress(comCddressBytes);
       return this.isValidAddress(address);
     } catch (error) {
       return false;
