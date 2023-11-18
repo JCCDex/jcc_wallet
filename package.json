@@ -91,6 +91,7 @@
     "clone-deep": "^4.0.1",
     "eccrypto": "^1.1.6",
     "elliptic": "^6.5.4",
+    "eosjs": "^22.1.0",
     "jcc_common": "^0.1.0",
     "keccak": "^3.0.3",
     "lockr": "^0.8.5",
