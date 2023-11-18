@@ -56,6 +56,25 @@ let bsc_account = [
   { address: "0xf56a34e674d5ea95385c588e21906a43e7e22a75" }
 ];
 
+let tron_keypairs = [
+  {
+    privateKey: "0048E1C53202F5D6D26D99C08577BF4B78E6E0926888904AB2ADF6B6B33B1657C7",
+    publicKey: "02939907713ED186CF89CC925D2DE0D858EF88C8AFEC798106EA935308D0F7D522"
+    // 在tron中利用privateKey生成的publicKey 完整内容如下，swtc lib对其内容进行了截断,其次是tron做了前导04修饰
+    //          04939907713ED186CF89CC925D2DE0D858EF88C8AFEC798106EA935308D0F7D522A9FAA422EB9FF2709495C00D984467A92812CB0ECBCBC6764D786ABA21E830F0
+  },
+  {
+    privateKey: "00FA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD19062BB",
+    publicKey: "0315F8CCA37CEA0D33F5B158292CDF65F7403FC3DAA1E3E47A80FA7B408D33EE86"
+    // 完整的public key
+    //          0415F8CCA37CEA0D33F5B158292CDF65F7403FC3DAA1E3E47A80FA7B408D33EE86CDF2E0B03B18E8C29A06990AC7F5F337BD2348793391816F211FD77BA0BCCA25
+  }
+];
+let tron_account = [
+  { address: "THfdUy8cCwm3KbrtNnMqbUVqVktG83q6GE" },
+  { address: "TFMqRST2JeCu2k64SgFg12MnJiaom6rkS6" }
+];
+
 /**
  * 生成HD根钱包
 派生出临时身份签名
@@ -98,8 +117,20 @@ describe("test hd create", function() {
       expect(bscHd2.keypair().privateKey).to.equal(bsc_keypairs[1].privateKey);
       let bscAddress2 = bscHd2.address();
       expect(bscAddress2).to.equal(bsc_account[1].address);
+
+      let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
+      expect(tronHd.keypair().privateKey).to.equal(tron_keypairs[0].privateKey);
+      expect(tronHd.isRoot()).to.equal(false);
+      let tronAddress = tronHd.address();
+      expect(tronAddress).to.equal(tron_account[0].address);
+
+      let tronHd2 = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 1 });
+      expect(tronHd2.keypair().privateKey).to.equal(tron_keypairs[1].privateKey);
+      let tronAddress2 = tronHd2.address();
+      expect(tronAddress2).to.equal(tron_account[1].address);
     });
   });
+
   describe("test swtc plugin", function() {
     it("test swtc plugin invalid pair", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
@@ -112,23 +143,27 @@ describe("test hd create", function() {
       let swtcAddress = swtcHd.address();
       expect(swtcAddress).to.equal(null);
     });
+
     it("test deriveWallet invalid options", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
 
       let bscHd = hd.deriveWallet({ chain: "bsc", account: 0, index: 0 });
       expect(bscHd).to.equal(null);
     });
+
     it("test getHDKeypair invalid chain", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
 
       let pair = HDWallet.getHDKeypair(hd.secret(), 1234, 0, 0);
       expect(pair).to.equal(null);
     });
+
     it("test generate without options", function() {
       let hd = HDWallet.generate();
       let mnemonic = hd.mnemonic().mnemonic.split(" ");
       expect(mnemonic.length).to.equal(12);
     });
+
     it("test create HDWallet without options", function() {
       try {
         let hd = new HDWallet({});
@@ -141,6 +176,7 @@ describe("test hd create", function() {
         expect(e.message.length > 0).to.equal(true);
       }
     });
+
     it("test getAddress with 64 length privatekey", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
 
@@ -153,6 +189,7 @@ describe("test hd create", function() {
       bscAddress = bscHd.address();
       expect(bscAddress).to.equal(bsc_account[0].address);
     });
+
     it("test generate without parameters", function() {
       let mnemonic = HDWallet.generateMnemonic().split(" ");
       expect(mnemonic.length).to.equal(12);
@@ -160,15 +197,18 @@ describe("test hd create", function() {
       mnemonic = HDWallet.generateMnemonic(128).split(" ");
       expect(mnemonic.length).to.equal(12);
     });
+
     it("test get mnemonic with language parameters", function() {
       let mnemonic = HDWallet.getMnemonicFromSecret(testSecret, "english").split(" ");
       expect(mnemonic.length).to.equal(12);
     });
+
     it("test get keypair without account parameter", function() {
       let keypair = HDWallet.getHDKeypair(testSecret, BIP44Chain.BSC, undefinedValue, 0);
       expect(keypair.privateKey).to.equal(bsc_keypairs[0].privateKey);
     });
   });
+
   describe("test plugin isValidAddress and isValidSecret", function() {
     it("test swtc isValidAddress", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
@@ -190,7 +230,15 @@ describe("test hd create", function() {
       expect(ret).to.equal(true);
       ret = bscHd.isValidAddress("0xf56a34e674d5ea95385c588e21906a43e7e22a7c1");
       expect(ret).to.equal(false);
+
+      // test tron like
+      let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
+      ret = tronHd.isValidAddress(tron_account[0].address);
+      expect(ret).to.equal(true);
+      ret = tronHd.isValidAddress("TFMqRST2JeCu2k64SgFg12MnJiaom6rkS8");
+      expect(ret).to.equal(false);
     });
+
     it("test swtc isValidSecret", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       let ret = hd.isValidSecret(hd.secret());
@@ -219,6 +267,14 @@ describe("test hd create", function() {
       // show how to use proxy function
       ret = api.proxy("isValidChecksumAddress", bscHd.address());
       expect(ret).to.equal(false);
+
+      // test tron
+      let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
+      api = tronHd.getWalletApi();
+      ret = tronHd.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD190621");
+      expect(ret).to.equal(false);
+      ret = api.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD19062BB");
+      expect(ret).to.equal(true);
     });
   });
 
@@ -274,6 +330,47 @@ describe("test hd create", function() {
       });
       expect(address).to.equal("rwggk3hXKzGsNwQtZEoDTygixVqKradBTE");
       address = api.address("ragy1jjPkx1Z75zKsSit5TuAsKV85");
+      expect(address).to.equal(null);
+
+      // test tron
+      let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
+      hash = tronHd.hash("234");
+      expect(hash).to.equal("0x446eaeeea1c8117d0169ccfb9bd52cffccbdea30f1fea248c1ef121f8ad912ae");
+      signed = tronHd.sign("234");
+      expect(signed).to.equal(
+        "0x55b889b2d414671ac16aeebea65b309a1773fe23c38e99212a7c39fc93f124247de094e668cb361ab50c1ab10f4fbb756a273aa0201c5841d8ddf776c3f9980b1c"
+      );
+
+      recover = tronHd.recover("234", signed);
+      expect(recover).to.equal(tron_account[0].address);
+
+      verify = tronHd.verify("234", signed, tronHd.address(), tronHd.keypair());
+      expect(verify).to.equal(true);
+
+      verify = tronHd.verify("234", signed, tronHd.address(), {
+        privateKey: "",
+        publicKey: "028D99A9A1AE990ED89C5A94E200715D023AF06A626F4E0E92A6C258B790AE08FF"
+      });
+      expect(verify).to.equal(true);
+
+      verify = tronHd.verify("234", signed, tronHd.address(), {
+        privateKey: "0023D6E38372CC93AE3B128975462024CD0ED35F330AD2E81AC9089672A617E818",
+        publicKey: ""
+      });
+      expect(verify).to.equal(true);
+
+      verify = tronHd.verify("234", signed, "rwggk3hXKzGsNwQtZEoDTygixVqKradBT1", tronHd.keypair());
+      expect(verify).to.equal(false);
+
+      api = tronHd.getWalletApi();
+      address = api.address({
+        privateKey: "",
+        // 真实的tron public key
+        publicKey:
+          "04939907713ED186CF89CC925D2DE0D858EF88C8AFEC798106EA935308D0F7D522A9FAA422EB9FF2709495C00D984467A92812CB0ECBCBC6764D786ABA21E830F0"
+      });
+      expect(address).to.equal("THfdUy8cCwm3KbrtNnMqbUVqVktG83q6GE");
+      address = api.address("THfdUy8cCwm3KbrtNnMqbUVqVktG83q6G1");
       expect(address).to.equal(null);
 
       // test eth like
