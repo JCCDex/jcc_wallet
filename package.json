@@ -16,9 +16,9 @@
     "build": "tsc --skipLibCheck",
     "test": "npm run test:node && npm run test:browser",
     "test:node": "npm run build && nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout=3000 test/*.spec.js",
-    "test:browser": "npm run babel && npm run build && karma start karma.conf.js",
+    "test:browser": "npm run babel && npm run babel-ethereum-wallet && npm run build && karma start karma.conf.js",
     "tslint": "tslint --project tsconfig.json --config tslint.json",
-    "compile": "npm run babel && ./compile.sh",
+    "compile": "npm run babel && npm run babel-ethereum-wallet && ./compile.sh",
     "pretty": "pretty-quick --staged",
     "babel": "babel --plugins @babel/plugin-transform-optional-chaining node_modules/@noble/curves/abstract/weierstrass.js -o node_modules/@noble/curves/abstract/weierstrass.js && babel --plugins @babel/plugin-transform-optional-chaining node_modules/@ethereumjs/wallet/dist/esm/thirdparty.js -o node_modules/@ethereumjs/wallet/dist/esm/thirdparty.js && babel --plugins @babel/plugin-transform-optional-chaining node_modules/@ethereumjs/util/dist/esm/asyncEventEmitter.js -o node_modules/@ethereumjs/util/dist/esm/asyncEventEmitter.js",
     "babel-ethereum-wallet": "babel --plugins @babel/plugin-transform-modules-commonjs node_modules/@ethereumjs/wallet/dist/esm/index.js -o node_modules/@ethereumjs/wallet/dist/esm/index.js && babel --plugins @babel/plugin-transform-modules-commonjs node_modules/@ethereumjs/util/dist/esm/asyncEventEmitter.js -o node_modules/@ethereumjs/wallet/util/esm/asyncEventEmitter.js && babel --plugins @babel/plugin-transform-modules-commonjs node_modules/@ethereumjs/util/dist/esm/mapDB.js -o node_modules/@ethereumjs/util/dist/esm/mapDB.js"
