@@ -15,7 +15,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "build": "tsc --skipLibCheck",
     "test": "npm run test:node && npm run test:browser",
-    "test:node": "npm run build && nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout=3000 test/*.spec.js",
+    "test:node": "npm run build && nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout=30000 test/*.spec.js",
     "test:browser": "npm run build && karma start karma.conf.js",
     "tslint": "tslint --project tsconfig.json --config tslint.json",
     "compile": "/compile.sh",

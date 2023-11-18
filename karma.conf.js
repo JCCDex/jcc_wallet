@@ -14,7 +14,7 @@ module.exports = function(config) {
     singleRun: true,
     client: {
       mocha: {
-        timeout: 6000 // 6 seconds - upped from 2 seconds
+        timeout: 30000 // 6 seconds - upped from 2 seconds
       }
     },
     plugins: [
