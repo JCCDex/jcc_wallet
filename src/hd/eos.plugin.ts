@@ -1,13 +1,14 @@
+// const EosJs = require('eosjs');
 import { Wallet } from "@ethereumjs/wallet";
 import * as ethUtil from "@ethereumjs/util";
 import { keccak256 } from "ethereum-cryptography/keccak.js";
 import { filterOx } from "jcc_common";
 
-export interface IEthereumPlugin extends IHDPlugin {
+export interface IEosPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
 }
 
-export const plugin: IEthereumPlugin = {
+export const plugin: IEosPlugin = {
   checkPrivateKey(privateKey: string): string {
     // check and cut swtc keypair lib add prefix 00
     return privateKey.length === 66 ? privateKey.substring(2) : privateKey;

@@ -62,5 +62,6 @@ typings/
 lib
 dist
 
-.yarn
+.yarn/*
+!.yarn/releases
 package-lock.json
