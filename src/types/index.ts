@@ -1,4 +1,4 @@
-declare interface IKdfparamsModel {
+export interface IKdfparamsModel {
   dklen: number;
   n: number;
   p: number;
@@ -6,14 +6,14 @@ declare interface IKdfparamsModel {
   salt: string;
 }
 
-declare interface ICryptoModel {
+export interface ICryptoModel {
   cipher: string;
   iv: string;
   kdf: string;
   kdfparams: IKdfparamsModel;
 }
 
-declare interface IKeystoreModel {
+export interface IKeystoreModel {
   address?: string;
   alias?: string;
   ciphertext: string;
@@ -23,7 +23,7 @@ declare interface IKeystoreModel {
   crypto: ICryptoModel;
 }
 
-declare interface IJingchangWalletModel {
+export interface IJingchangWalletModel {
   id?: string;
   version?: string;
   contact?: any;
@@ -37,17 +37,17 @@ declare interface IJingchangWalletModel {
  * @member address
  * @member secret
  */
-declare interface IWalletModel {
+export interface IWalletModel {
   address: string;
   secret: string;
 }
 
-declare interface ICreateOptionsModel {
+export interface ICreateOptionsModel {
   algorithm?: "ed25519" | "ecdsa-secp256k1";
   entropy?: Uint8Array;
 }
 
-declare interface IEncryptModel {
+export interface IEncryptModel {
   cipher?: string;
   dklen?: number;
   iv?: string;
@@ -57,7 +57,7 @@ declare interface IEncryptModel {
   salt?: string;
 }
 
-declare interface IKeypairsModel {
+export interface IKeypairsModel {
   secret: string;
   default?: boolean;
   type?: string;
@@ -65,31 +65,31 @@ declare interface IKeypairsModel {
   alias?: string;
 }
 
-declare interface IKeyPair {
+export interface IKeyPair {
   privateKey: string;
   publicKey: string;
 }
 
-declare interface IEncrypt {
+export interface IEncrypt {
   iv: string;
   ephemPublicKey: string;
   ciphertext: string;
   mac: string;
 }
 
-declare interface IMnemonic {
+export interface IMnemonic {
   mnemonic: string;
   language: string;
 }
 
-declare interface IBIP44Path {
+export interface IBIP44Path {
   chain: number;
   account: number;
   change: number;
   index: number;
 }
 
-declare interface IHDPlugin {
+export interface IHDPlugin {
   address(key: IKeyPair | string, ...args): string;
   isValidAddress(...args): boolean;
   isValidSecret(...args): boolean;

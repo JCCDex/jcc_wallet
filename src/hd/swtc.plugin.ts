@@ -1,6 +1,7 @@
 import { Factory as WalletFactory } from "@swtc/wallet";
 // import { KeyPair } from "@swtc/wallet";
 import { funcBytesToHex as bytesToHex } from "@swtc/common";
+import { IKeyPair, IHDPlugin } from "../types";
 
 export interface ISwtcPlugin extends IHDPlugin {
   wallet?: any;
@@ -20,15 +21,15 @@ const XWallet = (chain: string): ISwtcPlugin => {
       try {
         if (typeof key === "string") {
           const wallet = this.wallet.fromSecret(key);
-          return wallet.address;
+          return wallet.address as string;
         }
 
         const keypair = this.wallet.KeyPair;
         if (key.privateKey) {
-          return keypair.deriveAddress(keypair.deriveKeyPair(key.privateKey).publicKey);
+          return keypair.deriveAddress(keypair.deriveKeyPair(key.privateKey).publicKey) as string;
         }
         if (key.publicKey) {
-          return keypair.deriveAddress(key.publicKey);
+          return keypair.deriveAddress(key.publicKey) as string;
         }
 
         return null;
@@ -38,18 +39,18 @@ const XWallet = (chain: string): ISwtcPlugin => {
     },
 
     isValidAddress(address: string): boolean {
-      return this.wallet.isValidAddress(address);
+      return this.wallet.isValidAddress(address) as boolean;
     },
 
     isValidSecret(secret: string): boolean {
-      return this.wallet.isValidSecret(secret);
+      return this.wallet.isValidSecret(secret) as boolean;
     },
     hash(message: string): string {
       return bytesToHex(this.wallet.hash(message));
     },
 
     sign(message: string, privateKey: string): string {
-      return this.wallet.KeyPair.sign(message, privateKey);
+      return this.wallet.KeyPair.sign(message, privateKey) as string;
     },
 
     verify(message: string, signature: string, address: string, keypair: IKeyPair): boolean {
@@ -60,7 +61,7 @@ const XWallet = (chain: string): ISwtcPlugin => {
       if (!keypair.publicKey) {
         keypair = this.wallet.KeyPair.deriveKeyPair(keypair.privateKey);
       }
-      return this.wallet.KeyPair.verify(message, signature, keypair.publicKey);
+      return this.wallet.KeyPair.verify(message, signature, keypair.publicKey) as boolean;
     },
     recover(): string {
       return "swtclib does not support.";

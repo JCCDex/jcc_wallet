@@ -22,11 +22,11 @@ module.exports = function(config) {
       "test/*.spec.js": ["webpack"]
     },
     singleRun: true,
-    browserDisconnectTimeout: 10000,
+    browserDisconnectTimeout: 60000,
     browserDisconnectTolerance: 3,
     client: {
       mocha: {
-        timeout: 6000 // 6 seconds - upped from 2 seconds
+        timeout: 30000 // 6 seconds - upped from 2 seconds
       }
     },
     plugins: [

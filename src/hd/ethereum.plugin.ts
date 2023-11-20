@@ -2,6 +2,7 @@ import { Wallet } from "@ethereumjs/wallet";
 import * as ethUtil from "@ethereumjs/util";
 import { keccak256 } from "ethereum-cryptography/keccak.js";
 import { filterOx } from "jcc_common";
+import { IKeyPair, IHDPlugin } from "../types";
 
 export interface IEthereumPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;

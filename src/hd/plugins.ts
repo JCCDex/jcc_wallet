@@ -3,6 +3,7 @@ import { plugin as bscPlugin } from "./ethereum.plugin";
 import { plugin as hecoPlugin } from "./ethereum.plugin";
 import { plugin as polygonPlugin } from "./ethereum.plugin";
 import { plugin as tronPlugin } from "./tron.plugin";
+import { IHDPlugin } from "../types";
 // import { plugin as swtcPlugin } from "./swtc.plugin";
 // import { plugin as bvcadtPlugin } from "./swtc.plugin";
 // import { plugin as callPlugin } from "./swtc.plugin";
