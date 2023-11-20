@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
     frameworks: ["browserify", "detectBrowsers", "mocha"],
     files: ["test/*.spec.js"],
-    flags: ["--disable-gpu", "--no-sandbox"],
+    flags: ["--no-sandbox"],
     preprocessors: {
       // don't use browserify, because it don't support dynamic require.
       // and some file is dynamic required in the `stm-lib` package.
