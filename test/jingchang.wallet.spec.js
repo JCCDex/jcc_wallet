@@ -148,39 +148,32 @@ describe("test JingchangWallet", function() {
   });
 
   describe("static, test generate api", function() {
-    it("return jingchang wallet if the given secret is undefined", function(done) {
-      JingchangWallet.generate("123").then((wallet) => {
-        expect(JingchangWallet.isValid(wallet)).to.true;
-        const inst = new JingchangWallet(wallet);
-        inst.getAddress().then((address) => {
-          expect(jtWallet.isValidAddress(address)).to.true;
-          inst.getSecretWithType("123").then((secret) => {
-            expect(jtWallet.isValidSecret(secret)).to.true;
-            done();
-          });
-        });
-      });
+    it("return jingchang wallet if the given secret is undefined", async () => {
+      const wallet = await JingchangWallet.generate("123");
+      expect(JingchangWallet.isValid(wallet)).to.true;
+      const inst = new JingchangWallet(wallet);
+      const address = await inst.getAddress();
+      expect(jtWallet.isValidAddress(address)).to.true;
+      const secret = await inst.getSecretWithType("123");
+      expect(jtWallet.isValidSecret(secret)).to.true;
     });
 
-    it("return jingchang wallet if the given secret is valid", function(done) {
-      JingchangWallet.generate("123", testSecret).then((wallet) => {
-        expect(JingchangWallet.isValid(wallet)).to.true;
-        const inst = new JingchangWallet(wallet);
-        inst.getAddress("swt").then((address) => {
-          expect(address).to.equal(testAddress);
-          inst.getSecretWithType("123", "swt").then((secret) => {
-            expect(secret).to.equal(testSecret);
-            done();
-          });
-        });
-      });
+    it("return jingchang wallet if the given secret is valid", async () => {
+      const wallet = await JingchangWallet.generate("123", testSecret);
+      expect(JingchangWallet.isValid(wallet)).to.true;
+      const inst = new JingchangWallet(wallet);
+      const address = await inst.getAddress();
+      expect(address).to.equal(testAddress);
+      const secret = await inst.getSecretWithType("123", "swt");
+      expect(secret).to.equal(testSecret);
     });
 
-    it("reject `secret is invalid` if the given secret is invalid", function(done) {
-      JingchangWallet.generate("123", "123").catch((err) => {
-        expect(err.message).to.equal("secret is invalid");
-        done();
-      });
+    it("reject `secret is invalid` if the given secret is invalid", async () => {
+      try {
+        await JingchangWallet.generate("123", "123");
+      } catch (error) {
+        expect(error.message).to.equal("secret is invalid");
+      }
     });
   });
 
@@ -194,27 +187,27 @@ describe("test JingchangWallet", function() {
       JingchangWallet.clear();
     });
 
-    it("return address if the jingchang wallet is valid and the given type is existent", function(done) {
+    it("return address if the jingchang wallet is valid and the given type is existent", async () => {
       inst.setJingchangWallet(testWallet);
-      inst.getAddress().then((address) => {
-        expect(address).to.equal(testAddress);
-        done();
-      });
+      const address = await inst.getAddress();
+      expect(address).to.equal(testAddress);
     });
 
-    it("reject `wallet is empty` if the wallet of given type is not existent", function(done) {
-      inst.getAddress("eth").catch((err) => {
-        expect(err.message).to.equal("wallet is empty");
-        done();
-      });
+    it("reject `wallet is empty` if the wallet of given type is not existent", async () => {
+      try {
+        await inst.getAddress("eth");
+      } catch (error) {
+        expect(error.message).to.equal("wallet is empty");
+      }
     });
 
-    it("reject `keystore is invalid` if the jingchang wallet is invalid", function(done) {
+    it("reject `keystore is invalid` if the jingchang wallet is invalid", async () => {
       inst.setJingchangWallet(null);
-      inst.getAddress().catch((err) => {
-        expect(err.message).to.equal("keystore is invalid");
-        done();
-      });
+      try {
+        await inst.getAddress();
+      } catch (error) {
+        expect(error.message).to.equal("keystore is invalid");
+      }
     });
   });
 
@@ -228,27 +221,27 @@ describe("test JingchangWallet", function() {
       JingchangWallet.clear();
     });
 
-    it("return wallet if the jingchang wallet is valid and the given type is existent", function(done) {
+    it("return wallet if the jingchang wallet is valid and the given type is existent", async () => {
       inst.setJingchangWallet(testWallet);
-      inst.getWalletWithType("swt").then((wallet) => {
-        expect(wallet).to.deep.equal(testWallet.wallets[0]);
-        done();
-      });
+      const wallet = await inst.getWalletWithType("swt");
+      expect(wallet).to.deep.equal(testWallet.wallets[0]);
     });
 
-    it("reject `wallet is empty` if the wallet of given type is not existent", function(done) {
-      inst.getWalletWithType("eth").catch((err) => {
-        expect(err.message).to.equal("wallet is empty");
-        done();
-      });
+    it("reject `wallet is empty` if the wallet of given type is not existent", async () => {
+      try {
+        await inst.getWalletWithType("eth");
+      } catch (error) {
+        expect(error.message).to.equal("wallet is empty");
+      }
     });
 
-    it("reject `keystore is invalid` if the jingchang wallet is invalid", function(done) {
+    it("reject `keystore is invalid` if the jingchang wallet is invalid", async () => {
       inst.setJingchangWallet(null);
-      inst.getWalletWithType().catch((err) => {
-        expect(err.message).to.equal("keystore is invalid");
-        done();
-      });
+      try {
+        await inst.getWalletWithType();
+      } catch (error) {
+        expect(error.message).to.equal("keystore is invalid");
+      }
     });
   });
 
@@ -262,27 +255,27 @@ describe("test JingchangWallet", function() {
       JingchangWallet.clear();
     });
 
-    it("return wallet if the jingchang wallet is valid and the given address is existent", function(done) {
+    it("return wallet if the jingchang wallet is valid and the given address is existent", async () => {
       inst.setJingchangWallet(testWallet);
-      inst.getWalletWithAddress(testAddress).then((wallet) => {
-        expect(wallet).to.deep.equal(testWallet.wallets[0]);
-        done();
-      });
+      const wallet = await inst.getWalletWithAddress(testAddress);
+      expect(wallet).to.deep.equal(testWallet.wallets[0]);
     });
 
-    it("reject `wallet is empty` if the wallet of given type is not existent", function(done) {
-      inst.getWalletWithAddress("eth").catch((err) => {
-        expect(err.message).to.equal("wallet is empty");
-        done();
-      });
+    it("reject `wallet is empty` if the wallet of given type is not existent", async () => {
+      try {
+        await inst.getWalletWithAddress("eth");
+      } catch (error) {
+        expect(error.message).to.equal("wallet is empty");
+      }
     });
 
-    it("reject `keystore is invalid` if the jingchang wallet is invalid", function(done) {
+    it("reject `keystore is invalid` if the jingchang wallet is invalid", async () => {
       inst.setJingchangWallet(null);
-      inst.getWalletWithAddress("").catch((err) => {
-        expect(err.message).to.equal("keystore is invalid");
-        done();
-      });
+      try {
+        await inst.getWalletWithAddress("");
+      } catch (error) {
+        expect(error.message).to.equal("keystore is invalid");
+      }
     });
   });
 
@@ -296,37 +289,38 @@ describe("test JingchangWallet", function() {
       JingchangWallet.clear();
     });
 
-    it("return secret if success", function(done) {
+    it("return secret if success", async () => {
       inst.setJingchangWallet(testWallet);
-      inst.getSecretWithType(testPassword).then((secret) => {
-        expect(secret).to.equal(testSecret);
-        done();
-      });
+      const secret = await inst.getSecretWithType(testPassword);
+      expect(secret).to.equal(testSecret);
     });
 
-    it("reject `wallet is empty` if the wallet of given type is not existent", function(done) {
-      inst.getSecretWithType(testPassword, "eth").catch((err) => {
-        expect(err.message).to.equal("wallet is empty");
-        done();
-      });
+    it("reject `wallet is empty` if the wallet of given type is not existent", async () => {
+      try {
+        await inst.getSecretWithType(testPassword, "eth");
+      } catch (error) {
+        expect(error.message).to.equal("wallet is empty");
+      }
     });
 
-    it("reject `password is wrong` if the password of given type is wrong", function(done) {
-      inst.getSecretWithType("123").catch((err) => {
-        expect(err.message).to.equal("password is wrong");
-        done();
-      });
+    it("reject `password is wrong` if the password of given type is wrong", async () => {
+      try {
+        await inst.getSecretWithType("123");
+      } catch (error) {
+        expect(error.message).to.equal("password is wrong");
+      }
     });
 
-    it("reject `keystore is invalid` if the jingchang wallet is invalid", function(done) {
+    it("reject `keystore is invalid` if the jingchang wallet is invalid", async () => {
       inst.setJingchangWallet(null);
-      inst.getSecretWithType(testPassword).catch((err) => {
-        expect(err.message).to.equal("keystore is invalid");
-        done();
-      });
+      try {
+        await inst.getSecretWithType(testPassword);
+      } catch (error) {
+        expect(error.message).to.equal("keystore is invalid");
+      }
     });
 
-    it("reject `keystore is invalid` if the keystore is invalid", function(done) {
+    it("reject `keystore is invalid` if the keystore is invalid", async () => {
       inst.setJingchangWallet(
         Object.assign({}, testWallet, {
           wallets: [
@@ -347,10 +341,11 @@ describe("test JingchangWallet", function() {
           ]
         })
       );
-      inst.getSecretWithType(testPassword).catch((err) => {
-        expect(err.message).to.equal("keystore is invalid");
-        done();
-      });
+      try {
+        await inst.getSecretWithType(testPassword);
+      } catch (error) {
+        expect(error.message).to.equal("keystore is invalid");
+      }
     });
   });
 
@@ -383,34 +378,35 @@ describe("test JingchangWallet", function() {
       JingchangWallet.clear();
     });
 
-    it("return secret if success", function(done) {
+    it("return secret if success", async () => {
       inst.setJingchangWallet(testWallet);
-      inst.getSecretWithAddress(testPassword, testAddress).then((secret) => {
-        expect(secret).to.equal(testSecret);
-        done();
-      });
+      const secret = await inst.getSecretWithAddress(testPassword, testAddress);
+      expect(secret).to.equal(testSecret);
     });
 
-    it("reject `wallet is empty` if the wallet of given address is not existent", function(done) {
-      inst.getSecretWithAddress(testPassword, "eth").catch((err) => {
-        expect(err.message).to.equal("wallet is empty");
-        done();
-      });
+    it("reject `wallet is empty` if the wallet of given address is not existent", async () => {
+      try {
+        await inst.getSecretWithAddress(testPassword, "eth");
+      } catch (error) {
+        expect(error.message).to.equal("wallet is empty");
+      }
     });
 
-    it("reject `password is wrong` if the password of given address is wrong", function(done) {
-      inst.getSecretWithAddress("123", testAddress).catch((err) => {
-        expect(err.message).to.equal("password is wrong");
-        done();
-      });
+    it("reject `password is wrong` if the password of given address is wrong", async () => {
+      try {
+        await inst.getSecretWithAddress("123", testAddress);
+      } catch (error) {
+        expect(error.message).to.equal("password is wrong");
+      }
     });
 
-    it("reject `keystore is invalid` if the jingchang wallet is invalid", function(done) {
+    it("reject `keystore is invalid` if the jingchang wallet is invalid", async () => {
       inst.setJingchangWallet(null);
-      inst.getSecretWithAddress(testPassword, testAddress).catch((err) => {
-        expect(err.message).to.equal("keystore is invalid");
-        done();
-      });
+      try {
+        await inst.getSecretWithAddress(testPassword, testAddress);
+      } catch (error) {
+        expect(error.message).to.equal("keystore is invalid");
+      }
     });
   });
 
@@ -451,25 +447,28 @@ describe("test JingchangWallet", function() {
         expect(moacAddress).to.equal(testEthereumAddress);
       });
 
-      it("reject `address is existent` if the address is existent", function(done) {
-        inst.importSecret(jingtumSecret, testPassword, "swt", getSecret).catch((err) => {
-          expect(err.message).to.equal("address is existent");
-          done();
-        });
+      it("reject `address is existent` if the address is existent", async () => {
+        try {
+          await inst.importSecret(jingtumSecret, testPassword, "swt", getSecret);
+        } catch (error) {
+          expect(error.message).to.equal("address is existent");
+        }
       });
 
-      it("reject `password is wrong` if the given password is not the default swt keystore's password", function(done) {
-        inst.importSecret(jingtumSecret, "1234", "swt", getSecret).catch((err) => {
-          expect(err.message).to.equal("password is wrong");
-          done();
-        });
+      it("reject `password is wrong` if the given password is not the default swt keystore's password", async () => {
+        try {
+          await inst.importSecret(jingtumSecret, "123", "swt", getSecret);
+        } catch (error) {
+          expect(error.message).to.equal("password is wrong");
+        }
       });
 
-      it("reject `secret is invalid` if the given secret is invalid", function(done) {
-        inst.importSecret("123", testPassword, "swt", getSecret).catch((err) => {
-          expect(err.message).to.equal("secret is invalid");
-          done();
-        });
+      it("reject `secret is invalid` if the given secret is invalid", async () => {
+        try {
+          await inst.importSecret("123", testPassword, "swt", getSecret);
+        } catch (error) {
+          expect(error.message).to.equal("secret is invalid");
+        }
       });
     });
 
@@ -575,11 +574,12 @@ describe("test JingchangWallet", function() {
         inst = new JingchangWallet(testWallet, true, false);
       });
 
-      it("reject `the property of _samePassword is false, so please don't call this function!` when the property of _samePassword is false", function(done) {
-        inst.changeWholePassword("123", "123").catch((error) => {
+      it("reject `the property of _samePassword is false, so please don't call this function!` when the property of _samePassword is false", async () => {
+        try {
+          await inst.changeWholePassword("123", "123");
+        } catch (error) {
           expect(error.message).to.equal("the property of _samePassword is false, so please don't call this function!");
-          done();
-        });
+        }
       });
     });
 
@@ -620,12 +620,13 @@ describe("test JingchangWallet", function() {
         inst = new JingchangWallet(testWallet, true, true);
       });
 
-      it("reject `the property of _samePassword is true, so please don't call this function!` when the property of _samePassword is false", function(done) {
+      it("reject `the property of _samePassword is true, so please don't call this function!` when the property of _samePassword is false", async () => {
         this.timeout(10000);
-        inst.changePasswordWithAddress(testAddress, "123", "123").catch((error) => {
+        try {
+          await inst.changePasswordWithAddress(testAddress, "123", "123");
+        } catch (error) {
           expect(error.message).to.equal("the property of _samePassword is true, so please don't call this function!");
-          done();
-        });
+        }
       });
     });
 
