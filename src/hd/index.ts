@@ -4,6 +4,7 @@ import BIP32Factory from "bip32";
 import * as ecc from "tiny-secp256k1";
 import { BIP44Chain, BIP44ChainMap, getBIP44Chain } from "./constant";
 import { getPluginByType } from "./plugins";
+import { IBIP44Path, IHDPlugin, IKeyPair, IMnemonic } from "../types";
 
 const addressCodec = KeyPair.addressCodec;
 
@@ -15,142 +16,6 @@ export class HDWallet {
   private _address: string;
   private _keypair: IKeyPair;
   private _path: IBIP44Path;
-
-  /**
-   * generate mnemonic
-   *
-   * @static
-   * @param {number} len strength of random bytes, default 128
-   * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
-   * @returns {string} return mnemonic string, spilt by blank
-   */
-  public static generateMnemonic = (len: number = 128, language: string = "english"): string => {
-    BIP39.setDefaultWordlist(language);
-    return BIP39.generateMnemonic(len);
-  };
-
-  /**
-   * get secret from mnemonic, obey encode rule base58 for jingtum
-   *
-   * @static
-   * @param {string} mnemonic mnemonic words
-   * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
-   * @returns {string} return secret string
-   */
-  public static getSecretFromMnemonic = (mnemonic: string, language: string = "english"): string => {
-    BIP39.setDefaultWordlist(language);
-    const entropy = BIP39.mnemonicToEntropy(mnemonic);
-    return addressCodec.encodeSeed(Buffer.from(entropy, "hex"));
-  };
-
-  /**
-   * get mnemonic from secret, obey encode rule base58 for jingtum
-   *
-   * @static
-   * @param {string} secret secret string
-   * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
-   * @returns {string} return mnemonic word list
-   */
-  public static getMnemonicFromSecret = (secret: string, language: string = "english"): string => {
-    BIP39.setDefaultWordlist(language);
-    const entropy = addressCodec.decodeSeed(secret).bytes;
-    return BIP39.entropyToMnemonic(entropy);
-  };
-
-  /**
-   * get keypair from secret
-   *
-   * @static
-   * @param {string} secret secret string
-   * @returns {object} return keypair object
-   */
-  public static getKeypairFromSecret = (secret: string): any => {
-    return KeyPair.deriveKeypair(secret);
-  };
-
-  /**
-   * get hd wallet key pair
-   *
-   * @static
-   * @param {string} rootSecret root secret
-   * @param {number} chain chain index number
-   * @param {number} account bip44 account index for purpose
-   * @param {number} index bip44 last level index
-   * @returns {IKeyPair} return keypair object
-   */
-  public static getHDKeypair = (rootSecret: string, chain: number, account: number = 0, index: number): IKeyPair => {
-    const bip44Chain = getBIP44Chain(chain);
-    if (bip44Chain.length === 0) {
-      return null;
-    }
-
-    /* tslint:disable:no-bitwise */
-    const chainIdx = (bip44Chain[0][0] << 1) >> 1;
-    const mnemonic = HDWallet.getMnemonicFromSecret(rootSecret);
-    const seed = BIP39.mnemonicToSeedSync(mnemonic);
-
-    const bip32 = BIP32Factory(ecc);
-
-    const b32 = bip32.fromSeed(seed);
-    const privateKey = b32.derivePath(`m/44'/${chainIdx}'/${account}'/0/${index}`).privateKey;
-
-    return KeyPair.deriveKeypair(privateKey.toString("hex"));
-  };
-
-  /**
-   * generate hd wallet
-   *
-   * @static
-   * @param {any} opt options of generate, like:
-   *                  {
-   *                    len: 128/160/192/224/256, default is 128, determines number of mnemonic word
-   *                    language: english default/chinese_simplified/chinese_traditional/czech/korean/french/japanese/... see also:bip39 https://github.com/bitcoinjs/bip39/tree/master/ts_src/wordlists
-   *                  }
-   * @returns {object} return hd wallet object
-   */
-  public static generate = (opt: any): HDWallet => {
-    if (!opt) {
-      opt = {};
-    }
-    const mnemonic = HDWallet.generateMnemonic(opt.len, opt.language);
-
-    return new HDWallet({ mnemonic, language: opt.language });
-  };
-
-  /**
-   * create hd wallet from secret
-   *
-   * @static
-   * @param {string} secret secret string
-   * @returns {object} return hd wallet object
-   */
-  public static fromSecret = (secret: string): HDWallet => {
-    return new HDWallet({ secret });
-  };
-
-  /**
-   * create hd wallet from mnemonic
-   *
-   * @static
-   * @param {IMnemonic} mnemonic object like
-   *                    {mnemonic: "abc abc ...", language: "english"}
-   * @returns {object} return hd wallet object
-   */
-  public static fromMnemonic = (mnemonic: IMnemonic): HDWallet => {
-    return new HDWallet({ mnemonic: mnemonic.mnemonic, language: mnemonic.language });
-  };
-
-  /**
-   * create hd wallet from keypair
-   *
-   * @static
-   * @param {IKeyPair} keypair object like
-   *                    {publicKey: "public key...", privateKey: "private key..."}
-   * @returns {object} return hd wallet object
-   */
-  public static fromKeypair = (keypair: IKeyPair): HDWallet => {
-    return new HDWallet({ keypair });
-  };
 
   /**
    * generate hd wallet
@@ -212,6 +77,142 @@ export class HDWallet {
     // parameter error;
     throw new Error("invalid parameters: " + opt);
   }
+
+  /**
+   * generate mnemonic
+   *
+   * @static
+   * @param {number} len strength of random bytes, default 128
+   * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
+   * @returns {string} return mnemonic string, spilt by blank
+   */
+  public static generateMnemonic = (len: number = 128, language: string = "english"): string => {
+    BIP39.setDefaultWordlist(language);
+    return BIP39.generateMnemonic(len);
+  };
+
+  /**
+   * get secret from mnemonic, obey encode rule base58 for jingtum
+   *
+   * @static
+   * @param {string} mnemonic mnemonic words
+   * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
+   * @returns {string} return secret string
+   */
+  public static getSecretFromMnemonic = (mnemonic: string, language: string = "english"): string => {
+    BIP39.setDefaultWordlist(language);
+    const entropy = BIP39.mnemonicToEntropy(mnemonic);
+    return addressCodec.encodeSeed(Buffer.from(entropy, "hex")) as string;
+  };
+
+  /**
+   * get mnemonic from secret, obey encode rule base58 for jingtum
+   *
+   * @static
+   * @param {string} secret secret string
+   * @param {string} language localized word list, default is english. see also https://github.com/bitcoinjs/BIP39
+   * @returns {string} return mnemonic word list
+   */
+  public static getMnemonicFromSecret = (secret: string, language: string = "english"): string => {
+    BIP39.setDefaultWordlist(language);
+    const entropy = addressCodec.decodeSeed(secret).bytes;
+    return BIP39.entropyToMnemonic(entropy);
+  };
+
+  /**
+   * get keypair from secret
+   *
+   * @static
+   * @param {string} secret secret string
+   * @returns {object} return keypair object
+   */
+  public static getKeypairFromSecret = (secret: string): any => {
+    return KeyPair.deriveKeypair(secret);
+  };
+
+  /**
+   * get hd wallet key pair
+   *
+   * @static
+   * @param {string} rootSecret root secret
+   * @param {number} chain chain index number
+   * @param {number} account bip44 account index for purpose
+   * @param {number} index bip44 last level index
+   * @returns {IKeyPair} return keypair object
+   */
+  public static getHDKeypair = (rootSecret: string, chain: number, account: number = 0, index: number): IKeyPair => {
+    const bip44Chain = getBIP44Chain(chain);
+    if (bip44Chain.length === 0) {
+      return null;
+    }
+
+    // eslint-disable-next-line no-bitwise
+    const chainIdx = (bip44Chain[0][0] << 1) >> 1;
+    const mnemonic = HDWallet.getMnemonicFromSecret(rootSecret);
+    const seed = BIP39.mnemonicToSeedSync(mnemonic);
+
+    const bip32 = BIP32Factory(ecc);
+
+    const b32 = bip32.fromSeed(seed);
+    const privateKey = b32.derivePath(`m/44'/${chainIdx}'/${account}'/0/${index}`).privateKey;
+
+    return KeyPair.deriveKeypair(privateKey.toString("hex")) as IKeyPair;
+  };
+
+  /**
+   * generate hd wallet
+   *
+   * @static
+   * @param {any} opt options of generate, like:
+   *                  {
+   *                    len: 128/160/192/224/256, default is 128, determines number of mnemonic word
+   *                    language: english default/chinese_simplified/chinese_traditional/czech/korean/french/japanese/... see also:bip39 https://github.com/bitcoinjs/bip39/tree/master/ts_src/wordlists
+   *                  }
+   * @returns {object} return hd wallet object
+   */
+  public static generate = (opt: any): HDWallet => {
+    if (!opt) {
+      opt = {};
+    }
+    const mnemonic = HDWallet.generateMnemonic(opt.len, opt.language);
+
+    return new HDWallet({ mnemonic, language: opt.language });
+  };
+
+  /**
+   * create hd wallet from secret
+   *
+   * @static
+   * @param {string} secret secret string
+   * @returns {object} return hd wallet object
+   */
+  public static fromSecret = (secret: string): HDWallet => {
+    return new HDWallet({ secret });
+  };
+
+  /**
+   * create hd wallet from mnemonic
+   *
+   * @static
+   * @param {IMnemonic} mnemonic object like
+   *                    {mnemonic: "abc abc ...", language: "english"}
+   * @returns {object} return hd wallet object
+   */
+  public static fromMnemonic = (mnemonic: IMnemonic): HDWallet => {
+    return new HDWallet({ mnemonic: mnemonic.mnemonic, language: mnemonic.language });
+  };
+
+  /**
+   * create hd wallet from keypair
+   *
+   * @static
+   * @param {IKeyPair} keypair object like
+   *                    {publicKey: "public key...", privateKey: "private key..."}
+   * @returns {object} return hd wallet object
+   */
+  public static fromKeypair = (keypair: IKeyPair): HDWallet => {
+    return new HDWallet({ keypair });
+  };
 
   /**
    * hd wallet is root or not

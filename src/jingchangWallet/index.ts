@@ -8,6 +8,7 @@ import { Factory as KeypairsFactory } from "@swtc/keypairs";
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
 import { jtWallet } from "../x-wallet";
 import { decrypt, encryptWallet } from "../util";
+import { IEncrypt, IJingchangWalletModel, IKeypairsModel, IKeystoreModel, IKeyPair } from "../types";
 
 Lockr.prefix = "jingchang_";
 
@@ -128,7 +129,7 @@ export default class JingchangWallet {
     if (!JingchangWallet.isValid(jcWallet)) {
       return null;
     }
-    return jcWallet;
+    return jcWallet as IJingchangWalletModel;
   }
 
   /**
@@ -207,7 +208,7 @@ export default class JingchangWallet {
       mac: Buffer.from(message.mac, "hex")
     };
     const decode = await eccrypto.decrypt(Buffer.from(privateKey, "hex"), encode);
-    return decode.toString();
+    return decode.toString() as string;
   }
 
   /**
@@ -225,7 +226,7 @@ export default class JingchangWallet {
     } else {
       wallets = [];
     }
-    return wallets;
+    return wallets as Array<IKeystoreModel>;
   }
 
   /**
@@ -245,15 +246,9 @@ export default class JingchangWallet {
    * @returns {Promise<string>} resolve address if success
    * @memberof JingchangWallet
    */
-  public getAddress(type: string = "swt"): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const wallet = await this.getWalletWithType(type);
-        return resolve(wallet.address);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async getAddress(type: string = "swt"): Promise<string> {
+    const wallet = await this.getWalletWithType(type);
+    return wallet.address;
   }
 
   /**
@@ -263,15 +258,9 @@ export default class JingchangWallet {
    * @returns {Promise<IKeystoreModel>} resolve default wallet keystore if success.
    * @memberof JingchangWallet
    */
-  public getWalletWithType(type: string = "swt"): Promise<IKeystoreModel> {
-    return new Promise((resolve, reject) => {
-      try {
-        const wallet = this.findWallet((w) => w.type.toLowerCase() === type.toLowerCase() && w.default);
-        return resolve(wallet);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async getWalletWithType(type: string = "swt"): Promise<IKeystoreModel> {
+    const wallet = this.findWallet((w) => w.type.toLowerCase() === type.toLowerCase() && w.default);
+    return wallet;
   }
 
   /**
@@ -281,15 +270,9 @@ export default class JingchangWallet {
    * @returns {Promise<IKeystoreModel>} resolve wallet keystore if success.
    * @memberof JingchangWallet
    */
-  public getWalletWithAddress(address: string): Promise<IKeystoreModel> {
-    return new Promise((resolve, reject) => {
-      try {
-        const wallet = this.findWallet((w) => w.address === address);
-        return resolve(wallet);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async getWalletWithAddress(address: string): Promise<IKeystoreModel> {
+    const wallet = await this.findWallet((w) => w.address === address);
+    return wallet;
   }
 
   /**
@@ -316,16 +299,10 @@ export default class JingchangWallet {
    * @returns {Promise<string>}
    * @memberof JingchangWallet
    */
-  public getSecretWithType(password: string, type: string = "swt"): Promise<string> {
-    return new Promise((resolve, reject) => {
-      try {
-        const wallet = this.findWallet((w) => w.type === type && w.default);
-        const secret = decrypt(password, wallet);
-        return resolve(secret);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async getSecretWithType(password: string, type: string = "swt"): Promise<string> {
+    const wallet = await this.findWallet((w) => w.type === type && w.default);
+    const secret = decrypt(password, wallet);
+    return secret;
   }
 
   /**
@@ -336,16 +313,10 @@ export default class JingchangWallet {
    * @returns {Promise<string>}
    * @memberof JingchangWallet resolve secret if success.
    */
-  public getSecretWithAddress(password: string, address: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      try {
-        const wallet = this.findWallet((w) => w.address === address);
-        const secret = decrypt(password, wallet);
-        return resolve(secret);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async getSecretWithAddress(password: string, address: string): Promise<string> {
+    const wallet = await this.findWallet((w) => w.address === address);
+    const secret = decrypt(password, wallet);
+    return secret;
   }
 
   /**
@@ -356,36 +327,30 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  public changeWholePassword(oldPassword: string, newPassword: string): Promise<IJingchangWalletModel> {
-    return new Promise(async (resolve, reject) => {
-      if (!this._samePassword) {
-        return reject(new Error("the property of _samePassword is false, so please don't call this function!"));
-      }
-      const jcWallet = cloneDeep(this._jingchangWallet);
-      assert.notEqual(jcWallet, this._jingchangWallet);
-      const wallets = JingchangWallet.getWallets(jcWallet);
-      try {
-        const arr = [];
-        for (const wallet of wallets) {
-          const address = wallet.address;
-          const secret = await this.getSecretWithAddress(oldPassword, address);
-          const keypairs = {
-            address: wallet.address,
-            alias: wallet.alias,
-            default: wallet.default,
-            secret,
-            type: wallet.type
-          };
-          const newWallet = this.getEncryptData(newPassword, keypairs);
-          arr.push(newWallet);
-        }
-        jcWallet.wallets = arr;
-        this.setJingchangWallet(jcWallet);
-        return resolve(jcWallet);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async changeWholePassword(oldPassword: string, newPassword: string): Promise<IJingchangWalletModel> {
+    if (!this._samePassword) {
+      throw new Error("the property of _samePassword is false, so please don't call this function!");
+    }
+    const jcWallet = cloneDeep(this._jingchangWallet);
+    assert.notEqual(jcWallet, this._jingchangWallet);
+    const wallets = JingchangWallet.getWallets(jcWallet);
+    const arr = [];
+    for (const wallet of wallets) {
+      const address = wallet.address;
+      const secret = await this.getSecretWithAddress(oldPassword, address);
+      const keypairs = {
+        address: wallet.address,
+        alias: wallet.alias,
+        default: wallet.default,
+        secret,
+        type: wallet.type
+      };
+      const newWallet = this.getEncryptData(newPassword, keypairs);
+      arr.push(newWallet);
+    }
+    jcWallet.wallets = arr;
+    this.setJingchangWallet(jcWallet);
+    return jcWallet as IJingchangWalletModel;
   }
 
   /**
@@ -397,35 +362,29 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  public changePasswordWithAddress(
+  public async changePasswordWithAddress(
     address: string,
     oldPassword: string,
     newPassword: string
   ): Promise<IJingchangWalletModel> {
-    return new Promise(async (resolve, reject) => {
-      if (this._samePassword) {
-        return reject(new Error("the property of _samePassword is true, so please don't call this function!"));
-      }
-      try {
-        const wallet = this.findWallet((w) => w.address === address);
-        const secret = await this.getSecretWithAddress(oldPassword, address);
-        const keypairs = {
-          address: wallet.address,
-          alias: wallet.alias,
-          default: wallet.default,
-          secret,
-          type: wallet.type
-        };
-        const newWallet = this.getEncryptData(newPassword, keypairs);
-        // shadow copy
-        wallet.ciphertext = newWallet.ciphertext;
-        wallet.crypto = newWallet.crypto;
-        wallet.mac = newWallet.mac;
-        return resolve(this._jingchangWallet);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+    if (this._samePassword) {
+      throw new Error("the property of _samePassword is true, so please don't call this function!");
+    }
+    const wallet = this.findWallet((w) => w.address === address);
+    const secret = await this.getSecretWithAddress(oldPassword, address);
+    const keypairs = {
+      address: wallet.address,
+      alias: wallet.alias,
+      default: wallet.default,
+      secret,
+      type: wallet.type
+    };
+    const newWallet = this.getEncryptData(newPassword, keypairs);
+    // shadow copy
+    wallet.ciphertext = newWallet.ciphertext;
+    wallet.crypto = newWallet.crypto;
+    wallet.mac = newWallet.mac;
+    return this._jingchangWallet;
   }
 
   /**
@@ -466,16 +425,10 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  public removeWalletWithType(type: string = "swt"): Promise<IJingchangWalletModel> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const address = await this.getAddress(type);
-        const wallet = await this.removeWalletWithAddress(address);
-        resolve(wallet);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async removeWalletWithType(type: string = "swt"): Promise<IJingchangWalletModel> {
+    const address = await this.getAddress(type);
+    const wallet = await this.removeWalletWithAddress(address);
+    return wallet;
   }
 
   /**
@@ -485,25 +438,19 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  public removeWalletWithAddress(address: string): Promise<IJingchangWalletModel> {
-    return new Promise((resolve, reject) => {
-      const jcWallet = cloneDeep(this._jingchangWallet);
-      assert.notEqual(this._jingchangWallet, jcWallet);
-      const wallets = JingchangWallet.getWallets(jcWallet);
-      try {
-        const wallet = this.findWallet((w) => w.address === address);
-        const index = wallets.findIndex((w) => w.address === wallet.address);
-        wallets.splice(index, 1);
-        const next = wallets.find((w) => w.type === wallet.type);
-        if (next) {
-          next.default = true;
-        }
-        this.setJingchangWallet(jcWallet);
-        return resolve(jcWallet);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async removeWalletWithAddress(address: string): Promise<IJingchangWalletModel> {
+    const jcWallet = cloneDeep(this._jingchangWallet);
+    assert.notEqual(this._jingchangWallet, jcWallet);
+    const wallets = JingchangWallet.getWallets(jcWallet);
+    const wallet = this.findWallet((w) => w.address === address);
+    const index = wallets.findIndex((w) => w.address === wallet.address);
+    wallets.splice(index, 1);
+    const next = wallets.find((w) => w.type === wallet.type);
+    if (next) {
+      next.default = true;
+    }
+    this.setJingchangWallet(jcWallet);
+    return jcWallet as IJingchangWalletModel;
   }
 
   /**
@@ -513,21 +460,15 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  public setDefaultWallet(address: string): Promise<IJingchangWalletModel> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const wallet = await this.getWalletWithAddress(address);
-        if (wallet.default) {
-          return resolve(this._jingchangWallet);
-        }
-        const defaultWallet = await this.getWalletWithType(wallet.type);
-        defaultWallet.default = false;
-        wallet.default = true;
-        return resolve(this._jingchangWallet);
-      } catch (error) {
-        return reject(error);
-      }
-    });
+  public async setDefaultWallet(address: string): Promise<IJingchangWalletModel> {
+    const wallet = await this.getWalletWithAddress(address);
+    if (wallet.default) {
+      return this._jingchangWallet;
+    }
+    const defaultWallet = await this.getWalletWithType(wallet.type);
+    defaultWallet.default = false;
+    wallet.default = true;
+    return this._jingchangWallet;
   }
 
   /**
@@ -541,41 +482,34 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  public importSecret(
+  public async importSecret(
     secret: string,
     password: string,
     type: string,
     retriveSecret: (secret: string) => string,
     alias?: string
   ): Promise<IJingchangWalletModel> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        if (this._samePassword) {
-          // validate default password of swt keystore is right or not
-          await this.getSecretWithType(password);
-        }
-        const address = retriveSecret(secret);
-        if (!address) {
-          return reject(new Error(SECRET_IS_INVALID));
-        }
-        const wallets = JingchangWallet.getWallets(this._jingchangWallet);
-        const wallet = wallets.find((w) => w.address === address && w.type === type);
-        if (wallet) {
-          return reject(new Error(ADDRESS_IS_EXISTENT));
-        }
-        const keypairs = {
-          address,
-          alias: alias || `${type} wallet`,
-          secret,
-          type
-        };
-        this.saveWallet(password, keypairs).then((w) => {
-          return resolve(w);
-        });
-      } catch (error) {
-        return reject(error);
-      }
-    });
+    if (this._samePassword) {
+      // validate default password of swt keystore is right or not
+      await this.getSecretWithType(password);
+    }
+    const address = retriveSecret(secret);
+    if (!address) {
+      throw new Error(SECRET_IS_INVALID);
+    }
+    const wallets = JingchangWallet.getWallets(this._jingchangWallet);
+    const wallet = wallets.find((w) => w.address === address && w.type === type);
+    if (wallet) {
+      throw new Error(ADDRESS_IS_EXISTENT);
+    }
+    const keypairs = {
+      address,
+      alias: alias || `${type} wallet`,
+      secret,
+      type
+    };
+    const w = await this.saveWallet(password, keypairs);
+    return w;
   }
 
   /**
@@ -623,26 +557,24 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve new jingchang wallet if success
    * @memberof JingchangWallet
    */
-  private saveWallet(password: string, keypairs: IKeypairsModel): Promise<IJingchangWalletModel> {
-    return new Promise((resolve) => {
-      // support type: ethereum, stream, jingtum, call and moac
-      keypairs.default = this._multiple ? !this.hasDefault(keypairs.type) : true;
-      const encryptData = this.getEncryptData(password, keypairs);
-      const jcWallet = cloneDeep(this._jingchangWallet);
-      assert.notEqual(this._jingchangWallet, jcWallet);
-      const wallets = jcWallet.wallets;
-      const pre = wallets.findIndex((w) => w.type.toLowerCase() === keypairs.type.toLowerCase());
-      if (this._multiple) {
-        wallets.push(encryptData);
-      } else {
-        /* istanbul ignore else */
-        if (pre >= 0) {
-          wallets.splice(pre, 1);
-        }
-        wallets.push(encryptData);
+  private async saveWallet(password: string, keypairs: IKeypairsModel): Promise<IJingchangWalletModel> {
+    // support type: ethereum, stream, jingtum, call and moac
+    keypairs.default = this._multiple ? !this.hasDefault(keypairs.type) : true;
+    const encryptData = this.getEncryptData(password, keypairs);
+    const jcWallet = cloneDeep(this._jingchangWallet);
+    assert.notEqual(this._jingchangWallet, jcWallet);
+    const wallets = jcWallet.wallets;
+    const pre = wallets.findIndex((w) => w.type.toLowerCase() === keypairs.type.toLowerCase());
+    if (this._multiple) {
+      wallets.push(encryptData);
+    } else {
+      /* istanbul ignore else */
+      if (pre >= 0) {
+        wallets.splice(pre, 1);
       }
-      this.setJingchangWallet(jcWallet);
-      return resolve(jcWallet);
-    });
+      wallets.push(encryptData);
+    }
+    this.setJingchangWallet(jcWallet);
+    return jcWallet as IJingchangWalletModel;
   }
 }

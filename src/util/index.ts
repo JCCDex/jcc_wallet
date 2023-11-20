@@ -4,6 +4,7 @@ import createKeccakHash from "keccak";
 import randombytes from "randombytes";
 import scrypt from "scryptsy";
 import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
+import { IEncryptModel, IKeystoreModel, IKeypairsModel } from "../types";
 
 /**
  * decrypt wallet with password

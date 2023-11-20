@@ -2,6 +2,7 @@
 import { isValidPrivate } from "@ethereumjs/util";
 import { Wallet } from "@ethereumjs/wallet";
 import { filterOx } from "jcc_common";
+import { IWalletModel } from "../types";
 
 /**
  * check moac secret is valid or not
