@@ -5,7 +5,6 @@ module.exports = function(config) {
   config.set({
     frameworks: ["browserify", "detectBrowsers", "mocha"],
     files: ["test/*.spec.js"],
-    flags: ["--no-sandbox"],
     preprocessors: {
       // don't use browserify, because it don't support dynamic require.
       // and some file is dynamic required in the `stm-lib` package.
@@ -14,7 +13,7 @@ module.exports = function(config) {
     singleRun: true,
     client: {
       mocha: {
-        timeout: 30000 // 6 seconds - upped from 2 seconds
+        timeout: 6000 // 6 seconds - upped from 2 seconds
       }
     },
     plugins: [
