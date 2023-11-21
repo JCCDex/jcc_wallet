@@ -32,7 +32,11 @@ const config = {
   },
   optimization: {
     minimize: true,
-    minimizer: [new TerserPlugin()]
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false
+      })
+    ]
   },
   mode: process.env.MODE === "dev" ? "development" : "production",
   module: {
