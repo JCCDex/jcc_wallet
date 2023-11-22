@@ -75,6 +75,21 @@ let tron_account = [
   { address: "TFMqRST2JeCu2k64SgFg12MnJiaom6rkS6" }
 ];
 
+let eos_keypairs = [
+  {
+    privateKey: "006891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD781",
+    publicKey: "0291F836AA55037C859F4215107329CCEFA8F568AB5C09B92E3CE6B05571885920"
+  },
+  {
+    privateKey: "00DF462A603FC74C4837CAA847843B32B27C0788A36E25ADFA5F8E43B28D0F26BF",
+    publicKey: "024D20265424C77DCD0D3961EA29D048EC730635DE2C7690B108AB2D1CEC650448"
+  }
+];
+let eos_account = [
+  { address: "EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhPo" },
+  { address: "EOS5UTRVsPuJQ9ysjqrsh4MYLVyivVyG6mpYN6CRYEnzDeV5efu1N" }
+];
+
 /**
  * 生成HD根钱包
 派生出临时身份签名
@@ -128,6 +143,17 @@ describe("HD wallet testcase", function() {
       expect(tronHd2.keypair().privateKey).to.equal(tron_keypairs[1].privateKey);
       let tronAddress2 = tronHd2.address();
       expect(tronAddress2).to.equal(tron_account[1].address);
+
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      expect(eosHd.keypair().privateKey).to.equal(eos_keypairs[0].privateKey);
+      expect(eosHd.isRoot()).to.equal(false);
+      let eosAddress = eosHd.address();
+      expect(eosAddress).to.equal(eos_account[0].address);
+
+      let eosHd2 = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 1 });
+      expect(eosHd2.keypair().privateKey).to.equal(eos_keypairs[1].privateKey);
+      let eosAddress2 = eosHd2.address();
+      expect(eosAddress2).to.equal(eos_account[1].address);
     });
 
     it("test derive wallet invalid options", function() {
@@ -248,6 +274,16 @@ describe("HD wallet testcase", function() {
       expect(ret).to.equal(false);
     });
 
+    it("test eos isValidAddress", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      // test eos
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      ret = eosHd.isValidAddress(eos_account[0].address);
+      expect(ret).to.equal(true);
+      ret = eosHd.isValidAddress("EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP3");
+      expect(ret).to.equal(false);
+    });
+
     it("test swtc isValidSecret", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       let ret = hd.isValidSecret(hd.secret());
@@ -292,6 +328,17 @@ describe("HD wallet testcase", function() {
       ret = tronHd.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD190621");
       expect(ret).to.equal(false);
       ret = api.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD19062BB");
+      expect(ret).to.equal(true);
+    });
+
+    it("test eos isValidSecret", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      // test eos
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      api = eosHd.getWalletApi();
+      ret = eosHd.isValidSecret("6891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD78");
+      expect(ret).to.equal(false);
+      ret = api.isValidSecret("006891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD781");
       expect(ret).to.equal(true);
     });
   });
@@ -397,6 +444,38 @@ describe("HD wallet testcase", function() {
       });
       expect(address).to.equal("THfdUy8cCwm3KbrtNnMqbUVqVktG83q6GE");
       address = api.address("THfdUy8cCwm3KbrtNnMqbUVqVktG83q6G1");
+      expect(address).to.equal(null);
+    });
+
+    it("test eos hash & sign & verify & reocover", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonic.join(" "), language: "english" });
+
+      // test eos
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      hash = eosHd.hash("234");
+      expect(hash).to.equal("114bd151f8fb0c58642d2170da4ae7d7c57977260ac2cc8905306cab6b2acabc");
+      signed = eosHd.sign("234");
+      expect(signed).to.equal(
+        "SIG_K1_KbzjMjy5ca8WdGTYKUYwGBMNJQ4UJrWHyjSArBNoHo2HuLW5LkJkYLLL8aD1mqVfUwvVMzfPxn1GdY9yFTSG8euEGgYFXe"
+      );
+
+      recover = eosHd.recover("234", signed);
+      expect(recover).to.equal(eos_account[0].address);
+
+      verify = eosHd.verify("234", signed, eosHd.address(), eosHd.keypair());
+      expect(verify).to.equal(true);
+
+      verify = eosHd.verify("234", signed, "EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP1", eosHd.keypair());
+      expect(verify).to.equal(false);
+
+      api = eosHd.getWalletApi();
+      address = api.address({
+        privateKey: "",
+        // 真实的eos public key
+        publicKey: "024D20265424C77DCD0D3961EA29D048EC730635DE2C7690B108AB2D1CEC650448"
+      });
+      expect(address).to.equal(eos_account[1].address);
+      address = api.address("EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP2");
       expect(address).to.equal(null);
     });
 

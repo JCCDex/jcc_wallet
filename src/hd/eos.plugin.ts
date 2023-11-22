@@ -1,7 +1,7 @@
-// const EosJs = require('eosjs');
-import { Wallet } from "@ethereumjs/wallet";
-import * as ethUtil from "@ethereumjs/util";
-import { keccak256 } from "ethereum-cryptography/keccak.js";
+const EosJs = require("eosjs");
+const ecc = require("eosjs-ecc");
+const wif = require("wif");
+const secp256k1 = require("secp256k1");
 import { filterOx } from "jcc_common";
 
 export interface IEosPlugin extends IHDPlugin {
@@ -17,33 +17,37 @@ export const plugin: IEosPlugin = {
     if (key.privateKey) {
       const privateKey = this.checkPrivateKey(key.privateKey);
       const buffer = Buffer.from(privateKey, "hex");
-      const wallet = Wallet.fromPrivateKey(buffer);
-      // console.log("get public key:", wallet.getPublicKeyString());
-      return wallet.getAddressString();
+      // const eosPrivateKey = wif.encode(128, buffer, false)
+
+      // TODO: secp256k1 version confict fixed, but need refactor later
+      const rawPublicKey = Buffer.from(secp256k1.publicKeyCreate(buffer, true));
+      const eosPublicKey = ecc.PublicKey(rawPublicKey).toString();
+      return eosPublicKey;
     }
     if (key.publicKey) {
-      // TODO: length of ethereum publick key of keypaire is 128, but swtc lib keypair is 64
-      // so, if you want get address from public key, get it from private first
-      const wallet = Wallet.fromPublicKey(Buffer.from(key.publicKey, "hex"));
-      return wallet.getAddressString();
+      const rawPublicKey = Buffer.from(key.publicKey, "hex");
+      const eosPublicKey = ecc.PublicKey(rawPublicKey).toString();
+      return eosPublicKey;
     }
     return null;
   },
 
   isValidAddress(address: string): boolean {
-    return ethUtil.isValidAddress(address);
+    return ecc.isValidPublic(address);
   },
 
   isValidSecret(secret: string): boolean {
     try {
-      return ethUtil.isValidPrivate(Buffer.from(filterOx(secret), "hex"));
+      const privateKey = this.checkPrivateKey(filterOx(secret));
+      const buffer = Buffer.from(privateKey, "hex");
+      const eosPrivateKey = wif.encode(128, buffer, false);
+      return ecc.isValidPrivate(eosPrivateKey);
     } catch (error) {
       return false;
     }
   },
   hash(message: string): string {
-    const hash = ethUtil.bytesToHex(keccak256(Buffer.from(message, "utf-8")));
-    return ethUtil.stripHexPrefix(hash);
+    return ecc.sha256(message);
   },
   /**
    *
@@ -52,30 +56,18 @@ export const plugin: IEosPlugin = {
    * @returns signature string
    */
   sign(message: string, privateKey: string): string {
-    const key = this.checkPrivateKey(privateKey).toLowerCase();
+    const buffer = Buffer.from(this.checkPrivateKey(filterOx(privateKey)), "hex");
+    const eosPrivateKey = wif.encode(128, buffer, false);
 
-    const hash = keccak256(Buffer.from(message, "utf-8"));
-    const signed = ethUtil.ecsign(hash, Buffer.from(key, "hex"));
-
-    return (
-      ethUtil.stripHexPrefix(ethUtil.bytesToHex(signed.r)) +
-      ethUtil.stripHexPrefix(ethUtil.bytesToHex(signed.s)) +
-      signed.v.toString(16)
-    );
+    return ecc.sign(message, eosPrivateKey, "utf8");
   },
   verify(message: string, signature: string, address: string): boolean {
     return this.recover(message, signature) === address;
   },
   recover(message: string, signature: string): string {
-    const hash = keccak256(Buffer.from(message, "utf-8"));
-    const r = Buffer.from(Buffer.from(signature.substring(0, 64), "hex"));
-    const s = Buffer.from(Buffer.from(signature.substring(64, 128), "hex"));
-    const bytes = ethUtil.hexToBytes("0x" + signature.substring(128, 130));
-    const pk = ethUtil.ecrecover(hash, ethUtil.bytesToBigInt(bytes), r, s);
-    const wallet = Wallet.fromPublicKey(pk);
-    return wallet.getAddressString();
+    return ecc.recover(signature, message, "utf8");
   },
   proxy(functionName, ...args): any {
-    return ethUtil[functionName](...args);
+    return EosJs[functionName](...args);
   }
 };
