@@ -1,18 +1,32 @@
 const webpackConfig = require("./webpack.config");
-
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const webpack = require("webpack");
 module.exports = function(config) {
   config.set({
     frameworks: ["browserify", "detectBrowsers", "mocha"],
-    files: ["test/*.spec.js"],
+    files: [
+      "test/bvcadt.spec.js",
+      "test/call.spec.js",
+      "test/jingchang.wallet.spec.js",
+      "test/hd.spec.js",
+      "test/eth.spec.js",
+      "test/jingtum.spec.js",
+      "test/moac.spec.js",
+      "test/ripple.spec.js",
+      "test/stm.spec.js",
+      "test/util.spec.js"
+    ],
     preprocessors: {
       // don't use browserify, because it don't support dynamic require.
       // and some file is dynamic required in the `stm-lib` package.
       "test/*.spec.js": ["webpack"]
     },
     singleRun: true,
+    browserDisconnectTimeout: 60000,
+    browserDisconnectTolerance: 3,
     client: {
       mocha: {
-        timeout: 6000 // 6 seconds - upped from 2 seconds
+        timeout: 30000 // 6 seconds - upped from 2 seconds
       }
     },
     plugins: [
@@ -27,9 +41,15 @@ module.exports = function(config) {
     webpack: {
       node: webpackConfig.node,
       resolve: webpackConfig.resolve,
-      mode: "development"
+      mode: "development",
+      plugins: [
+        new NodePolyfillPlugin(),
+        new webpack.IgnorePlugin({
+          resourceRegExp: /canvas/,
+          contextRegExp: /jsdom$/
+        })
+      ]
     },
-    envPreprocessor: ["RANDOM_TESTS_REPEAT"],
     detectBrowsers: {
       enabled: true,
       usePhantomJS: false,

@@ -1,5 +1,5 @@
 import { Factory as WalletFactory } from "@swtc/wallet";
-
+import { ICreateOptionsModel, IWalletModel } from "../types";
 interface IWallet {
   isValidAddress(address: string): boolean;
   isValidSecret(secret: string): boolean;
@@ -25,7 +25,8 @@ export const XWallet = (chain: Chain): IWallet => {
    * @returns {boolean} return true if valid
    */
   const isValidAddress = (address: string): boolean => {
-    return Wallet.isValidAddress(address);
+    const isValid: boolean = Wallet.isValidAddress(address);
+    return isValid;
   };
 
   /**
@@ -35,7 +36,8 @@ export const XWallet = (chain: Chain): IWallet => {
    * @returns {boolean} return true if valid
    */
   const isValidSecret = (secret: string): boolean => {
-    return Wallet.isValidSecret(secret);
+    const isValid: boolean = Wallet.isValidSecret(secret);
+    return isValid;
   };
 
   /**
@@ -47,7 +49,7 @@ export const XWallet = (chain: Chain): IWallet => {
   const getAddress = (secret: string): string | null => {
     try {
       const wallet = Wallet.fromSecret(secret);
-      return wallet.address;
+      return wallet.address as string;
     } catch (error) {
       return null;
     }
