@@ -18,7 +18,7 @@
     "test:node": "npm run build && nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout=6000 test/*.spec.js",
     "test:browser": "npm run build && karma start karma.conf.js",
     "eslint": "./node_modules/.bin/eslint src",
-    "compile": "/compile.sh",
+    "compile": "./compile.sh",
     "pretty": "pretty-quick --staged"
   },
   "repository": {
