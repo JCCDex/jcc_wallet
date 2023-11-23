@@ -75,13 +75,28 @@ let tron_account = [
   { address: "TFMqRST2JeCu2k64SgFg12MnJiaom6rkS6" }
 ];
 
+let eos_keypairs = [
+  {
+    privateKey: "006891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD781",
+    publicKey: "0291F836AA55037C859F4215107329CCEFA8F568AB5C09B92E3CE6B05571885920"
+  },
+  {
+    privateKey: "00DF462A603FC74C4837CAA847843B32B27C0788A36E25ADFA5F8E43B28D0F26BF",
+    publicKey: "024D20265424C77DCD0D3961EA29D048EC730635DE2C7690B108AB2D1CEC650448"
+  }
+];
+let eos_account = [
+  { address: "EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhPo" },
+  { address: "EOS5UTRVsPuJQ9ysjqrsh4MYLVyivVyG6mpYN6CRYEnzDeV5efu1N" }
+];
+
 /**
  * 生成HD根钱包
 派生出临时身份签名
 派生出第三方验真身份
  */
-describe("test hd create", function() {
-  describe("test hd create&recover&sign", function() {
+describe("HD wallet testcase", function() {
+  describe("test hd create&derive", function() {
     it("create HDWallet test", function() {
       let hd = HDWallet.generate({ language: "chinese_simplified" });
       let mnemonic = hd.mnemonic().mnemonic.split(" ");
@@ -128,23 +143,20 @@ describe("test hd create", function() {
       expect(tronHd2.keypair().privateKey).to.equal(tron_keypairs[1].privateKey);
       let tronAddress2 = tronHd2.address();
       expect(tronAddress2).to.equal(tron_account[1].address);
-    });
-  });
 
-  describe("test swtc plugin", function() {
-    it("test swtc plugin invalid pair", function() {
-      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
-      let rootAddress = hd.address();
-      expect(rootAddress).to.equal(root_account);
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      expect(eosHd.keypair().privateKey).to.equal(eos_keypairs[0].privateKey);
+      expect(eosHd.isRoot()).to.equal(false);
+      let eosAddress = eosHd.address();
+      expect(eosAddress).to.equal(eos_account[0].address);
 
-      let swtcHd = hd.deriveWallet({ chain: BIP44Chain.SWTC, account: 0, index: 0 });
-      // set invalid keypair
-      swtcHd.setKeypair({ privateKey: "", publicKey: "" });
-      let swtcAddress = swtcHd.address();
-      expect(swtcAddress).to.equal(null);
+      let eosHd2 = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 1 });
+      expect(eosHd2.keypair().privateKey).to.equal(eos_keypairs[1].privateKey);
+      let eosAddress2 = eosHd2.address();
+      expect(eosAddress2).to.equal(eos_account[1].address);
     });
 
-    it("test deriveWallet invalid options", function() {
+    it("test derive wallet invalid options", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
 
       let bscHd = hd.deriveWallet({ chain: "bsc", account: 0, index: 0 });
@@ -209,6 +221,20 @@ describe("test hd create", function() {
     });
   });
 
+  describe("test swtc plugin", function() {
+    it("test swtc plugin invalid pair", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      let rootAddress = hd.address();
+      expect(rootAddress).to.equal(root_account);
+
+      let swtcHd = hd.deriveWallet({ chain: BIP44Chain.SWTC, account: 0, index: 0 });
+      // set invalid keypair
+      swtcHd.setKeypair({ privateKey: "", publicKey: "" });
+      let swtcAddress = swtcHd.address();
+      expect(swtcAddress).to.equal(null);
+    });
+  });
+
   describe("test plugin isValidAddress and isValidSecret", function() {
     it("test swtc isValidAddress", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
@@ -216,26 +242,45 @@ describe("test hd create", function() {
       expect(ret).to.equal(true);
       ret = hd.isValidAddress("jN2NEAiZpNYHYbFUdZbkCpEcxDTWBJ6Avs");
       expect(ret).to.equal(false);
+    });
 
-      // test xrp
-      let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
-      ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBTE");
-      expect(ret).to.equal(true);
-      ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
-      expect(ret).to.equal(false);
-
+    it("test xrp isValidAddress", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test eth like
       let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
       ret = bscHd.isValidAddress(bsc_account[0].address);
       expect(ret).to.equal(true);
       ret = bscHd.isValidAddress("0xf56a34e674d5ea95385c588e21906a43e7e22a7c1");
       expect(ret).to.equal(false);
+    });
 
+    it("test eth like isValidAddress", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      // test xrp
+      let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
+      ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBTE");
+      expect(ret).to.equal(true);
+      ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
+      expect(ret).to.equal(false);
+    });
+
+    it("test tron isValidAddress", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test tron like
       let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
       ret = tronHd.isValidAddress(tron_account[0].address);
       expect(ret).to.equal(true);
       ret = tronHd.isValidAddress("TFMqRST2JeCu2k64SgFg12MnJiaom6rkS8");
+      expect(ret).to.equal(false);
+    });
+
+    it("test eos isValidAddress", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      // test eos
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      ret = eosHd.isValidAddress(eos_account[0].address);
+      expect(ret).to.equal(true);
+      ret = eosHd.isValidAddress("EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP3");
       expect(ret).to.equal(false);
     });
 
@@ -245,7 +290,10 @@ describe("test hd create", function() {
       expect(ret).to.equal(true);
       ret = hd.isValidSecret("shgy1jjPkx1Z75zKsSit5TuAsKV86");
       expect(ret).to.equal(false);
+    });
 
+    it("test xrp isValidSecret", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test xrp
       let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
       let api = hd.getWalletApi();
@@ -255,7 +303,10 @@ describe("test hd create", function() {
       expect(ret).to.equal(false);
       ret = api.proxy("isValidSecret", "rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
       expect(ret).to.equal(false);
+    });
 
+    it("test eth like isValidSecret", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test eth like
       let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
       api = bscHd.getWalletApi();
@@ -267,13 +318,27 @@ describe("test hd create", function() {
       // show how to use proxy function
       ret = api.proxy("isValidChecksumAddress", bscHd.address());
       expect(ret).to.equal(false);
+    });
 
+    it("test tron isValidSecret", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test tron
       let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
       api = tronHd.getWalletApi();
       ret = tronHd.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD190621");
       expect(ret).to.equal(false);
       ret = api.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD19062BB");
+      expect(ret).to.equal(true);
+    });
+
+    it("test eos isValidSecret", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      // test eos
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      api = eosHd.getWalletApi();
+      ret = eosHd.isValidSecret("6891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD78");
+      expect(ret).to.equal(false);
+      ret = api.isValidSecret("006891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD781");
       expect(ret).to.equal(true);
     });
   });
@@ -292,6 +357,10 @@ describe("test hd create", function() {
 
       let verify = hd.verify("234", signed);
       expect(verify).to.equal(true);
+    });
+
+    it("test xrp hash & sign & verify & reocover", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonic.join(" "), language: "english" });
 
       // test xrp
       let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
@@ -331,6 +400,10 @@ describe("test hd create", function() {
       expect(address).to.equal("rwggk3hXKzGsNwQtZEoDTygixVqKradBTE");
       address = api.address("ragy1jjPkx1Z75zKsSit5TuAsKV85");
       expect(address).to.equal(null);
+    });
+
+    it("test tron hash & sign & verify & reocover", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonic.join(" "), language: "english" });
 
       // test tron
       let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
@@ -372,6 +445,42 @@ describe("test hd create", function() {
       expect(address).to.equal("THfdUy8cCwm3KbrtNnMqbUVqVktG83q6GE");
       address = api.address("THfdUy8cCwm3KbrtNnMqbUVqVktG83q6G1");
       expect(address).to.equal(null);
+    });
+
+    it("test eos hash & sign & verify & reocover", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonic.join(" "), language: "english" });
+
+      // test eos
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      hash = eosHd.hash("234");
+      expect(hash).to.equal("114bd151f8fb0c58642d2170da4ae7d7c57977260ac2cc8905306cab6b2acabc");
+      signed = eosHd.sign("234");
+      expect(signed).to.equal(
+        "SIG_K1_KbzjMjy5ca8WdGTYKUYwGBMNJQ4UJrWHyjSArBNoHo2HuLW5LkJkYLLL8aD1mqVfUwvVMzfPxn1GdY9yFTSG8euEGgYFXe"
+      );
+
+      recover = eosHd.recover("234", signed);
+      expect(recover).to.equal(eos_account[0].address);
+
+      verify = eosHd.verify("234", signed, eosHd.address(), eosHd.keypair());
+      expect(verify).to.equal(true);
+
+      verify = eosHd.verify("234", signed, "EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP1", eosHd.keypair());
+      expect(verify).to.equal(false);
+
+      api = eosHd.getWalletApi();
+      address = api.address({
+        privateKey: "",
+        // 真实的eos public key
+        publicKey: "024D20265424C77DCD0D3961EA29D048EC730635DE2C7690B108AB2D1CEC650448"
+      });
+      expect(address).to.equal(eos_account[1].address);
+      address = api.address("EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP2");
+      expect(address).to.equal(null);
+    });
+
+    it("test eth like hash & sign & verify & reocover", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonic.join(" "), language: "english" });
 
       // test eth like
       let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
