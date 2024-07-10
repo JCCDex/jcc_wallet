@@ -91,7 +91,9 @@
     "randombytes": "^2.1.0",
     "create-hmac": "^1.1.7",
     "create-hash": "^1.2.0",
-    "browserify-aes": "^1.2.0"
+    "browserify-aes": "^1.2.0",
+    "elliptic": "^6.5.5",
+    "buffer": "^6.0.3"
   },
   "dependencies": {
     "@scure/bip32": "^1.4.0",
