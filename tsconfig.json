@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "es5"
-    ],
+    "target": "ES2018",
+    "lib": ["ES2018"],
     "outDir": "lib",
     "rootDir": "src",
     "moduleResolution": "node",
+    "module": "commonjs",
     "noUnusedLocals": true,
     "declaration": true,
     "noUnusedParameters": true,
@@ -14,7 +13,6 @@
     "sourceMap": true,
     "esModuleInterop": true
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"]
 }

@@ -1,8 +1,5 @@
 const chai = require("chai");
 const expect = chai.expect;
-const jtWallet = require("../lib").jtWallet;
-const { Wallet, KeyPair } = require("@swtc/wallet");
-const { hdWallet } = require("../lib");
 const { HDWallet, BIP44Chain } = require("../lib").hdWallet;
 
 let undefinedValue;
@@ -301,8 +298,6 @@ describe("HD wallet testcase", function() {
       expect(ret).to.equal(false);
       ret = api.isValidSecret("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
       expect(ret).to.equal(false);
-      ret = api.proxy("isValidSecret", "rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
-      expect(ret).to.equal(false);
     });
 
     it("test eth like isValidSecret", function() {
@@ -314,10 +309,6 @@ describe("HD wallet testcase", function() {
       expect(ret).to.equal(false);
       ret = api.isValidSecret("0x394e6e30a85375daab1940ec9ec5c6200ed85a479fdff45bcbcd81f5e73af18b");
       expect(ret).to.equal(true);
-
-      // show how to use proxy function
-      ret = api.proxy("isValidChecksumAddress", bscHd.address());
-      expect(ret).to.equal(false);
     });
 
     it("test tron isValidSecret", function() {
@@ -371,8 +362,9 @@ describe("HD wallet testcase", function() {
         "3045022100ADB86E642174EBDA51D7E40BA65083F38200A8364918827F1C374981F086ADEE0220590FAF6003DCFB73EF18D11C336EAFBF3D91A0EF2895511B2932B06A9BEDD526"
       );
 
-      recover = xrpHd.recover("234", signed);
-      expect(recover).to.equal("swtclib does not support.");
+      expect(function() {
+        xrpHd.recover("234", signed);
+      }).to.throw("swtclib does not support.");
 
       verify = xrpHd.verify("234", signed, xrpHd.address(), xrpHd.keypair());
       expect(verify).to.equal(true);
@@ -466,6 +458,7 @@ describe("HD wallet testcase", function() {
       expect(verify).to.equal(true);
 
       verify = eosHd.verify("234", signed, "EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP1", eosHd.keypair());
+
       expect(verify).to.equal(false);
 
       api = eosHd.getWalletApi();

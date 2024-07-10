@@ -1,11 +1,23 @@
-import { Wallet } from "@ethereumjs/wallet";
-import * as ethUtil from "@ethereumjs/util";
+import { secp256k1 } from "@noble/curves/secp256k1";
 import { keccak256 } from "ethereum-cryptography/keccak.js";
-import { filterOx } from "jcc_common";
-import { IKeyPair, IHDPlugin } from "../types";
+import { IKeyPair, IHDPlugin, IWalletModel } from "../types";
+import { bytesToBigInt, bytesToHex, hexToBytes } from "../minify-ethereumjs-util/bytes";
+import { stripHexPrefix } from "../minify-ethereumjs-util/internal";
+import { ecrecover, ecsign } from "../minify-ethereumjs-util/signature";
+import { pubToAddress } from "../minify-ethereumjs-util/account";
+import { isEmptyObject } from "jcc_common";
+import { ETH_PASSWORD_IS_WRONG, KEYSTORE_IS_INVALID } from "../constant";
+import { scrypt } from "@noble/hashes/scrypt";
+import crypto from "crypto";
+import { randomBytes } from "@noble/hashes/utils";
+
+const isObject = (obj: any): boolean => {
+  return Object.prototype.toString.call(obj) === "[object Object]";
+};
 
 export interface IEthereumPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
+  decryptKeystore(password: string, encryptData): string;
 }
 
 export const plugin: IEthereumPlugin = {
@@ -15,35 +27,41 @@ export const plugin: IEthereumPlugin = {
   },
   address(key: IKeyPair): string {
     if (key.privateKey) {
-      const privateKey = this.checkPrivateKey(key.privateKey);
-      const buffer = Buffer.from(privateKey, "hex");
-      const wallet = Wallet.fromPrivateKey(buffer);
-      // console.log("get public key:", wallet.getPublicKeyString());
-      return wallet.getAddressString();
+      const privateKey = plugin.checkPrivateKey(key.privateKey);
+      return plugin.getAddress(privateKey);
     }
     if (key.publicKey) {
-      // TODO: length of ethereum publick key of keypaire is 128, but swtc lib keypair is 64
-      // so, if you want get address from public key, get it from private first
-      const wallet = Wallet.fromPublicKey(Buffer.from(key.publicKey, "hex"));
-      return wallet.getAddressString();
+      const address = pubToAddress(Buffer.from(key.publicKey, "hex"));
+      return bytesToHex(address);
     }
     return null;
   },
 
   isValidAddress(address: string): boolean {
-    return ethUtil.isValidAddress(address);
+    if (typeof address !== "string") {
+      return false;
+    }
+    return /^(0x)?[0-9a-fA-F]{40}$/.test(stripHexPrefix(address));
+  },
+
+  getAddress(secret: string): string | null {
+    if (!plugin.isValidSecret(secret)) {
+      return null;
+    }
+    const pk = secp256k1.ProjectivePoint.fromPrivateKey(Buffer.from(stripHexPrefix(secret), "hex")).toHex(false);
+    return bytesToHex(pubToAddress(Buffer.from(pk.substring(2), "hex")));
   },
 
   isValidSecret(secret: string): boolean {
     try {
-      return ethUtil.isValidPrivate(Buffer.from(filterOx(secret), "hex"));
-    } catch (error) {
+      return secp256k1.utils.isValidPrivateKey(Buffer.from(stripHexPrefix(secret), "hex"));
+    } catch (_) {
       return false;
     }
   },
   hash(message: string): string {
-    const hash = ethUtil.bytesToHex(keccak256(Buffer.from(message, "utf-8")));
-    return ethUtil.stripHexPrefix(hash);
+    const hash = bytesToHex(keccak256(Buffer.from(message, "utf-8")));
+    return stripHexPrefix(hash);
   },
   /**
    *
@@ -52,30 +70,54 @@ export const plugin: IEthereumPlugin = {
    * @returns signature string
    */
   sign(message: string, privateKey: string): string {
-    const key = this.checkPrivateKey(privateKey).toLowerCase();
-
+    const key = plugin.checkPrivateKey(privateKey).toLowerCase();
     const hash = keccak256(Buffer.from(message, "utf-8"));
-    const signed = ethUtil.ecsign(hash, Buffer.from(key, "hex"));
-
-    return (
-      ethUtil.stripHexPrefix(ethUtil.bytesToHex(signed.r)) +
-      ethUtil.stripHexPrefix(ethUtil.bytesToHex(signed.s)) +
-      signed.v.toString(16)
-    );
+    const signed = ecsign(hash, Buffer.from(key, "hex"));
+    return stripHexPrefix(bytesToHex(signed.r)) + stripHexPrefix(bytesToHex(signed.s)) + signed.v.toString(16);
   },
   verify(message: string, signature: string, address: string): boolean {
-    return this.recover(message, signature) === address;
+    return plugin.recover(message, signature) === address;
   },
   recover(message: string, signature: string): string {
     const hash = keccak256(Buffer.from(message, "utf-8"));
     const r = Buffer.from(Buffer.from(signature.substring(0, 64), "hex"));
     const s = Buffer.from(Buffer.from(signature.substring(64, 128), "hex"));
-    const bytes = ethUtil.hexToBytes("0x" + signature.substring(128, 130));
-    const pk = ethUtil.ecrecover(hash, ethUtil.bytesToBigInt(bytes), r, s);
-    const wallet = Wallet.fromPublicKey(pk);
-    return wallet.getAddressString();
+    const bytes = hexToBytes("0x" + signature.substring(128, 130));
+    const pk = ecrecover(hash, bytesToBigInt(bytes), r, s);
+    const address = pubToAddress(Buffer.from(pk));
+    return bytesToHex(address);
   },
-  proxy(functionName, ...args): any {
-    return ethUtil[functionName](...args);
+  decryptKeystore(password: string, encryptData): string {
+    if (!isObject(encryptData)) {
+      throw new Error(KEYSTORE_IS_INVALID);
+    }
+    const cryptoData = encryptData.Crypto || encryptData.crypto;
+    if (isEmptyObject(cryptoData) || isEmptyObject(cryptoData.cipherparams) || isEmptyObject(cryptoData.kdfparams)) {
+      throw new Error(KEYSTORE_IS_INVALID);
+    }
+    const iv = Buffer.from(cryptoData.cipherparams.iv, "hex");
+    const kdfparams = cryptoData.kdfparams;
+    const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), {
+      N: kdfparams.n,
+      r: kdfparams.r,
+      p: kdfparams.p,
+      dkLen: kdfparams.dklen
+    });
+    const ciphertext = Buffer.from(cryptoData.ciphertext, "hex");
+    const mac = keccak256
+      .create()
+      .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
+      .digest();
+    if (Buffer.from(mac).toString("hex") !== cryptoData.mac) {
+      throw new Error(ETH_PASSWORD_IS_WRONG);
+    }
+    const decipher = crypto.createDecipheriv("aes-128-ctr", derivedKey.slice(0, 16), iv);
+    const seed = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+    return seed.toString("hex");
+  },
+  createWallet(): IWalletModel {
+    const priv = randomBytes(32);
+    const address = plugin.getAddress(bytesToHex(priv));
+    return { address, secret: bytesToHex(priv) };
   }
 };

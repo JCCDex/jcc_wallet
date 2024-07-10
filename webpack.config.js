@@ -16,12 +16,10 @@ const config = {
   resolve: {
     extensions: [".js", ".ts"],
     alias: {
+      "readable-stream": path.resolve(__dirname, "node_modules/browserify-sign/node_modules/readable-stream"),
       "bn.js": path.resolve(__dirname, "node_modules/bn.js"),
-      keccak: path.resolve(__dirname, "node_modules/keccak"),
-      "base64-js": path.resolve(__dirname, "node_modules/base64-js"),
-      elliptic: path.resolve(__dirname, "node_modules/elliptic"),
-      scryptsy: path.resolve(__dirname, "node_modules/scryptsy"),
-      "base-x": path.resolve(__dirname, "node_modules/base-x")
+      "base-x": path.resolve(__dirname, "node_modules/base-x"),
+      bs58: path.resolve(__dirname, "node_modules/bs58check/node_modules/bs58")
     },
     fallback: {
       tls: false,

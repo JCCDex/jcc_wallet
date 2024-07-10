@@ -122,16 +122,16 @@ describe("test JingchangWallet", function() {
     it("return IKeyPair if success that chain is default(swt)", function() {
       const keypair = JingchangWallet.deriveKeyPair(testSecret);
       expect(keypair).to.deep.equal({
-        privateKey: "BDFED361E245A47C8603FA7B15D73787545455C5C731C89568EE117A18BDC67D",
-        publicKey: "02C13075B18C87A032226CE383AEFD748D7BB719E02CD7F5A8C1F2C7562DE7C12A"
+        privateKey: "BDFED361E245A47C8603FA7B15D73787545455C5C731C89568EE117A18BDC67D".toLowerCase(),
+        publicKey: "02C13075B18C87A032226CE383AEFD748D7BB719E02CD7F5A8C1F2C7562DE7C12A".toLowerCase()
       });
     });
 
     it("return IKeyPair if success that chain is ripple", function() {
       const keypair = JingchangWallet.deriveKeyPair("ss8uEAWyPy6Fefo8QcCYyncUPfwhu", "xrp");
       expect(keypair).to.deep.equal({
-        privateKey: "1A9AC58B7A2B6A9F00BC655B6EB5A21D1415A621FFB148B05E1BA674B2B2E53D",
-        publicKey: "024E88BD20C8E6BC00BAD53CD72BAD68BF31335E9520090BD902A25D0CFFFF206D"
+        privateKey: "1A9AC58B7A2B6A9F00BC655B6EB5A21D1415A621FFB148B05E1BA674B2B2E53D".toLowerCase(),
+        publicKey: "024E88BD20C8E6BC00BAD53CD72BAD68BF31335E9520090BD902A25D0CFFFF206D".toLowerCase()
       });
     });
   });

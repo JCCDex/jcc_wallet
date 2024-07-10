@@ -19,11 +19,8 @@
  * @author https://github.com/GinMu
  */
 
-import * as ethWallet from "./eth";
 import JingchangWallet from "./jingchangWallet";
-import * as moacWallet from "./moac";
 import * as hdWallet from "./hd";
-
-export * from "./x-wallet";
-
-export { ethWallet, JingchangWallet, moacWallet, hdWallet };
+import { HDWallet } from "./hd";
+export * from "./hd/plugins";
+export { JingchangWallet, hdWallet, HDWallet };

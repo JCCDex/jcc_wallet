@@ -1,5 +1,13 @@
-const TronWeb = require("tronweb");
 import { IHDPlugin, IKeyPair } from "../types";
+import {
+  pkToAddress,
+  computeAddress,
+  getPubKeyFromPriKey,
+  isAddressValid,
+  getBase58CheckAddress
+} from "../minify-tron/crypto";
+import { hexStr2byteArray } from "../minify-tron/code";
+import { hashMessage, signMessage, verifyMessage } from "../minify-tron/message";
 
 export interface ITronPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
@@ -12,37 +20,37 @@ export const plugin: ITronPlugin = {
   },
   address(key: IKeyPair): string {
     if (key.privateKey) {
-      const privateKey = this.checkPrivateKey(key.privateKey);
-      const wallet = TronWeb.address.fromPrivateKey(privateKey);
+      const privateKey = plugin.checkPrivateKey(key.privateKey);
+      const wallet = pkToAddress(privateKey);
       return wallet as string;
     }
     if (key.publicKey) {
       // TODO: length of ethereum publick key of keypaire is 128, but swtc lib keypair is 64
       // so, if you want get address from public key, get it from private first
-      const pubBytes = TronWeb.utils.code.hexStr2byteArray(key.publicKey);
-      const comCddressBytes = TronWeb.utils.crypto.computeAddress(pubBytes);
-      return TronWeb.utils.crypto.getBase58CheckAddress(comCddressBytes) as string;
+      const pubBytes = hexStr2byteArray(key.publicKey);
+      const comCddressBytes = computeAddress(pubBytes);
+      return getBase58CheckAddress(comCddressBytes) as string;
     }
     return null;
   },
 
   isValidAddress(address: string): boolean {
-    return TronWeb.utils.crypto.isAddressValid(address) as boolean;
+    return isAddressValid(address);
   },
 
   isValidSecret(secret: string): boolean {
     try {
-      const comPriKeyBytes = TronWeb.utils.code.hexStr2byteArray(this.checkPrivateKey(secret));
-      const pubBytes = TronWeb.utils.crypto.getPubKeyFromPriKey(comPriKeyBytes);
-      const comCddressBytes = TronWeb.utils.crypto.computeAddress(pubBytes);
-      const address = TronWeb.utils.crypto.getBase58CheckAddress(comCddressBytes);
-      return this.isValidAddress(address) as boolean;
-    } catch (error) {
+      const comPriKeyBytes = hexStr2byteArray(plugin.checkPrivateKey(secret));
+      const pubBytes = getPubKeyFromPriKey(comPriKeyBytes);
+      const comCddressBytes = computeAddress(pubBytes);
+      const address = getBase58CheckAddress(comCddressBytes);
+      return plugin.isValidAddress(address) as boolean;
+    } catch (_) {
       return false;
     }
   },
   hash(message: string): string {
-    return TronWeb.utils.message.hashMessage(message) as string;
+    return hashMessage(message) as string;
   },
   /**
    *
@@ -51,17 +59,14 @@ export const plugin: ITronPlugin = {
    * @returns signature string
    */
   sign(message: string, privateKey: string): string {
-    const key = this.checkPrivateKey(privateKey).toLowerCase();
+    const key = plugin.checkPrivateKey(privateKey).toLowerCase();
 
-    return TronWeb.Trx.signMessageV2(message, key) as string;
+    return signMessage(message, key) as string;
   },
   verify(message: string, signature: string, address: string): boolean {
-    return this.recover(message, signature) === address;
+    return plugin.recover(message, signature) === address;
   },
   recover(message: string, signature: string): string {
-    return TronWeb.Trx.verifyMessageV2(message, signature) as string;
-  },
-  proxy(functionName, ...args): any {
-    return TronWeb[functionName](...args);
+    return verifyMessage(message, signature);
   }
 };

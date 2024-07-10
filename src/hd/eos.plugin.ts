@@ -1,9 +1,11 @@
-const EosJs = require("eosjs");
-const ecc = require("eosjs-ecc");
+const PublicKey = require("eosjs-ecc/lib/key_public");
+const PrivateKey = require("eosjs-ecc/lib/key_private");
+const Signature = require("eosjs-ecc/lib/signature");
 const wif = require("wif");
-const secp256k1 = require("secp256k1");
+import { secp256k1 } from "@noble/curves/secp256k1";
 import { filterOx } from "jcc_common";
 import { IHDPlugin, IKeyPair } from "../types";
+import { sha256 } from "@noble/hashes/sha256";
 
 export interface IEosPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
@@ -16,39 +18,41 @@ export const plugin: IEosPlugin = {
   },
   address(key: IKeyPair): string {
     if (key.privateKey) {
-      const privateKey = this.checkPrivateKey(key.privateKey);
-      const buffer = Buffer.from(privateKey, "hex");
-      // const eosPrivateKey = wif.encode(128, buffer, false)
-
+      const privateKey = plugin.checkPrivateKey(key.privateKey);
       // TODO: secp256k1 version confict fixed, but need refactor later
-      const rawPublicKey = Buffer.from(secp256k1.publicKeyCreate(buffer, true));
-      const eosPublicKey = ecc.PublicKey(rawPublicKey).toString();
+      const rawPublicKey = Buffer.from(secp256k1.ProjectivePoint.fromPrivateKey(privateKey).toRawBytes(true));
+      const eosPublicKey = PublicKey(rawPublicKey).toString();
       return eosPublicKey as string;
     }
     if (key.publicKey) {
       const rawPublicKey = Buffer.from(key.publicKey, "hex");
-      const eosPublicKey = ecc.PublicKey(rawPublicKey).toString();
+      const eosPublicKey = PublicKey(rawPublicKey).toString();
       return eosPublicKey as string;
     }
     return null;
   },
 
   isValidAddress(address: string): boolean {
-    return ecc.isValidPublic(address) as boolean;
+    return PublicKey.isValid(address) as boolean;
   },
 
   isValidSecret(secret: string): boolean {
     try {
-      const privateKey = this.checkPrivateKey(filterOx(secret));
+      const privateKey = plugin.checkPrivateKey(filterOx(secret));
       const buffer = Buffer.from(privateKey, "hex");
       const eosPrivateKey = wif.encode(128, buffer, false);
-      return ecc.isValidPrivate(eosPrivateKey) as boolean;
-    } catch (error) {
+      return PrivateKey.isValid(eosPrivateKey) as boolean;
+    } catch (_) {
       return false;
     }
   },
   hash(message: string): string {
-    return ecc.sha256(message) as string;
+    return Buffer.from(
+      sha256
+        .create()
+        .update(message)
+        .digest()
+    ).toString("hex");
   },
   /**
    *
@@ -57,18 +61,16 @@ export const plugin: IEosPlugin = {
    * @returns signature string
    */
   sign(message: string, privateKey: string): string {
-    const buffer = Buffer.from(this.checkPrivateKey(filterOx(privateKey)), "hex");
+    const buffer = Buffer.from(plugin.checkPrivateKey(filterOx(privateKey)), "hex");
     const eosPrivateKey = wif.encode(128, buffer, false);
 
-    return ecc.sign(message, eosPrivateKey, "utf8") as string;
+    return Signature.sign(message, eosPrivateKey, "utf8").toString();
   },
   verify(message: string, signature: string, address: string): boolean {
-    return this.recover(message, signature) === address;
+    return plugin.recover(message, signature) === address;
   },
   recover(message: string, signature: string): string {
-    return ecc.recover(signature, message, "utf8") as string;
-  },
-  proxy(functionName, ...args): any {
-    return EosJs[functionName](...args);
+    const s = Signature.from(signature);
+    return s.recover(message, "utf8").toString();
   }
 };

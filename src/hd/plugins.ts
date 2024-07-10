@@ -4,14 +4,18 @@ import { plugin as hecoPlugin } from "./ethereum.plugin";
 import { plugin as polygonPlugin } from "./ethereum.plugin";
 import { plugin as tronPlugin } from "./tron.plugin";
 import { plugin as eosPlugin } from "./eos.plugin";
-import { IHDPlugin } from "../types";
-// import { plugin as swtcPlugin } from "./swtc.plugin";
-// import { plugin as bvcadtPlugin } from "./swtc.plugin";
-// import { plugin as callPlugin } from "./swtc.plugin";
-// import { plugin as ripplePlugin } from "./ripple.plugin";
-// import { plugin as streamPlugin } from "./swtc.plugin";
-// import { plugin as bizainPlugin } from "./swtc.plugin";
-import { XWallet } from "./swtc.plugin";
+import { IHDPlugin, Alphabet } from "../types";
+import { SWTCPlugin } from "./swtc.plugin";
+
+export const bvcadtWallet = SWTCPlugin(Alphabet.BVCADT);
+export const callWallet = SWTCPlugin(Alphabet.CALL);
+export const rippleWallet = SWTCPlugin(Alphabet.RIPPLE);
+export const stmWallet = SWTCPlugin(Alphabet.STREAM);
+export const bizainWallet = SWTCPlugin(Alphabet.BIZAIN);
+export const jtWallet = SWTCPlugin(Alphabet.JINGTUM);
+export const ethWallet = ethereumPlugin;
+export const moacWallet = ethereumPlugin;
+export const eosWallet = eosPlugin;
 
 interface IPluginMap {
   [key: string]: IHDPlugin;
@@ -24,12 +28,12 @@ const pluginMap: IPluginMap = {
   polygon: polygonPlugin,
   tron: tronPlugin,
   eos: eosPlugin,
-  bvcadt: XWallet("bvcadt"),
-  call: XWallet("call"),
-  ripple: XWallet("ripple"),
-  stream: XWallet("stream"),
-  bizain: XWallet("bizain"),
-  jingtum: XWallet("jingtum")
+  bvcadt: bvcadtWallet,
+  call: callWallet,
+  ripple: rippleWallet,
+  stream: stmWallet,
+  bizain: bizainWallet,
+  jingtum: jtWallet
 };
 
 export function getPluginByType<T extends IHDPlugin>(type: string): T {

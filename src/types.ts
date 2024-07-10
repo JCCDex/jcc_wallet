@@ -43,7 +43,7 @@ export interface IWalletModel {
 }
 
 export interface ICreateOptionsModel {
-  algorithm?: "ed25519" | "ecdsa-secp256k1";
+  algorithm?: "ed25519" | "secp256k1";
   entropy?: Uint8Array;
 }
 
@@ -96,6 +96,20 @@ export interface IHDPlugin {
   hash(message: string, ...args): string;
   sign(message: string, ...args): string;
   verify(messgae: string, signature: string, address: string, ...args): boolean;
-  recover(message: string, signature: string, ...args): string;
-  proxy(functionName: string, ...args): any;
+  recover(message: string, signature: string, ...args): string | void;
+  getAddress?(secret: string): string;
+  createWallet?(opts?: ICreateOptionsModel): IWalletModel;
+  proxy?(functionName: string, ...args);
+}
+
+export enum Alphabet {
+  JINGTUM = "jpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65rkm8oFqi1tuvAxyz",
+  SWT = "jpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65rkm8oFqi1tuvAxyz",
+  RIPPLE = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz",
+  CALL = "cpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2brdeCg65jkm8oFqi1tuvAxyz",
+  STREAM = "vpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1turAxyz",
+  BVCADT = "bpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2rcdeCg65jkm8oFqi1tuvAxyz",
+  BIZAIN = "bpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2jcdeCg65rkm8oFqi1tuvAxyz",
+  XRP = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz",
+  SWTC = "jpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65rkm8oFqi1tuvAxyz"
 }
