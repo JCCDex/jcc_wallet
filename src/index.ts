@@ -21,6 +21,6 @@
 
 import JingchangWallet from "./jingchangWallet";
 import * as hdWallet from "./hd";
-import { HDWallet } from "./hd";
+export * from "./hd";
 export * from "./hd/plugins";
-export { JingchangWallet, hdWallet, HDWallet };
+export { JingchangWallet, hdWallet };
