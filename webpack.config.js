@@ -17,11 +17,9 @@ const config = {
     extensions: [".js", ".ts"],
     alias: {
       "bn.js": path.resolve(__dirname, "node_modules/bn.js"),
-      keccak: path.resolve(__dirname, "node_modules/keccak"),
-      "base64-js": path.resolve(__dirname, "node_modules/base64-js"),
-      elliptic: path.resolve(__dirname, "node_modules/elliptic"),
-      scryptsy: path.resolve(__dirname, "node_modules/scryptsy"),
-      "base-x": path.resolve(__dirname, "node_modules/base-x")
+      "base-x": path.resolve(__dirname, "node_modules/base-x"),
+      bs58: path.resolve(__dirname, "node_modules/bs58check/node_modules/bs58"),
+      "readable-stream": path.resolve(__dirname, "node_modules/hash-base/node_modules/readable-stream")
     },
     fallback: {
       tls: false,

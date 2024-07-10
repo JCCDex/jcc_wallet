@@ -1,8 +1,9 @@
 import crypto from "crypto";
 import { isEmptyObject } from "jcc_common";
-import createKeccakHash from "keccak";
+import { keccak256 } from "ethereum-cryptography/keccak.js";
+
 import randombytes from "randombytes";
-import scrypt from "scryptsy";
+import { scrypt } from "@noble/hashes/scrypt";
 import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
 import { IEncryptModel, IKeystoreModel, IKeypairsModel } from "../types";
 
@@ -20,19 +21,18 @@ const decrypt = (password: string, encryptData: IKeystoreModel): string => {
   }
   const iv = Buffer.from(encryptData.crypto.iv, "hex");
   const kdfparams = encryptData.crypto.kdfparams;
-  const derivedKey = scrypt(
-    Buffer.from(password),
-    Buffer.from(kdfparams.salt, "hex"),
-    kdfparams.n,
-    kdfparams.r,
-    kdfparams.p,
-    kdfparams.dklen
-  );
+  const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), {
+    N: kdfparams.n,
+    r: kdfparams.r,
+    p: kdfparams.p,
+    dkLen: kdfparams.dklen
+  });
   const ciphertext = Buffer.from(encryptData.ciphertext, "hex");
-  const mac = createKeccakHash("keccak256")
+  const mac = keccak256
+    .create()
     .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
     .digest();
-  if (mac.toString("hex") !== encryptData.mac) {
+  if (Buffer.from(mac).toString("hex") !== encryptData.mac) {
     throw new Error(PASSWORD_IS_WRONG);
   }
   const decipher = crypto.createDecipheriv("aes-128-ctr", derivedKey.slice(0, 16), iv);
@@ -57,17 +57,16 @@ const encrypt = (password: string, data: string, opts: IEncryptModel): IKeystore
     r: opts.r || 8,
     salt: opts.salt || randombytes(32).toString("hex")
   };
-  const derivedKey = scrypt(
-    Buffer.from(password),
-    Buffer.from(kdfparams.salt, "hex"),
-    kdfparams.n,
-    kdfparams.r,
-    kdfparams.p,
-    kdfparams.dklen
-  );
+  const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), {
+    N: kdfparams.n,
+    r: kdfparams.r,
+    p: kdfparams.p,
+    dkLen: kdfparams.dklen
+  });
   const cipher = crypto.createCipheriv(opts.cipher || "aes-128-ctr", derivedKey.slice(0, 16), Buffer.from(iv, "hex"));
   const ciphertext = Buffer.concat([cipher.update(Buffer.from(data)), cipher.final()]);
-  const mac = createKeccakHash("keccak256")
+  const mac = keccak256
+    .create()
     .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
     .digest();
   return {
@@ -78,7 +77,7 @@ const encrypt = (password: string, data: string, opts: IEncryptModel): IKeystore
       kdf: "scrypt",
       kdfparams
     },
-    mac: mac.toString("hex")
+    mac: Buffer.from(mac).toString("hex")
   };
 };
 

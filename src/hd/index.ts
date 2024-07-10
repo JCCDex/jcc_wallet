@@ -1,12 +1,11 @@
-import { KeyPair } from "@swtc/wallet";
+import { Factory } from "../minify-swtc-keypair";
 import * as BIP39 from "bip39";
-import BIP32Factory from "bip32";
-import * as ecc from "tiny-secp256k1";
+import { HDKey } from "@scure/bip32";
 import { BIP44Chain, BIP44ChainMap, getBIP44Chain } from "./constant";
 import { getPluginByType } from "./plugins";
-import { IBIP44Path, IHDPlugin, IKeyPair, IMnemonic } from "../types";
+import { IBIP44Path, IHDPlugin, IKeyPair, IMnemonic, Alphabet } from "../types";
 
-const addressCodec = KeyPair.addressCodec;
+const keypair = Factory(Alphabet.JINGTUM);
 
 export { BIP44Chain, BIP44ChainMap, getBIP44Chain };
 
@@ -102,7 +101,7 @@ export class HDWallet {
   public static getSecretFromMnemonic = (mnemonic: string, language: string = "english"): string => {
     BIP39.setDefaultWordlist(language);
     const entropy = BIP39.mnemonicToEntropy(mnemonic);
-    return addressCodec.encodeSeed(Buffer.from(entropy, "hex")) as string;
+    return keypair.addressCodec.encodeSeed(Buffer.from(entropy, "hex"));
   };
 
   /**
@@ -115,7 +114,7 @@ export class HDWallet {
    */
   public static getMnemonicFromSecret = (secret: string, language: string = "english"): string => {
     BIP39.setDefaultWordlist(language);
-    const entropy = addressCodec.decodeSeed(secret).bytes;
+    const entropy = keypair.addressCodec.decodeSeed(secret).bytes;
     return BIP39.entropyToMnemonic(entropy);
   };
 
@@ -127,7 +126,7 @@ export class HDWallet {
    * @returns {object} return keypair object
    */
   public static getKeypairFromSecret = (secret: string): any => {
-    return KeyPair.deriveKeypair(secret);
+    return keypair.deriveKeyPair(secret);
   };
 
   /**
@@ -145,18 +144,14 @@ export class HDWallet {
     if (bip44Chain.length === 0) {
       return null;
     }
-
-    // eslint-disable-next-line no-bitwise
     const chainIdx = (bip44Chain[0][0] << 1) >> 1;
     const mnemonic = HDWallet.getMnemonicFromSecret(rootSecret);
     const seed = BIP39.mnemonicToSeedSync(mnemonic);
 
-    const bip32 = BIP32Factory(ecc);
+    const b32 = HDKey.fromMasterSeed(seed);
+    const privateKey = b32.derive(`m/44'/${chainIdx}'/${account}'/0/${index}`).privateKey;
 
-    const b32 = bip32.fromSeed(seed);
-    const privateKey = b32.derivePath(`m/44'/${chainIdx}'/${account}'/0/${index}`).privateKey;
-
-    return KeyPair.deriveKeypair(privateKey.toString("hex")) as IKeyPair;
+    return keypair.deriveKeyPair(Buffer.from(privateKey).toString("hex")) as IKeyPair;
   };
 
   /**
@@ -358,7 +353,7 @@ export class HDWallet {
    *
    * @returns {string} return address
    */
-  public recover = (messgae: string, signature: string): string => {
+  public recover = (messgae: string, signature: string): string | void => {
     return getPluginByType(this.chain()).recover(messgae, signature);
   };
   /**

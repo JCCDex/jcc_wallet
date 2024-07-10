@@ -1,14 +1,14 @@
 import assert from "assert";
 import cloneDeep from "clone-deep";
-import crypto from "crypto";
+import { sha256 } from "@noble/hashes/sha256";
 import eccrypto from "eccrypto";
 import { isEmptyObject } from "jcc_common";
 import Lockr from "lockr";
-import { Factory as KeypairsFactory } from "@swtc/keypairs";
-import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "../constant";
-import { jtWallet } from "../x-wallet";
-import { decrypt, encryptWallet } from "../util";
-import { IEncrypt, IJingchangWalletModel, IKeypairsModel, IKeystoreModel, IKeyPair } from "../types";
+import { Factory as KeypairsFactory } from "./minify-swtc-keypair";
+import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "./constant";
+import { jtWallet } from "./hd/plugins";
+import { decrypt, encryptWallet } from "./util";
+import { IEncrypt, IJingchangWalletModel, IKeypairsModel, IKeystoreModel, IKeyPair, Alphabet } from "./types";
 
 Lockr.prefix = "jingchang_";
 
@@ -21,10 +21,12 @@ Lockr.prefix = "jingchang_";
 export default class JingchangWallet {
   public static readonly version = "1.0";
   private static readonly _name = "wallets";
-  private static readonly _walletID = crypto
-    .createHash("sha256")
-    .update(JingchangWallet._name.toLowerCase())
-    .digest("hex");
+  private static readonly _walletID = Buffer.from(
+    sha256
+      .create()
+      .update(JingchangWallet._name.toLowerCase())
+      .digest()
+  ).toString("hex");
 
   private _jingchangWallet: IJingchangWalletModel;
   /**
@@ -164,7 +166,8 @@ export default class JingchangWallet {
    * @memberof JingchangWallet
    */
   public static deriveKeyPair(secret: string, chain = "swt"): IKeyPair {
-    const keyPair = KeypairsFactory(chain);
+    const alphabet = Alphabet[chain?.toUpperCase()];
+    const keyPair = KeypairsFactory(alphabet);
     const pair = keyPair.deriveKeyPair(secret);
     return {
       privateKey: pair.privateKey.substring(2),

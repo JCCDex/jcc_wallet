@@ -1,10 +1,8 @@
 const chai = require("chai");
 const expect = chai.expect;
-const jtWallet = require("../lib").jtWallet;
+const { jtWallet, bizainWallet } = require("../lib");
 let testAddress = "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH";
 let testSecret = "snfXQMEVbbZng84CcfdKDASFRi4Hf";
-const XWallet = require("../lib").XWallet;
-const bizainWallet = XWallet("bizain");
 let testBizainAddress = "bMAy4Pu8CSf5apR44HbYyLFKeC9Dbau16Q";
 let testBizainSecret = "ssySqG4BhxpngV2FjAe1SJYFD4dcm";
 
