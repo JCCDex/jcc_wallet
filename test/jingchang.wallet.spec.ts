@@ -1,11 +1,13 @@
 import * as chai from "chai";
 import Lockr from "lockr";
 const expect = chai.expect;
-const jsdom = require("jsdom");
 const JingchangWallet = require("../src").JingchangWallet;
 const jtWallet = require("../src").jtWallet;
 const ethereumWallet = require("../src").ethWallet;
 const moacWallet = require("../src").moacWallet;
+
+const beforeAll = global.beforeAll || global.before;
+const afterAll = global.afterAll || global.after;
 
 let testWallet = {
   version: "1.0",
@@ -44,15 +46,6 @@ const testEthereumSecret = "ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c
 const testEthereumAddress = "0x2995c1376a852e4040caf9dbae2c765e24c37a15";
 
 describe("test JingchangWallet", function() {
-  beforeAll(function() {
-    const { JSDOM } = jsdom;
-    const a = new JSDOM("<!doctype html><html><body></body></html>", {
-      url: "https://localhost"
-    });
-    const { window } = a;
-    global.localStorage = window.localStorage;
-  });
-
   describe("static: test isValid api", function() {
     it("return true if the keystore of jingchang wallet is valid", function() {
       let valid = JingchangWallet.isValid(testWallet);

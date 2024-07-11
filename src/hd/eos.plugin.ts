@@ -27,7 +27,7 @@ export const plugin: IEosPlugin = {
     if (key.publicKey) {
       const rawPublicKey = Buffer.from(key.publicKey, "hex");
       const eosPublicKey = PublicKey(rawPublicKey).toString();
-      return eosPublicKey as string;
+      return eosPublicKey;
     }
     return null;
   },

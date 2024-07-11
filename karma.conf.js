@@ -32,7 +32,9 @@ module.exports = function(config) {
       module: webpackConfig.module,
       mode: "development",
       plugins: [
-        new NodePolyfillPlugin(),
+        new NodePolyfillPlugin({
+          excludeAliases: ["console", "crypto"]
+        }),
         new webpack.IgnorePlugin({
           resourceRegExp: /canvas/,
           contextRegExp: /jsdom$/
