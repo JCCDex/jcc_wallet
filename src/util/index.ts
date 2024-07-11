@@ -1,6 +1,6 @@
-import crypto from "crypto";
 import { isEmptyObject } from "jcc_common";
 import { keccak256 } from "ethereum-cryptography/keccak.js";
+import { decrypt as aesDecrypt, encrypt as aesEncrypt } from "ethereum-cryptography/aes";
 
 import randombytes from "randombytes";
 import { scrypt } from "@noble/hashes/scrypt";
@@ -15,7 +15,7 @@ import { IEncryptModel, IKeystoreModel, IKeypairsModel } from "../types";
  * @returns {(string)} return secret if success, otherwise throws `keystore is invalid` if the keystore is invalid or
  * throws `password is wrong` if the password is wrong
  */
-const decrypt = (password: string, encryptData: IKeystoreModel): string => {
+const decrypt = async (password: string, encryptData: IKeystoreModel): Promise<string> => {
   if (isEmptyObject(encryptData) || isEmptyObject(encryptData.crypto) || isEmptyObject(encryptData.crypto.kdfparams)) {
     throw new Error(KEYSTORE_IS_INVALID);
   }
@@ -35,9 +35,10 @@ const decrypt = (password: string, encryptData: IKeystoreModel): string => {
   if (Buffer.from(mac).toString("hex") !== encryptData.mac) {
     throw new Error(PASSWORD_IS_WRONG);
   }
-  const decipher = crypto.createDecipheriv("aes-128-ctr", derivedKey.slice(0, 16), iv);
-  const seed = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
-  return seed.toString();
+
+  const buf = await aesDecrypt(ciphertext, derivedKey.slice(0, 16), iv, "aes-128-ctr");
+
+  return Buffer.from(buf).toString();
 };
 
 /**
@@ -48,7 +49,7 @@ const decrypt = (password: string, encryptData: IKeystoreModel): string => {
  * @param {IEncryptModel} [opts={}]
  * @returns {IKeystoreModel}
  */
-const encrypt = (password: string, data: string, opts: IEncryptModel): IKeystoreModel => {
+const encrypt = async (password: string, data: string, opts: IEncryptModel): Promise<IKeystoreModel> => {
   const iv = opts.iv || randombytes(16).toString("hex");
   const kdfparams = {
     dklen: opts.dklen || 32,
@@ -63,14 +64,14 @@ const encrypt = (password: string, data: string, opts: IEncryptModel): IKeystore
     p: kdfparams.p,
     dkLen: kdfparams.dklen
   });
-  const cipher = crypto.createCipheriv(opts.cipher || "aes-128-ctr", derivedKey.slice(0, 16), Buffer.from(iv, "hex"));
-  const ciphertext = Buffer.concat([cipher.update(Buffer.from(data)), cipher.final()]);
+  const buf = await aesEncrypt(Buffer.from(data), derivedKey.slice(0, 16), Buffer.from(iv, "hex"), "aes-128-ctr");
+
   const mac = keccak256
     .create()
-    .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
+    .update(Buffer.concat([derivedKey.slice(16, 32), buf]))
     .digest();
   return {
-    ciphertext: ciphertext.toString("hex"),
+    ciphertext: Buffer.from(buf).toString("hex"),
     crypto: {
       cipher: opts.cipher || "aes-128-ctr",
       iv,
@@ -81,12 +82,16 @@ const encrypt = (password: string, data: string, opts: IEncryptModel): IKeystore
   };
 };
 
-const encryptContact = (password: string, contacts: any, opts: IEncryptModel = {}): IKeystoreModel => {
-  return encrypt(password, JSON.stringify(contacts), opts);
+const encryptContact = async (password: string, contacts: any, opts: IEncryptModel = {}): Promise<IKeystoreModel> => {
+  return await encrypt(password, JSON.stringify(contacts), opts);
 };
 
-const encryptWallet = (password: string, keypairs: IKeypairsModel, opts: IEncryptModel = {}): IKeystoreModel => {
-  const data = encrypt(password, keypairs.secret, opts);
+const encryptWallet = async (
+  password: string,
+  keypairs: IKeypairsModel,
+  opts: IEncryptModel = {}
+): Promise<IKeystoreModel> => {
+  const data = await encrypt(password, keypairs.secret, opts);
   data.type = keypairs.type || "swt";
   data.address = keypairs.address;
   data.default = typeof keypairs.default === "boolean" ? keypairs.default : true;

@@ -49,7 +49,12 @@ const config = {
       }
     ]
   },
-  plugins: [new DuplicatePackageCheckerPlugin(), new NodePolyfillPlugin()]
+  plugins: [
+    new DuplicatePackageCheckerPlugin(),
+    new NodePolyfillPlugin({
+      excludeAliases: ["process", "console"]
+    })
+  ]
 };
 
 if (process.env.REPORT === "true") {
