@@ -52,7 +52,7 @@ const config = {
   plugins: [
     new DuplicatePackageCheckerPlugin(),
     new NodePolyfillPlugin({
-      excludeAliases: ["process", "console"]
+      excludeAliases: ["process", "console", "crypto"]
     })
   ]
 };

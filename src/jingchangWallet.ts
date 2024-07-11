@@ -1,7 +1,7 @@
 import assert from "assert";
 import cloneDeep from "clone-deep";
 import { sha256 } from "@noble/hashes/sha256";
-import eccrypto from "eccrypto";
+import * as eccrypto from "./eccrypto";
 import { isEmptyObject } from "jcc_common";
 import Lockr from "lockr";
 import { Factory as KeypairsFactory } from "./minify-swtc-keypair";
@@ -185,10 +185,10 @@ export default class JingchangWallet {
   public static async encryptWithPublicKey(message: string, publicKey: string): Promise<IEncrypt> {
     const encode = await eccrypto.encrypt(Buffer.from(publicKey, "hex"), Buffer.from(message));
     return {
-      ciphertext: encode.ciphertext.toString("hex"),
-      ephemPublicKey: encode.ephemPublicKey.toString("hex"),
-      iv: encode.iv.toString("hex"),
-      mac: encode.mac.toString("hex")
+      ciphertext: Buffer.from(encode.ciphertext).toString("hex"),
+      ephemPublicKey: Buffer.from(encode.ephemPublicKey).toString("hex"),
+      iv: Buffer.from(encode.iv).toString("hex"),
+      mac: Buffer.from(encode.mac).toString("hex")
     };
   }
 
@@ -209,7 +209,7 @@ export default class JingchangWallet {
       mac: Buffer.from(message.mac, "hex")
     };
     const decode = await eccrypto.decrypt(Buffer.from(privateKey, "hex"), encode);
-    return decode.toString() as string;
+    return Buffer.from(decode).toString() as string;
   }
 
   /**
