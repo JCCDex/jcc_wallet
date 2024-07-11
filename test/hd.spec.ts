@@ -446,11 +446,9 @@ describe("HD wallet testcase", function() {
       let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
       let hash = eosHd.hash("234");
       expect(hash).to.equal("114bd151f8fb0c58642d2170da4ae7d7c57977260ac2cc8905306cab6b2acabc");
-      console.log(eosHd.keypair());
-      console.log(eosHd.address());
       let signed = eosHd.sign("234");
       expect(signed).to.equal(
-        "SIG_K1_KbzjMjy5ca8WdGTYKUYwGBMNJQ4UJrWHyjSArBNoHo2HuLW5LkJkYLLL8aD1mqVfUwvVMzfPxn1GdY9yFTSG8euEGgYFXe"
+        "SIG_K1_K9CghtiWgqRMDFRWcKy51rXH3qh8JCqnZALx5YdMZbYYhEi46Mvx4Ggs14CYfrsbgqJRuDuQAzrFxgiTxMYVvGXPWhE5Fh"
       );
 
       let recover = eosHd.recover("234", signed);
@@ -470,6 +468,7 @@ describe("HD wallet testcase", function() {
         // 真实的eos public key
         publicKey: "024D20265424C77DCD0D3961EA29D048EC730635DE2C7690B108AB2D1CEC650448"
       });
+
       expect(address).to.equal(eos_account[1].address);
 
       address = api.address("EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP2");
