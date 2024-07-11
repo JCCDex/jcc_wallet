@@ -1,6 +1,6 @@
-const chai = require("chai");
+import * as chai from "chai";
 const expect = chai.expect;
-const { jtWallet, bizainWallet } = require("../lib");
+const { jtWallet, bizainWallet } = require("../src");
 let testAddress = "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH";
 let testSecret = "snfXQMEVbbZng84CcfdKDASFRi4Hf";
 let testBizainAddress = "bMAy4Pu8CSf5apR44HbYyLFKeC9Dbau16Q";

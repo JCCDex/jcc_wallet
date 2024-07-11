@@ -1,6 +1,6 @@
-const chai = require("chai");
+import * as chai from "chai";
 const expect = chai.expect;
-const { encryptWallet, encryptContact, decrypt } = require("../lib/util");
+const { encryptWallet, encryptContact, decrypt } = require("../src/util");
 
 describe("test jingchang", function() {
   describe("test encryptWallet", function() {

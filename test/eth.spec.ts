@@ -1,6 +1,6 @@
-const chai = require("chai");
+import * as chai from "chai";
 const expect = chai.expect;
-const ethWallet = require("../lib").ethWallet;
+const ethWallet = require("../src").ethWallet;
 let testEthKeystore = {
   version: 3,
   id: "00451ad2-2d5c-454b-b2b9-db577ef4423c",

@@ -1,6 +1,6 @@
-const chai = require("chai");
+import * as chai from "chai";
 const expect = chai.expect;
-const { HDWallet, BIP44Chain } = require("../lib").hdWallet;
+const { HDWallet, BIP44Chain } = require("../src").hdWallet;
 
 let undefinedValue;
 
@@ -175,12 +175,12 @@ describe("HD wallet testcase", function() {
 
     it("test create HDWallet without options", function() {
       try {
-        let hd = new HDWallet({});
+        new HDWallet({});
       } catch (e) {
         expect(e.message.length > 0).to.equal(true);
       }
       try {
-        let hd = new HDWallet();
+        new HDWallet();
       } catch (e) {
         expect(e.message.length > 0).to.equal(true);
       }
@@ -245,7 +245,7 @@ describe("HD wallet testcase", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test eth like
       let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
-      ret = bscHd.isValidAddress(bsc_account[0].address);
+      let ret = bscHd.isValidAddress(bsc_account[0].address);
       expect(ret).to.equal(true);
       ret = bscHd.isValidAddress("0xf56a34e674d5ea95385c588e21906a43e7e22a7c1");
       expect(ret).to.equal(false);
@@ -255,7 +255,7 @@ describe("HD wallet testcase", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test xrp
       let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
-      ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBTE");
+      let ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBTE");
       expect(ret).to.equal(true);
       ret = xrpHd.isValidAddress("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
       expect(ret).to.equal(false);
@@ -265,7 +265,7 @@ describe("HD wallet testcase", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test tron like
       let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
-      ret = tronHd.isValidAddress(tron_account[0].address);
+      let ret = tronHd.isValidAddress(tron_account[0].address);
       expect(ret).to.equal(true);
       ret = tronHd.isValidAddress("TFMqRST2JeCu2k64SgFg12MnJiaom6rkS8");
       expect(ret).to.equal(false);
@@ -275,7 +275,7 @@ describe("HD wallet testcase", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test eos
       let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
-      ret = eosHd.isValidAddress(eos_account[0].address);
+      let ret = eosHd.isValidAddress(eos_account[0].address);
       expect(ret).to.equal(true);
       ret = eosHd.isValidAddress("EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP3");
       expect(ret).to.equal(false);
@@ -294,7 +294,7 @@ describe("HD wallet testcase", function() {
       // test xrp
       let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
       let api = hd.getWalletApi();
-      ret = xrpHd.isValidSecret("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
+      let ret = xrpHd.isValidSecret("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
       expect(ret).to.equal(false);
       ret = api.isValidSecret("rwggk3hXKzGsNwQtZEoDTygixVqKradBT2");
       expect(ret).to.equal(false);
@@ -304,8 +304,8 @@ describe("HD wallet testcase", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test eth like
       let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
-      api = bscHd.getWalletApi();
-      ret = bscHd.isValidSecret("0xf56a34e674d5ea95385c588e21906a43e7e22a7c1");
+      let api = bscHd.getWalletApi();
+      let ret = bscHd.isValidSecret("0xf56a34e674d5ea95385c588e21906a43e7e22a7c1");
       expect(ret).to.equal(false);
       ret = api.isValidSecret("0x394e6e30a85375daab1940ec9ec5c6200ed85a479fdff45bcbcd81f5e73af18b");
       expect(ret).to.equal(true);
@@ -315,8 +315,8 @@ describe("HD wallet testcase", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test tron
       let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
-      api = tronHd.getWalletApi();
-      ret = tronHd.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD190621");
+      let api = tronHd.getWalletApi();
+      let ret = tronHd.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD190621");
       expect(ret).to.equal(false);
       ret = api.isValidSecret("0xFA522766550E364CDBA7E16736AB731D2CEAC2CB3860211543228C7CD19062BB");
       expect(ret).to.equal(true);
@@ -326,8 +326,8 @@ describe("HD wallet testcase", function() {
       let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
       // test eos
       let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
-      api = eosHd.getWalletApi();
-      ret = eosHd.isValidSecret("6891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD78");
+      let api = eosHd.getWalletApi();
+      let ret = eosHd.isValidSecret("6891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD78");
       expect(ret).to.equal(false);
       ret = api.isValidSecret("006891846D6251993D50301741194D34561128804D02858DC6D0AF1FA8C3ACD781");
       expect(ret).to.equal(true);
@@ -355,9 +355,9 @@ describe("HD wallet testcase", function() {
 
       // test xrp
       let xrpHd = hd.deriveWallet({ chain: BIP44Chain.RIPPLE, account: 0, index: 0 });
-      hash = xrpHd.hash("234");
+      let hash = xrpHd.hash("234");
       expect(hash).to.equal("6BB558F2A3F586D106FE800F8AD67B263DAF8F41CC2FACB04431E871143B87F3");
-      signed = xrpHd.sign("234");
+      let signed = xrpHd.sign("234");
       expect(signed).to.equal(
         "3045022100ADB86E642174EBDA51D7E40BA65083F38200A8364918827F1C374981F086ADEE0220590FAF6003DCFB73EF18D11C336EAFBF3D91A0EF2895511B2932B06A9BEDD526"
       );
@@ -366,7 +366,7 @@ describe("HD wallet testcase", function() {
         xrpHd.recover("234", signed);
       }).to.throw("swtclib does not support.");
 
-      verify = xrpHd.verify("234", signed, xrpHd.address(), xrpHd.keypair());
+      let verify = xrpHd.verify("234", signed, xrpHd.address(), xrpHd.keypair());
       expect(verify).to.equal(true);
 
       verify = xrpHd.verify("234", signed, xrpHd.address(), {
@@ -384,8 +384,8 @@ describe("HD wallet testcase", function() {
       verify = xrpHd.verify("234", signed, "rwggk3hXKzGsNwQtZEoDTygixVqKradBT1", xrpHd.keypair());
       expect(verify).to.equal(false);
 
-      api = xrpHd.getWalletApi();
-      address = api.address({
+      let api = xrpHd.getWalletApi();
+      let address = api.address({
         privateKey: "",
         publicKey: "028D99A9A1AE990ED89C5A94E200715D023AF06A626F4E0E92A6C258B790AE08FF"
       });
@@ -399,17 +399,17 @@ describe("HD wallet testcase", function() {
 
       // test tron
       let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
-      hash = tronHd.hash("234");
+      let hash = tronHd.hash("234");
       expect(hash).to.equal("0x446eaeeea1c8117d0169ccfb9bd52cffccbdea30f1fea248c1ef121f8ad912ae");
-      signed = tronHd.sign("234");
+      let signed = tronHd.sign("234");
       expect(signed).to.equal(
         "0x55b889b2d414671ac16aeebea65b309a1773fe23c38e99212a7c39fc93f124247de094e668cb361ab50c1ab10f4fbb756a273aa0201c5841d8ddf776c3f9980b1c"
       );
 
-      recover = tronHd.recover("234", signed);
+      let recover = tronHd.recover("234", signed);
       expect(recover).to.equal(tron_account[0].address);
 
-      verify = tronHd.verify("234", signed, tronHd.address(), tronHd.keypair());
+      let verify = tronHd.verify("234", signed, tronHd.address(), tronHd.keypair());
       expect(verify).to.equal(true);
 
       verify = tronHd.verify("234", signed, tronHd.address(), {
@@ -427,8 +427,8 @@ describe("HD wallet testcase", function() {
       verify = tronHd.verify("234", signed, "rwggk3hXKzGsNwQtZEoDTygixVqKradBT1", tronHd.keypair());
       expect(verify).to.equal(false);
 
-      api = tronHd.getWalletApi();
-      address = api.address({
+      let api = tronHd.getWalletApi();
+      let address = api.address({
         privateKey: "",
         // 真实的tron public key
         publicKey:
@@ -444,30 +444,34 @@ describe("HD wallet testcase", function() {
 
       // test eos
       let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
-      hash = eosHd.hash("234");
+      let hash = eosHd.hash("234");
       expect(hash).to.equal("114bd151f8fb0c58642d2170da4ae7d7c57977260ac2cc8905306cab6b2acabc");
-      signed = eosHd.sign("234");
+      console.log(eosHd.keypair());
+      console.log(eosHd.address());
+      let signed = eosHd.sign("234");
       expect(signed).to.equal(
         "SIG_K1_KbzjMjy5ca8WdGTYKUYwGBMNJQ4UJrWHyjSArBNoHo2HuLW5LkJkYLLL8aD1mqVfUwvVMzfPxn1GdY9yFTSG8euEGgYFXe"
       );
 
-      recover = eosHd.recover("234", signed);
+      let recover = eosHd.recover("234", signed);
       expect(recover).to.equal(eos_account[0].address);
 
-      verify = eosHd.verify("234", signed, eosHd.address(), eosHd.keypair());
+      let verify = eosHd.verify("234", signed, eosHd.address(), eosHd.keypair());
       expect(verify).to.equal(true);
 
       verify = eosHd.verify("234", signed, "EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP1", eosHd.keypair());
 
       expect(verify).to.equal(false);
 
-      api = eosHd.getWalletApi();
-      address = api.address({
+      let api = eosHd.getWalletApi();
+
+      let address = api.address({
         privateKey: "",
         // 真实的eos public key
         publicKey: "024D20265424C77DCD0D3961EA29D048EC730635DE2C7690B108AB2D1CEC650448"
       });
       expect(address).to.equal(eos_account[1].address);
+
       address = api.address("EOS5zmx6bHzQbockS1hUEGPMg3n2R9dLQ9YpDQx5b33h2BcnFYhP2");
       expect(address).to.equal(null);
     });
@@ -479,23 +483,23 @@ describe("HD wallet testcase", function() {
       let bscHd = hd.deriveWallet({ chain: BIP44Chain.BSC, account: 0, index: 0 });
       let rawMessage = "Some data";
       let web3Message = "\x19Ethereum Signed Message:\n" + rawMessage.length + rawMessage;
-      hash = bscHd.hash(web3Message);
+      let hash = bscHd.hash(web3Message);
       expect(hash).to.equal("1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655");
-      signed = bscHd.sign(web3Message);
+      let signed = bscHd.sign(web3Message);
       expect(signed).to.equal(
         "75e6b11135309fd872db0d28a7d45c032e7fe443e847d4ea52063388fdd113c04985e074b398f32ca2baff8c34e806200bd15916fdadb9f4eadf8cad37962ace1b"
       );
 
-      recover = bscHd.recover(web3Message, signed);
+      let recover = bscHd.recover(web3Message, signed);
       expect(recover).to.equal(bscHd.address());
 
-      verify = bscHd.verify(web3Message, signed);
+      let verify = bscHd.verify(web3Message, signed);
       expect(verify).to.equal(true);
       // 0x3c236c9aa6a34033808e5f2408d7264250f6ec29e189c01559b57dd4e590b73ecf2761aab655454c6880d736c5778e6dc42df95b2a411785828570b9c06a4b6e
 
       // test signed like web3.accounts.sign
       // https://web3js.readthedocs.io/en/v1.7.3/web3-eth-accounts.html#sign
-      api = bscHd.getWalletApi();
+      let api = bscHd.getWalletApi();
       rawMessage = "Some data";
       web3Message = "\x19Ethereum Signed Message:\n" + rawMessage.length + rawMessage;
       signed = api.sign(web3Message, "0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318");
@@ -508,7 +512,7 @@ describe("HD wallet testcase", function() {
       });
       expect(verify).to.equal(true);
 
-      address = api.address({
+      let address = api.address({
         publicKey:
           "3c236c9aa6a34033808e5f2408d7264250f6ec29e189c01559b57dd4e590b73ecf2761aab655454c6880d736c5778e6dc42df95b2a411785828570b9c06a4b6e",
         privateKey: ""
