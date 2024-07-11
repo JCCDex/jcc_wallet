@@ -5,7 +5,7 @@ const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 const config = {
-  entry: "./lib",
+  entry: "./src",
   output: {
     filename: "jcc-wallet.min.js",
     path: path.resolve(__dirname, "./dist"),
@@ -17,9 +17,7 @@ const config = {
     extensions: [".js", ".ts"],
     alias: {
       "bn.js": path.resolve(__dirname, "node_modules/bn.js"),
-      "base-x": path.resolve(__dirname, "node_modules/base-x"),
-      bs58: path.resolve(__dirname, "node_modules/bs58check/node_modules/bs58"),
-      "readable-stream": path.resolve(__dirname, "node_modules/hash-base/node_modules/readable-stream")
+      "base-x": path.resolve(__dirname, "node_modules/base-x")
     },
     fallback: {
       tls: false,
@@ -49,7 +47,12 @@ const config = {
       }
     ]
   },
-  plugins: [new DuplicatePackageCheckerPlugin(), new NodePolyfillPlugin()]
+  plugins: [
+    new DuplicatePackageCheckerPlugin(),
+    new NodePolyfillPlugin({
+      excludeAliases: ["process", "console", "crypto"]
+    })
+  ]
 };
 
 if (process.env.REPORT === "true") {

@@ -6,9 +6,9 @@ import { stripHexPrefix } from "../minify-ethereumjs-util/internal";
 import { ecrecover, ecsign } from "../minify-ethereumjs-util/signature";
 import { pubToAddress } from "../minify-ethereumjs-util/account";
 import { isEmptyObject } from "jcc_common";
-import { ETH_PASSWORD_IS_WRONG, KEYSTORE_IS_INVALID } from "../constant";
+import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
 import { scrypt } from "@noble/hashes/scrypt";
-import crypto from "crypto";
+import { decrypt } from "ethereum-cryptography/aes";
 import { randomBytes } from "@noble/hashes/utils";
 
 const isObject = (obj: any): boolean => {
@@ -17,7 +17,7 @@ const isObject = (obj: any): boolean => {
 
 export interface IEthereumPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
-  decryptKeystore(password: string, encryptData): string;
+  decryptKeystore(password: string, encryptData): Promise<string>;
 }
 
 export const plugin: IEthereumPlugin = {
@@ -87,11 +87,12 @@ export const plugin: IEthereumPlugin = {
     const address = pubToAddress(Buffer.from(pk));
     return bytesToHex(address);
   },
-  decryptKeystore(password: string, encryptData): string {
+  async decryptKeystore(password: string, encryptData): Promise<string> {
     if (!isObject(encryptData)) {
       throw new Error(KEYSTORE_IS_INVALID);
     }
     const cryptoData = encryptData.Crypto || encryptData.crypto;
+
     if (isEmptyObject(cryptoData) || isEmptyObject(cryptoData.cipherparams) || isEmptyObject(cryptoData.kdfparams)) {
       throw new Error(KEYSTORE_IS_INVALID);
     }
@@ -103,17 +104,21 @@ export const plugin: IEthereumPlugin = {
       p: kdfparams.p,
       dkLen: kdfparams.dklen
     });
+
     const ciphertext = Buffer.from(cryptoData.ciphertext, "hex");
+
     const mac = keccak256
       .create()
       .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
       .digest();
+
     if (Buffer.from(mac).toString("hex") !== cryptoData.mac) {
-      throw new Error(ETH_PASSWORD_IS_WRONG);
+      throw new Error(PASSWORD_IS_WRONG);
     }
-    const decipher = crypto.createDecipheriv("aes-128-ctr", derivedKey.slice(0, 16), iv);
-    const seed = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
-    return seed.toString("hex");
+
+    const buf = await decrypt(ciphertext, derivedKey.slice(0, 16), iv, "aes-128-ctr");
+
+    return Buffer.from(buf).toString("hex");
   },
   createWallet(): IWalletModel {
     const priv = randomBytes(32);

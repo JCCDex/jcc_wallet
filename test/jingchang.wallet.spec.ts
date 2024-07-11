@@ -1,11 +1,13 @@
-const chai = require("chai");
+import * as chai from "chai";
+import Lockr from "lockr";
 const expect = chai.expect;
-const jsdom = require("jsdom");
-const JingchangWallet = require("../lib").JingchangWallet;
-const jtWallet = require("../lib").jtWallet;
-const ethereumWallet = require("../lib").ethWallet;
-const moacWallet = require("../lib").moacWallet;
-const Lockr = require("lockr");
+const JingchangWallet = require("../src").JingchangWallet;
+const jtWallet = require("../src").jtWallet;
+const ethereumWallet = require("../src").ethWallet;
+const moacWallet = require("../src").moacWallet;
+
+const beforeAll = global.beforeAll || global.before;
+const afterAll = global.afterAll || global.after;
 
 let testWallet = {
   version: "1.0",
@@ -44,15 +46,6 @@ const testEthereumSecret = "ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c
 const testEthereumAddress = "0x2995c1376a852e4040caf9dbae2c765e24c37a15";
 
 describe("test JingchangWallet", function() {
-  before(function() {
-    const { JSDOM } = jsdom;
-    const a = new JSDOM("<!doctype html><html><body></body></html>", {
-      url: "https://localhost"
-    });
-    const { window } = a;
-    global.localStorage = window.localStorage;
-  });
-
   describe("static: test isValid api", function() {
     it("return true if the keystore of jingchang wallet is valid", function() {
       let valid = JingchangWallet.isValid(testWallet);
@@ -92,6 +85,7 @@ describe("test JingchangWallet", function() {
   describe("static: test get and save api", function() {
     it("return null if the keystore of jingchang wallet is invalid from local storage", function() {
       JingchangWallet.save({});
+      // @ts-ignore
       const key = Lockr._getPrefixedKey(JingchangWallet._walletID);
       expect(key).to.equal("jingchang_4085118690b6b24a58e8b9a2e26a15a31f2dfbd9e6280752a04af70e3a5389cc");
       const wallet = JingchangWallet.get();
@@ -104,7 +98,7 @@ describe("test JingchangWallet", function() {
       expect(wallet).to.deep.equal(testWallet);
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
   });
@@ -179,11 +173,11 @@ describe("test JingchangWallet", function() {
 
   describe("instance: test getAddress api", function() {
     let inst;
-    before(() => {
+    beforeAll(() => {
       inst = new JingchangWallet();
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
 
@@ -213,11 +207,11 @@ describe("test JingchangWallet", function() {
 
   describe("instance: test getWalletWithType api", function() {
     let inst;
-    before(() => {
+    beforeAll(() => {
       inst = new JingchangWallet();
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
 
@@ -247,11 +241,11 @@ describe("test JingchangWallet", function() {
 
   describe("instance: test getWalletWithAddress api", function() {
     let inst;
-    before(() => {
+    beforeAll(() => {
       inst = new JingchangWallet();
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
 
@@ -281,11 +275,11 @@ describe("test JingchangWallet", function() {
 
   describe("instance: test getSecretWithType api", function() {
     let inst;
-    before(() => {
+    beforeAll(() => {
       inst = new JingchangWallet();
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
 
@@ -351,11 +345,11 @@ describe("test JingchangWallet", function() {
 
   describe("instance: test hasDefault api", function() {
     let inst;
-    before(() => {
+    beforeAll(() => {
       inst = new JingchangWallet(testWallet);
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
 
@@ -370,11 +364,11 @@ describe("test JingchangWallet", function() {
 
   describe("instance: test getSecretWithAddress api", function() {
     let inst;
-    before(() => {
+    beforeAll(() => {
       inst = new JingchangWallet();
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
 
@@ -418,11 +412,11 @@ describe("test JingchangWallet", function() {
     describe("when the _multiple is true and the _samePassword is true", function() {
       let inst;
       let newWallet;
-      before(() => {
+      beforeAll(() => {
         inst = new JingchangWallet(testWallet, true, true);
       });
 
-      after(() => {
+      afterAll(() => {
         JingchangWallet.clear();
       });
 
@@ -474,11 +468,11 @@ describe("test JingchangWallet", function() {
 
     describe("when the _multiple is true and the _samePassword is false", function() {
       let inst;
-      before(() => {
+      beforeAll(() => {
         inst = new JingchangWallet(testWallet, true, false);
       });
 
-      after(() => {
+      afterAll(() => {
         JingchangWallet.clear();
       });
 
@@ -491,11 +485,11 @@ describe("test JingchangWallet", function() {
 
     describe("when the _multiple is false and the _samePassword is true", function() {
       let inst;
-      before(() => {
+      beforeAll(() => {
         inst = new JingchangWallet(testWallet, false, true);
       });
 
-      after(() => {
+      afterAll(() => {
         JingchangWallet.clear();
       });
 
@@ -520,11 +514,11 @@ describe("test JingchangWallet", function() {
     const jingtumAddress = "jEMKvdukvtKuTZEdRWVSzaRkCF1hjuAXxh";
 
     let inst;
-    before(() => {
+    beforeAll(() => {
       inst = new JingchangWallet(testWallet, true, true);
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
 
@@ -570,7 +564,7 @@ describe("test JingchangWallet", function() {
   describe("instance: test changeWholePassword api", function() {
     describe("when the _samePassword is false", function() {
       let inst;
-      before(() => {
+      beforeAll(() => {
         inst = new JingchangWallet(testWallet, true, false);
       });
 
@@ -585,16 +579,15 @@ describe("test JingchangWallet", function() {
 
     describe("when the _samePassword is true", function() {
       let inst;
-      before(() => {
+      beforeAll(() => {
         inst = new JingchangWallet(testWallet, true, true);
       });
 
-      after(() => {
+      afterAll(() => {
         JingchangWallet.clear();
       });
 
       it("change whole password success", async function() {
-        this.timeout(20000);
         await inst.importSecret(testEthereumSecret, testPassword, "eth", ethereumWallet.getAddress);
         await inst.changeWholePassword(testPassword, "123");
         const swtSecret = await inst.getSecretWithType("123");
@@ -616,12 +609,11 @@ describe("test JingchangWallet", function() {
   describe("instance: test changePasswordWithAddress api", function() {
     describe("when the _samePassword is true", function() {
       let inst;
-      before(() => {
+      beforeAll(() => {
         inst = new JingchangWallet(testWallet, true, true);
       });
 
       it("reject `the property of _samePassword is true, so please don't call this function!` when the property of _samePassword is false", async () => {
-        this.timeout(10000);
         try {
           await inst.changePasswordWithAddress(testAddress, "123", "123");
         } catch (error) {
@@ -632,16 +624,15 @@ describe("test JingchangWallet", function() {
 
     describe("when the _samePassword is false", function() {
       let inst;
-      before(() => {
+      beforeAll(() => {
         inst = new JingchangWallet(testWallet, true, false);
       });
 
-      after(() => {
+      afterAll(() => {
         JingchangWallet.clear();
       });
 
       it("change password for each address success", async function() {
-        this.timeout(20000);
         await inst.importSecret(testEthereumSecret, testPassword, "eth", ethereumWallet.getAddress);
         await inst.changePasswordWithAddress(testAddress, testPassword, "123");
         await inst.changePasswordWithAddress(testEthereumAddress, testPassword, "1234");
@@ -666,11 +657,11 @@ describe("test JingchangWallet", function() {
     const jingtumSecret = "ssRFxQRCdmGgAg2QRe9QEoH1ZSFKu";
     const jingtumAddress = "jEMKvdukvtKuTZEdRWVSzaRkCF1hjuAXxh";
     let inst;
-    before(() => {
+    beforeAll(() => {
       inst = new JingchangWallet(testWallet, true, true);
     });
 
-    after(() => {
+    afterAll(() => {
       JingchangWallet.clear();
     });
 

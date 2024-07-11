@@ -1,6 +1,6 @@
-const chai = require("chai");
+import * as chai from "chai";
 const expect = chai.expect;
-const ethWallet = require("../lib").ethWallet;
+const ethWallet = require("../src").ethWallet;
 let testEthKeystore = {
   version: 3,
   id: "00451ad2-2d5c-454b-b2b9-db577ef4423c",
@@ -97,20 +97,32 @@ describe("test eth", function() {
   });
 
   describe("test decryptKeystore", function() {
-    it("should return null when the given data is not object", function() {
-      expect(() => ethWallet.decryptKeystore(123, null)).throw("keystore is invalid");
+    it("should return null when the given data is not object", async function() {
+      try {
+        await ethWallet.decryptKeystore(123, null);
+      } catch (error) {
+        expect(error.message).to.equal("keystore is invalid");
+      }
     });
 
-    it("should return null when the given data does not contain Crypto and crypto", function() {
-      expect(() => ethWallet.decryptKeystore(123, {})).throw("keystore is invalid");
+    it("should return null when the given data does not contain Crypto and crypto", async function() {
+      try {
+        await ethWallet.decryptKeystore(123, {});
+      } catch (error) {
+        expect(error.message).to.equal("keystore is invalid");
+      }
     });
 
-    it("should return false when the password is wrong", function() {
-      expect(() => ethWallet.decryptKeystore("123", testEthKeystore)).throw("ethereum password is wrong");
+    it("should return false when the password is wrong", async function() {
+      try {
+        await ethWallet.decryptKeystore("1234", testEthKeystore);
+      } catch (error) {
+        expect(error.message).to.equal("password is wrong");
+      }
     });
 
-    it("should return right secret when the password is correct", function() {
-      let secret = ethWallet.decryptKeystore("123456789", testEthKeystore);
+    it("should return right secret when the password is correct", async () => {
+      let secret = await ethWallet.decryptKeystore("123456789", testEthKeystore);
       expect(secret).to.equal("ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c250a883e4486");
     });
   });

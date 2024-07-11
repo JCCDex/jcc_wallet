@@ -3,16 +3,16 @@
     "target": "ES2018",
     "lib": ["ES2018"],
     "outDir": "lib",
-    "rootDir": "src",
+    "baseUrl": ".",
     "moduleResolution": "node",
     "module": "commonjs",
     "noUnusedLocals": true,
     "declaration": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "sourceMap": true,
-    "esModuleInterop": true
+    "sourceMap": false,
+    "esModuleInterop": true,
+    "types": ["node", "jest"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "lib"]
+  "include": ["src/**/*"]
 }

@@ -3,23 +3,12 @@ const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const webpack = require("webpack");
 module.exports = function(config) {
   config.set({
-    frameworks: ["browserify", "detectBrowsers", "mocha"],
-    files: [
-      "test/bvcadt.spec.js",
-      "test/call.spec.js",
-      "test/jingchang.wallet.spec.js",
-      "test/hd.spec.js",
-      "test/eth.spec.js",
-      "test/jingtum.spec.js",
-      "test/moac.spec.js",
-      "test/ripple.spec.js",
-      "test/stm.spec.js",
-      "test/util.spec.js"
-    ],
+    frameworks: ["detectBrowsers", "mocha"],
+    files: ["test/*.spec.ts"],
     preprocessors: {
       // don't use browserify, because it don't support dynamic require.
       // and some file is dynamic required in the `stm-lib` package.
-      "test/*.spec.js": ["webpack"]
+      "test/*.spec.ts": ["webpack"]
     },
     singleRun: true,
     browserDisconnectTimeout: 60000,
@@ -31,7 +20,6 @@ module.exports = function(config) {
     },
     plugins: [
       "karma-webpack",
-      "karma-browserify",
       "karma-chrome-launcher",
       "karma-env-preprocessor",
       "karma-firefox-launcher",
@@ -41,9 +29,12 @@ module.exports = function(config) {
     webpack: {
       node: webpackConfig.node,
       resolve: webpackConfig.resolve,
+      module: webpackConfig.module,
       mode: "development",
       plugins: [
-        new NodePolyfillPlugin(),
+        new NodePolyfillPlugin({
+          excludeAliases: ["console", "crypto"]
+        }),
         new webpack.IgnorePlugin({
           resourceRegExp: /canvas/,
           contextRegExp: /jsdom$/

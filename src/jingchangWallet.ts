@@ -1,7 +1,7 @@
 import assert from "assert";
 import cloneDeep from "clone-deep";
 import { sha256 } from "@noble/hashes/sha256";
-import eccrypto from "eccrypto";
+import * as eccrypto from "./eccrypto";
 import { isEmptyObject } from "jcc_common";
 import Lockr from "lockr";
 import { Factory as KeypairsFactory } from "./minify-swtc-keypair";
@@ -91,32 +91,30 @@ export default class JingchangWallet {
    * @returns {Promise<IJingchangWalletModel>} resolve jingchang wallet if success.
    * @memberof JingchangWallet
    */
-  public static generate(password: string, secret?: string, alias?: string): Promise<IJingchangWalletModel> {
-    return new Promise((resolve, reject) => {
-      const keypairs: any = {};
-      if (secret === undefined) {
-        const wallet = jtWallet.createWallet();
-        secret = wallet.secret;
-        keypairs.address = wallet.address;
-      } else {
-        if (!jtWallet.isValidSecret(secret)) {
-          return reject(new Error(SECRET_IS_INVALID));
-        }
-        keypairs.address = jtWallet.getAddress(secret);
+  public static async generate(password: string, secret?: string, alias?: string): Promise<IJingchangWalletModel> {
+    const keypairs: any = {};
+    if (secret === undefined) {
+      const wallet = jtWallet.createWallet();
+      secret = wallet.secret;
+      keypairs.address = wallet.address;
+    } else {
+      if (!jtWallet.isValidSecret(secret)) {
+        throw new Error(SECRET_IS_INVALID);
       }
-      keypairs.secret = secret;
-      keypairs.type = "swt";
-      keypairs.default = true;
-      keypairs.alias = alias || "swt wallet";
-      const jcWallet: IJingchangWalletModel = {};
-      const walletObj = encryptWallet(password, keypairs);
-      jcWallet.version = JingchangWallet.version;
-      jcWallet.id = JingchangWallet._walletID;
-      jcWallet.contact = {};
-      jcWallet.wallets = [];
-      jcWallet.wallets.push(walletObj);
-      return resolve(jcWallet);
-    });
+      keypairs.address = jtWallet.getAddress(secret);
+    }
+    keypairs.secret = secret;
+    keypairs.type = "swt";
+    keypairs.default = true;
+    keypairs.alias = alias || "swt wallet";
+    const jcWallet: IJingchangWalletModel = {};
+    const walletObj = await encryptWallet(password, keypairs);
+    jcWallet.version = JingchangWallet.version;
+    jcWallet.id = JingchangWallet._walletID;
+    jcWallet.contact = {};
+    jcWallet.wallets = [];
+    jcWallet.wallets.push(walletObj);
+    return jcWallet;
   }
 
   /**
@@ -187,10 +185,10 @@ export default class JingchangWallet {
   public static async encryptWithPublicKey(message: string, publicKey: string): Promise<IEncrypt> {
     const encode = await eccrypto.encrypt(Buffer.from(publicKey, "hex"), Buffer.from(message));
     return {
-      ciphertext: encode.ciphertext.toString("hex"),
-      ephemPublicKey: encode.ephemPublicKey.toString("hex"),
-      iv: encode.iv.toString("hex"),
-      mac: encode.mac.toString("hex")
+      ciphertext: Buffer.from(encode.ciphertext).toString("hex"),
+      ephemPublicKey: Buffer.from(encode.ephemPublicKey).toString("hex"),
+      iv: Buffer.from(encode.iv).toString("hex"),
+      mac: Buffer.from(encode.mac).toString("hex")
     };
   }
 
@@ -211,7 +209,7 @@ export default class JingchangWallet {
       mac: Buffer.from(message.mac, "hex")
     };
     const decode = await eccrypto.decrypt(Buffer.from(privateKey, "hex"), encode);
-    return decode.toString() as string;
+    return Buffer.from(decode).toString() as string;
   }
 
   /**
@@ -348,7 +346,7 @@ export default class JingchangWallet {
         secret,
         type: wallet.type
       };
-      const newWallet = this.getEncryptData(newPassword, keypairs);
+      const newWallet = await this.getEncryptData(newPassword, keypairs);
       arr.push(newWallet);
     }
     jcWallet.wallets = arr;
@@ -382,7 +380,7 @@ export default class JingchangWallet {
       secret,
       type: wallet.type
     };
-    const newWallet = this.getEncryptData(newPassword, keypairs);
+    const newWallet = await this.getEncryptData(newPassword, keypairs);
     // shadow copy
     wallet.ciphertext = newWallet.ciphertext;
     wallet.crypto = newWallet.crypto;
@@ -413,7 +411,7 @@ export default class JingchangWallet {
       secret,
       type: wallet.type
     };
-    const newWallet = this.getEncryptData(password, keypairs);
+    const newWallet = await this.getEncryptData(password, keypairs);
     // shadow copy
     wallet.ciphertext = newWallet.ciphertext;
     wallet.crypto = newWallet.crypto;
@@ -546,8 +544,8 @@ export default class JingchangWallet {
    * @returns {IKeystoreModel}
    * @memberof JingchangWallet
    */
-  protected getEncryptData(password: string, keypairs: IKeypairsModel): IKeystoreModel {
-    const encryptData = encryptWallet(password, keypairs, {});
+  protected async getEncryptData(password: string, keypairs: IKeypairsModel): Promise<IKeystoreModel> {
+    const encryptData = await encryptWallet(password, keypairs, {});
     return encryptData;
   }
 
@@ -563,7 +561,7 @@ export default class JingchangWallet {
   private async saveWallet(password: string, keypairs: IKeypairsModel): Promise<IJingchangWalletModel> {
     // support type: ethereum, stream, jingtum, call and moac
     keypairs.default = this._multiple ? !this.hasDefault(keypairs.type) : true;
-    const encryptData = this.getEncryptData(password, keypairs);
+    const encryptData = await this.getEncryptData(password, keypairs);
     const jcWallet = cloneDeep(this._jingchangWallet);
     assert.notEqual(this._jingchangWallet, jcWallet);
     const wallets = jcWallet.wallets;

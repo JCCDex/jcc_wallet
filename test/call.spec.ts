@@ -1,8 +1,8 @@
-const chai = require("chai");
+import * as chai from "chai";
 const expect = chai.expect;
-const bvcadtWallet = require("../lib").bvcadtWallet;
-const testSecret = "snD5uxaSjpNnCVrvfmn3mj8rRXGD9";
-const testAddress = "bpfaZZjXW2vLZqgUihwYq3VKKLVt7x2xyT";
+const callWallet = require("../src").callWallet;
+const testSecret = "shaXxkbcS8NoHrL1TzTfWBRCbsD2K";
+const testAddress = "c3oPNfL3k3EUTBQMFQ2LTZM5W5TUM7Qq5N";
 let undefinedValue;
 
 let invalidAddresses = [
@@ -33,32 +33,32 @@ let invalidSecrets = [
   123456
 ];
 
-describe("test bvcadt", function() {
+describe("test call", function() {
   describe("test createWallet", function() {
-    it("the wallet should be valid when create bvcadt wallet successfully", function() {
-      let wallet = bvcadtWallet.createWallet();
+    it("the wallet should be valid when create call wallet successfully", function() {
+      let wallet = callWallet.createWallet();
       let { secret, address } = wallet;
-      let a = bvcadtWallet.isValidAddress(address);
-      let b = bvcadtWallet.isValidSecret(secret);
+      let a = callWallet.isValidAddress(address);
+      let b = callWallet.isValidSecret(secret);
       expect(a).to.equal(true);
       expect(b).to.equal(true);
     });
 
-    it("should return null when create bvcadt wallet wrongly", function() {
-      let wallet = bvcadtWallet.createWallet(null);
+    it("should return null when create call wallet wrongly", function() {
+      let wallet = callWallet.createWallet(null);
       expect(wallet).to.equal(null);
     });
   });
 
   describe("test isValidAddress", function() {
     it("should return true if the address is valid", function() {
-      let isvalid = bvcadtWallet.isValidAddress(testAddress);
+      let isvalid = callWallet.isValidAddress(testAddress);
       expect(isvalid).to.equal(true);
     });
 
     it("should return false if the address is not valid", function() {
       for (let address of invalidAddresses) {
-        let isvalid = bvcadtWallet.isValidAddress(address);
+        let isvalid = callWallet.isValidAddress(address);
         expect(isvalid).to.equal(false);
       }
     });
@@ -66,13 +66,13 @@ describe("test bvcadt", function() {
 
   describe("test isValidSecret", function() {
     it("should return true if the secret is valid", function() {
-      let isvalid = bvcadtWallet.isValidSecret(testSecret);
+      let isvalid = callWallet.isValidSecret(testSecret);
       expect(isvalid).to.equal(true);
     });
 
     it("should return false if the secret is not valid", function() {
       for (let secret of invalidSecrets) {
-        let isvalid = bvcadtWallet.isValidSecret(secret);
+        let isvalid = callWallet.isValidSecret(secret);
         expect(isvalid).to.equal(false);
       }
     });
@@ -80,13 +80,13 @@ describe("test bvcadt", function() {
 
   describe("test getAddress", function() {
     it("should return correct address if the secret is valid", function() {
-      let address = bvcadtWallet.getAddress(testSecret);
+      let address = callWallet.getAddress(testSecret);
       expect(address).to.equal(testAddress);
     });
 
     it("should return null if the secret is not valid", function() {
       for (let secret of invalidSecrets) {
-        let address = bvcadtWallet.getAddress(secret);
+        let address = callWallet.getAddress(secret);
         expect(address).to.equal(null);
       }
     });
