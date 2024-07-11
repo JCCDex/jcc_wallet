@@ -7,7 +7,8 @@ import { ripemd160 } from "@noble/hashes/ripemd160";
 import { ed25519 as Ed25519 } from "@noble/curves/ed25519";
 import { secp256k1 as Secp256k1 } from "@noble/curves/secp256k1";
 import brorand from "brorand";
-const assert = require("assert");
+import assert from "assert";
+
 const hash = (message) => {
   return sha512
     .create()

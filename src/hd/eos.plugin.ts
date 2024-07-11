@@ -3,10 +3,10 @@ import { IHDPlugin, IKeyPair } from "../types";
 import { sha256 } from "@noble/hashes/sha256";
 import { ripemd160 } from "@noble/hashes/ripemd160";
 import base58 from "bs58";
-const { PublicKey } = require("eosjs/dist/PublicKey");
-const { PrivateKey } = require("eosjs/dist/PrivateKey");
-const { Signature } = require("eosjs/dist/Signature");
-const wif = require("wif");
+import { PublicKey } from "eosjs/dist/PublicKey";
+import { PrivateKey } from "eosjs/dist/PrivateKey";
+import { Signature } from "eosjs/dist/Signature";
+import wif from "wif";
 
 export interface IEosPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;

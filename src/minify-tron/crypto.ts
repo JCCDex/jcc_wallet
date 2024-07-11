@@ -5,7 +5,7 @@ import { hexStr2byteArray } from "./code";
 import { encode58, decode58 } from "./base58";
 import { byteArray2hexStr } from "./bytes";
 import { secp256k1 } from "@noble/curves/secp256k1";
-const { keccak256, sha256 } = require("ethers/crypto");
+import { keccak256, sha256 } from "ethers/crypto";
 
 function normalizePrivateKeyBytes(priKeyBytes) {
   return hexStr2byteArray(byteArray2hexStr(priKeyBytes).padStart(64, "0"));

@@ -3,9 +3,9 @@
 import { ADDRESS_PREFIX } from "./address";
 import { getBase58CheckAddress } from "./crypto";
 import { hexStr2byteArray } from "./code";
-const { keccak256, SigningKey, Signature } = require("ethers/crypto");
-const { recoverAddress } = require("ethers/transaction");
-const { toUtf8Bytes, concat } = require("ethers/utils");
+import { keccak256, SigningKey, Signature } from "ethers/crypto";
+import { recoverAddress } from "ethers/transaction";
+import { toUtf8Bytes, concat } from "ethers/utils";
 
 const joinSignature = (splitSig) => Signature.from(splitSig).serialized;
 
