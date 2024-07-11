@@ -5,7 +5,7 @@ const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 const config = {
-  entry: "./lib",
+  entry: "./src",
   output: {
     filename: "jcc-wallet.min.js",
     path: path.resolve(__dirname, "./dist"),

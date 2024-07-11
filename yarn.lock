@@ -1373,15 +1373,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@babel/runtime@npm:7.6.0"
-  dependencies:
-    regenerator-runtime: "npm:^0.13.2"
-  checksum: 94ae90d952e633cef0f2dd2dfcad4dc1f4ae11143be6e1804024a01153c578ba3de14ced2355e8e9ef1c73d5bf8a25e4ac05829cd568c945435855c4839c00eb
-  languageName: node
-  linkType: hard
-
 "@babel/runtime@npm:^7.8.4":
   version: 7.23.2
   resolution: "@babel/runtime@npm:7.23.2"
@@ -2982,15 +2973,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base-x@npm:^3.0.2":
-  version: 3.0.10
-  resolution: "base-x@npm:3.0.10"
-  dependencies:
-    safe-buffer: "npm:^5.0.1"
-  checksum: a13a34b71439ee5381667efa630b3bf640cf17f632c5ba01990483367592e72f247d7fb4f8c6d0e3ff8c0fb7224b3ac682ff5be09b87063a45b3968f0457e563
-  languageName: node
-  linkType: hard
-
 "base-x@npm:^4.0.0":
   version: 4.0.0
   resolution: "base-x@npm:4.0.0"
@@ -3009,13 +2991,6 @@ __metadata:
   version: 2.0.0
   resolution: "base64id@npm:2.0.0"
   checksum: 6919efd237ed44b9988cbfc33eca6f173a10e810ce50292b271a1a421aac7748ef232a64d1e6032b08f19aae48dce6ee8f66c5ae2c9e5066c82b884861d4d453
-  languageName: node
-  linkType: hard
-
-"bigi@npm:1.4.2, bigi@npm:^1.1.0":
-  version: 1.4.2
-  resolution: "bigi@npm:1.4.2"
-  checksum: 59acf628a3bd27ea032a1a9257dc6aa759483ed97d65e1cbf094aa2e1f762ec0ec8f86173a5095ff0da42cc53e481ece7cc9462e5ac5abb15efa060788c19ef7
   languageName: node
   linkType: hard
 
@@ -3125,19 +3100,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserify-aes@npm:1.0.6":
-  version: 1.0.6
-  resolution: "browserify-aes@npm:1.0.6"
-  dependencies:
-    buffer-xor: "npm:^1.0.2"
-    cipher-base: "npm:^1.0.0"
-    create-hash: "npm:^1.1.0"
-    evp_bytestokey: "npm:^1.0.0"
-    inherits: "npm:^2.0.1"
-  checksum: ac39746ac8e8d29235afc191d116a7f177c6b5f9079626676d8f4e2476e25da99dc562faa24929f097d2f562749beecb0091639477b71a92e7879f7417db421b
-  languageName: node
-  linkType: hard
-
 "browserify-aes@npm:^1.0.4, browserify-aes@npm:^1.2.0":
   version: 1.2.0
   resolution: "browserify-aes@npm:1.2.0"
@@ -3226,15 +3188,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bs58@npm:4.0.1":
-  version: 4.0.1
-  resolution: "bs58@npm:4.0.1"
-  dependencies:
-    base-x: "npm:^3.0.2"
-  checksum: 613a1b1441e754279a0e3f44d1faeb8c8e838feef81e550efe174ff021dd2e08a4c9ae5805b52dfdde79f97b5c0918c78dd24a0eb726c4a94365f0984a0ffc65
-  languageName: node
-  linkType: hard
-
 "bs58@npm:^5.0.0":
   version: 5.0.0
   resolution: "bs58@npm:5.0.0"
@@ -3270,7 +3223,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer-xor@npm:^1.0.2, buffer-xor@npm:^1.0.3":
+"buffer-xor@npm:^1.0.3":
   version: 1.0.3
   resolution: "buffer-xor@npm:1.0.3"
   checksum: fd269d0e0bf71ecac3146187cfc79edc9dbb054e2ee69b4d97dfb857c6d997c33de391696d04bdd669272751fa48e7872a22f3a6c7b07d6c0bc31dbe02a4075c
@@ -3298,15 +3251,6 @@ __metadata:
   version: 3.0.0
   resolution: "builtin-status-codes@npm:3.0.0"
   checksum: c37bbba11a34c4431e56bd681b175512e99147defbe2358318d8152b3a01df7bf25e0305873947e5b350073d5ef41a364a22b37e48f1fb6d2fe6d5286a0f348c
-  languageName: node
-  linkType: hard
-
-"bytebuffer@npm:5.0.1":
-  version: 5.0.1
-  resolution: "bytebuffer@npm:5.0.1"
-  dependencies:
-    long: "npm:~3"
-  checksum: d2f1342ac50a047e50ebaea7c3b73751c113aec84baddda0849e7cf2beb9feb52c93fd67425630976bdb7d801f048f47003a07f83dcda59f1c49ec6eb4e106bb
   languageName: node
   linkType: hard
 
@@ -4014,15 +3958,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ecurve@npm:1.0.5":
-  version: 1.0.5
-  resolution: "ecurve@npm:1.0.5"
-  dependencies:
-    bigi: "npm:^1.1.0"
-  checksum: 05b43d4c6d7edec4d87352e3870b9a265d00b252d57f7640ea63144d71c900748890b5c85569973791e13efc18ebceccff78dd896045879d89c302d9e5a7643b
-  languageName: node
-  linkType: hard
-
 "ee-first@npm:1.1.1":
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
@@ -4170,23 +4105,6 @@ __metadata:
   bin:
     envinfo: dist/cli.js
   checksum: 9c279213cbbb353b3171e8e333fd2ed564054abade08ab3d735fe136e10a0e14e0588e1ce77e6f01285f2462eaca945d64f0778be5ae3d9e82804943e36a4411
-  languageName: node
-  linkType: hard
-
-"eosjs-ecc@npm:^4.0.7":
-  version: 4.0.7
-  resolution: "eosjs-ecc@npm:4.0.7"
-  dependencies:
-    "@babel/runtime": "npm:7.6.0"
-    bigi: "npm:1.4.2"
-    browserify-aes: "npm:1.0.6"
-    bs58: "npm:4.0.1"
-    bytebuffer: "npm:5.0.1"
-    create-hash: "npm:1.1.3"
-    create-hmac: "npm:1.1.6"
-    ecurve: "npm:1.0.5"
-    randombytes: "npm:2.0.5"
-  checksum: aebf05713eacf7280d891027fedadb5b8eea6d8bc9c8b650827f5652eb116ba5a5fc7a13d81e8db069ee8dab62f8ea3521071355a02bb0c85ed17f66a6b5816f
   languageName: node
   linkType: hard
 
@@ -5642,7 +5560,6 @@ __metadata:
     cross-env: "npm:^7.0.0"
     duplicate-package-checker-webpack-plugin: "npm:^3.0.0"
     eosjs: "npm:^22.1.0"
-    eosjs-ecc: "npm:^4.0.7"
     eslint: "npm:^9.4.0"
     eslint-plugin-jsdoc: "npm:^46.9.0"
     eslint-plugin-prefer-arrow: "npm:^1.2.3"
@@ -6485,13 +6402,6 @@ __metadata:
     rfdc: "npm:^1.3.0"
     streamroller: "npm:^3.1.5"
   checksum: 05846e48f72d662800c8189bd178c42b4aa2f0c574cfc90a1942cf90b76f621c44019e26796c8fd88da1b6f0fe8272cba607cbaad6ae6ede50a7a096b58197ea
-  languageName: node
-  linkType: hard
-
-"long@npm:~3":
-  version: 3.2.0
-  resolution: "long@npm:3.2.0"
-  checksum: 03884ad097403bda356228899c8397d7e4e2cd26489983034faa8e52ab9f18df4539de548571ad2f574ecf78454fc377bbcd2ba8ba76d567bf973345aefcbdb2
   languageName: node
   linkType: hard
 
@@ -7687,13 +7597,6 @@ __metadata:
   version: 1.4.2
   resolution: "regenerate@npm:1.4.2"
   checksum: f73c9eba5d398c818edc71d1c6979eaa05af7a808682749dd079f8df2a6d91a9b913db216c2c9b03e0a8ba2bba8701244a93f45211afbff691c32c7b275db1b8
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.13.2":
-  version: 0.13.11
-  resolution: "regenerator-runtime@npm:0.13.11"
-  checksum: 12b069dc774001fbb0014f6a28f11c09ebfe3c0d984d88c9bced77fdb6fedbacbca434d24da9ae9371bfbf23f754869307fb51a4c98a8b8b18e5ef748677ca24
   languageName: node
   linkType: hard
 

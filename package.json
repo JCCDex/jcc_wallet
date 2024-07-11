@@ -100,7 +100,6 @@
     "bn.js": "^5.2.1",
     "clone-deep": "^4.0.1",
     "eosjs": "^22.1.0",
-    "eosjs-ecc": "^4.0.7",
     "ethereum-cryptography": "^2.2.1",
     "ethers": "^6.13.1",
     "jcc_common": "^0.1.0",
