@@ -29,7 +29,8 @@ module.exports = {
     "test",
     "src/minify-ethereumjs-util",
     "src/minify-swtc-keypair",
-    "src/minify-tron"
+    "src/minify-tron",
+    "src/minify-eosjs"
   ],
 
   // A list of reporter names that Jest uses when writing coverage reports

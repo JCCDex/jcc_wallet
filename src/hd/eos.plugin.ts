@@ -3,9 +3,9 @@ import { IHDPlugin, IKeyPair } from "../types";
 import { sha256 } from "@noble/hashes/sha256";
 import { ripemd160 } from "@noble/hashes/ripemd160";
 import base58 from "bs58";
-import { PublicKey } from "eosjs/dist/PublicKey";
-import { PrivateKey } from "eosjs/dist/PrivateKey";
-import { Signature } from "eosjs/dist/Signature";
+import { PublicKey } from "../minify-eosjs/PublicKey";
+import { PrivateKey } from "../minify-eosjs/PrivateKey";
+import { Signature } from "../minify-eosjs/Signature";
 import wif from "wif";
 
 export interface IEosPlugin extends IHDPlugin {
