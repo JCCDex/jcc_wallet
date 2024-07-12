@@ -23,7 +23,7 @@ export class PublicKey {
   }
 
   /** Instantiate public key from an `elliptic`-format public key */
-  public static fromElliptic(publicKey: ProjPointType<bigint>, keyType: KeyType, ec?: CurveFn): PublicKey {
+  public static fromPoint(publicKey: ProjPointType<bigint>, keyType: KeyType, ec?: CurveFn): PublicKey {
     const x = new BN(publicKey.x).toArray("be", 32);
     const y = new BN(publicKey.y).toArray("be", 32);
     if (!ec) {
@@ -44,7 +44,7 @@ export class PublicKey {
   }
 
   /** Export public key as `elliptic`-format public key */
-  public toElliptic(): ProjPointType<bigint> {
+  public toPoint(): ProjPointType<bigint> {
     return this.ec.ProjectivePoint.fromHex(this.key.data);
   }
 
@@ -56,7 +56,7 @@ export class PublicKey {
   /** Validate a public key */
   public isValid(): boolean {
     try {
-      this.toElliptic();
+      this.toPoint();
       return true;
     } catch {
       return false;
