@@ -24,7 +24,7 @@ export class PrivateKey {
   }
 
   /** Export private key as `elliptic`-format private key */
-  public toElliptic(): ProjPointType<bigint> {
+  public toPoint(): ProjPointType<bigint> {
     return this.ec.ProjectivePoint.fromPrivateKey(this.key.data);
   }
 
@@ -35,8 +35,8 @@ export class PrivateKey {
 
   /** Retrieve the public key from a private key */
   public getPublicKey(): PublicKey {
-    const ellipticPrivateKey = this.toElliptic();
-    return PublicKey.fromElliptic(ellipticPrivateKey, this.getType(), this.ec);
+    const ellipticPrivateKey = this.toPoint();
+    return PublicKey.fromPoint(ellipticPrivateKey, this.getType(), this.ec);
   }
 
   /** Sign a message or hashed message digest with private key */
@@ -56,7 +56,7 @@ export class PrivateKey {
       !(sigData[33] === 0 && !(sigData[34] & 0x80));
     const constructSignature = (options: SignOpts): Signature => {
       const ellipticSignature = this.ec.sign(data, this.key.data, options);
-      return Signature.fromElliptic(ellipticSignature, this.getType(), this.ec);
+      return Signature.fromSignature(ellipticSignature, this.getType(), this.ec);
     };
 
     if (this.key.type === KeyType.k1) {
@@ -72,7 +72,7 @@ export class PrivateKey {
   /** Validate a private key */
   public isValid(): boolean {
     try {
-      this.toElliptic();
+      this.toPoint();
       return true;
     } catch {
       return false;

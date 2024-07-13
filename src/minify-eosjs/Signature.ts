@@ -6,8 +6,9 @@
 
 import { Key, KeyType, signatureToString, stringToSignature } from "./eosjs-numeric";
 import { constructElliptic, PublicKey } from "./eosjs-key-conversions";
-import BN from "bn.js";
+import { BN } from "bn.js";
 import { CurveFn, SignatureType, RecoveredSignatureType } from "@noble/curves/abstract/weierstrass";
+import { toBEArray, toBigInt } from "./bn-utils";
 
 /** Represents/stores a Signature and provides easy conversion for use with `elliptic` lib */
 export class Signature {
@@ -23,9 +24,9 @@ export class Signature {
   }
 
   /** Instantiate Signature from an `elliptic`-format Signature */
-  public static fromElliptic(ellipticSig: SignatureType, keyType: KeyType, ec?: CurveFn): Signature {
-    const r = new BN(ellipticSig.r).toArray("be", 32);
-    const s = new BN(ellipticSig.s).toArray("be", 32);
+  public static fromSignature(ellipticSig: SignatureType, keyType: KeyType, ec?: CurveFn): Signature {
+    const r = toBEArray(ellipticSig.r, 32);
+    const s = toBEArray(ellipticSig.s, 32);
     let eosioRecoveryParam;
     if (keyType === KeyType.k1 || keyType === KeyType.r1) {
       eosioRecoveryParam = ellipticSig.recovery + 27;
@@ -54,11 +55,11 @@ export class Signature {
    * not an ec.Signature.
    * Further NOTE: @types/elliptic shows ec.Signature as exported; it is *not*.  Hence the `any`.
    */
-  public toElliptic(): RecoveredSignatureType {
+  public toRecoveredSignature(): RecoveredSignatureType {
     const lengthOfR = 32;
     const lengthOfS = 32;
-    const r = new BN(this.signature.data.slice(1, lengthOfR + 1));
-    const s = new BN(this.signature.data.slice(lengthOfR + 1, lengthOfR + lengthOfS + 1));
+    const r = toBigInt(this.signature.data.slice(1, lengthOfR + 1));
+    const s = toBigInt(this.signature.data.slice(lengthOfR + 1, lengthOfR + lengthOfS + 1));
 
     let ellipticRecoveryBitField;
     if (this.signature.type === KeyType.k1 || this.signature.type === KeyType.r1) {
@@ -97,9 +98,9 @@ export class Signature {
       }
       data = this.ec.CURVE.hash(data);
     }
-    const ellipticSignature = this.toElliptic();
-    const recoveredPublicKey = ellipticSignature.recoverPublicKey(data);
+    const sig = this.toRecoveredSignature();
+    const recoveredPublicKey = sig.recoverPublicKey(data);
     const ellipticKPub = this.ec.ProjectivePoint.fromHex(recoveredPublicKey.toHex());
-    return PublicKey.fromElliptic(ellipticKPub, this.getType(), this.ec);
+    return PublicKey.fromPoint(ellipticKPub, this.getType(), this.ec);
   }
 }

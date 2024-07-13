@@ -1,4 +1,3 @@
-import assert from "assert";
 import cloneDeep from "clone-deep";
 import { sha256 } from "@noble/hashes/sha256";
 import * as eccrypto from "./eccrypto";
@@ -333,7 +332,6 @@ export default class JingchangWallet {
       throw new Error("the property of _samePassword is false, so please don't call this function!");
     }
     const jcWallet = cloneDeep(this._jingchangWallet);
-    assert.notEqual(jcWallet, this._jingchangWallet);
     const wallets = JingchangWallet.getWallets(jcWallet);
     const arr = [];
     for (const wallet of wallets) {
@@ -441,7 +439,6 @@ export default class JingchangWallet {
    */
   public async removeWalletWithAddress(address: string): Promise<IJingchangWalletModel> {
     const jcWallet = cloneDeep(this._jingchangWallet);
-    assert.notEqual(this._jingchangWallet, jcWallet);
     const wallets = JingchangWallet.getWallets(jcWallet);
     const wallet = this.findWallet((w) => w.address === address);
     const index = wallets.findIndex((w) => w.address === wallet.address);
@@ -563,7 +560,6 @@ export default class JingchangWallet {
     keypairs.default = this._multiple ? !this.hasDefault(keypairs.type) : true;
     const encryptData = await this.getEncryptData(password, keypairs);
     const jcWallet = cloneDeep(this._jingchangWallet);
-    assert.notEqual(this._jingchangWallet, jcWallet);
     const wallets = jcWallet.wallets;
     const pre = wallets.findIndex((w) => w.type.toLowerCase() === keypairs.type.toLowerCase());
     if (this._multiple) {
