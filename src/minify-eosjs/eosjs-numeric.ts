@@ -6,6 +6,7 @@
  */
 
 import { ripemd160 } from "@noble/hashes/ripemd160";
+import { sha256 } from "@noble/hashes/sha256";
 
 const base58Chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
@@ -258,5 +259,48 @@ export const signatureToString = (signature: Key): string => {
     return keyToString(signature, "WA", "SIG_WA_");
   } else {
     throw new Error("unrecognized signature format");
+  }
+};
+
+export const privateKeyToLegacyString = (key: Key): string => {
+  if (key.type === KeyType.k1 && key.data.length === privateKeyDataSize) {
+    const whole = [] as number[];
+    whole.push(128);
+    key.data.forEach((byte) => whole.push(byte));
+    const digest = new Uint8Array(
+      sha256
+        .create()
+        .update(
+          sha256
+            .create()
+            .update(Buffer.from(whole))
+            .digest()
+        )
+        .digest()
+    );
+
+    const result = new Uint8Array(privateKeyDataSize + 5);
+    for (let i = 0; i < whole.length; i++) {
+      result[i] = whole[i];
+    }
+    for (let i = 0; i < 4; i++) {
+      result[i + whole.length] = digest[i];
+    }
+    return binaryToBase58(result);
+  } else if (key.type === KeyType.r1 || key.type === KeyType.wa) {
+    throw new Error("Key format not supported in legacy conversion");
+  } else {
+    throw new Error("unrecognized public key format");
+  }
+};
+
+/** Convert `key` to string (base-58) form */
+export const privateKeyToString = (key: Key): string => {
+  if (key.type === KeyType.r1) {
+    return keyToString(key, "R1", "PVT_R1_");
+  } else if (key.type === KeyType.k1) {
+    return keyToString(key, "K1", "PVT_K1_");
+  } else {
+    throw new Error("unrecognized private key format");
   }
 };

@@ -15,10 +15,6 @@ const config = {
   target: "web",
   resolve: {
     extensions: [".js", ".ts"],
-    alias: {
-      "bn.js": path.resolve(__dirname, "node_modules/bn.js"),
-      "base-x": path.resolve(__dirname, "node_modules/base-x")
-    },
     fallback: {
       tls: false,
       net: false,

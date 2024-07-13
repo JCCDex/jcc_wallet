@@ -1,15 +1,14 @@
-import { filterOx } from "jcc_common";
 import { IHDPlugin, IKeyPair } from "../types";
 import { sha256 } from "@noble/hashes/sha256";
-import { ripemd160 } from "@noble/hashes/ripemd160";
-import base58 from "bs58";
 import { PublicKey } from "../minify-eosjs/PublicKey";
 import { PrivateKey } from "../minify-eosjs/PrivateKey";
 import { Signature } from "../minify-eosjs/Signature";
-import wif from "wif";
+import { KeyType, publicKeyToLegacyString, privateKeyToLegacyString } from "../minify-eosjs/eosjs-numeric";
+import { stripHexPrefix } from "../minify-ethereumjs-util/internal";
 
 export interface IEosPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
+  privateKeyToLegacyString(privateKey: string): string;
 }
 
 export const plugin: IEosPlugin = {
@@ -17,19 +16,27 @@ export const plugin: IEosPlugin = {
     // check and cut swtc keypair lib add prefix 00
     return privateKey.length === 66 ? privateKey.substring(2) : privateKey;
   },
+  privateKeyToLegacyString(privateKey: string): string {
+    const priv = plugin.checkPrivateKey(stripHexPrefix(privateKey));
+    const buffer = Buffer.from(priv, "hex");
+    const eosPrivateKey = privateKeyToLegacyString({
+      data: Uint8Array.from(buffer),
+      type: KeyType.k1
+    });
+    return eosPrivateKey;
+  },
   address(key: IKeyPair): string {
     if (key.privateKey) {
-      const privateKey = plugin.checkPrivateKey(key.privateKey);
-      const buffer = Buffer.from(privateKey, "hex");
-      const eosPrivateKey = wif.encode(128, buffer, false);
+      const eosPrivateKey = plugin.privateKeyToLegacyString(key.privateKey);
       return PrivateKey.fromString(eosPrivateKey)
         .getPublicKey()
         .toLegacyString();
     }
     if (key.publicKey) {
-      const rawPublicKey = Buffer.from(key.publicKey, "hex");
-      const checksum = ripemd160(rawPublicKey).slice(0, 4);
-      return "EOS" + base58.encode(Buffer.concat([rawPublicKey, Buffer.from(checksum)]));
+      return publicKeyToLegacyString({
+        data: Uint8Array.from(Buffer.from(key.publicKey, "hex")),
+        type: KeyType.k1
+      });
     }
     return null;
   },
@@ -44,9 +51,7 @@ export const plugin: IEosPlugin = {
 
   isValidSecret(secret: string): boolean {
     try {
-      const privateKey = plugin.checkPrivateKey(filterOx(secret));
-      const buffer = Buffer.from(privateKey, "hex");
-      const eosPrivateKey = wif.encode(128, buffer, false);
+      const eosPrivateKey = plugin.privateKeyToLegacyString(secret);
       return PrivateKey.fromString(eosPrivateKey).isValid() as boolean;
     } catch (_) {
       return false;
@@ -67,8 +72,7 @@ export const plugin: IEosPlugin = {
    * @returns signature string
    */
   sign(message: string, privateKey: string): string {
-    const buffer = Buffer.from(plugin.checkPrivateKey(filterOx(privateKey)), "hex");
-    const eosPrivateKey = wif.encode(128, buffer, false);
+    const eosPrivateKey = plugin.privateKeyToLegacyString(privateKey);
     const pk = PrivateKey.fromString(eosPrivateKey);
     return pk.sign(message).toString();
   },

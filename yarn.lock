@@ -3188,25 +3188,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bs58@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "bs58@npm:5.0.0"
-  dependencies:
-    base-x: "npm:^4.0.0"
-  checksum: 0d1b05630b11db48039421b5975cb2636ae0a42c62f770eec257b2e5c7d94cb5f015f440785f3ec50870a6e9b1132b35bd0a17c7223655b22229f24b2a3491d1
-  languageName: node
-  linkType: hard
-
-"bs58check@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "bs58check@npm:3.0.1"
-  dependencies:
-    "@noble/hashes": "npm:^1.2.0"
-    bs58: "npm:^5.0.0"
-  checksum: a01f62351d17cea5f6607f75f6b4b79d3473d018c52f1dfa6f449751062bb079ebfd556ea81c453de657102ab8c5a6b78620161f21ae05f0e5a43543e0447700
-  languageName: node
-  linkType: hard
-
 "bser@npm:2.1.1":
   version: 2.1.1
   resolution: "bser@npm:2.1.1"
@@ -5552,6 +5533,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^7.12.0"
     babel-jest: "npm:^29.7.0"
     babel-loader: "npm:^9.1.3"
+    base-x: "npm:^4.0.0"
     bip39: "npm:^3.0.4"
     bip44-constants: "npm:^123.0.0"
     bn.js: "npm:^5.2.1"
@@ -5589,7 +5571,6 @@ __metadata:
     webpack: "npm:^5.89.0"
     webpack-bundle-analyzer: "npm:^4.10.1"
     webpack-cli: "npm:^5.1.4"
-    wif: "npm:^4.0.0"
   languageName: unknown
   linkType: soft
 
@@ -8905,15 +8886,6 @@ __metadata:
   bin:
     node-which: bin/which.js
   checksum: 449fa5c44ed120ccecfe18c433296a4978a7583bf2391c50abce13f76878d2476defde04d0f79db8165bdf432853c1f8389d0485ca6e8ebce3bbcded513d5e6a
-  languageName: node
-  linkType: hard
-
-"wif@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "wif@npm:4.0.0"
-  dependencies:
-    bs58check: "npm:^3.0.1"
-  checksum: bc267d1eac5a29b62d8356cca28760411ab489d863cfcd622c64552b40e9c50e027f140ef969cb87a60b8cf817f044f86d8a9971a2c261b934abfe21de2c490e
   languageName: node
   linkType: hard
 
