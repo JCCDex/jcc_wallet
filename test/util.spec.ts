@@ -36,13 +36,13 @@ describe("test jingchang", function() {
     it("should encrypt contact correctly", async () => {
       let data = await encryptContact("123456", [123456789], {});
       let contact = await decrypt("123456", data);
-      expect(contact).to.equal("[123456789]");
+      expect(contact.toString()).to.equal("[123456789]");
     });
 
     it("should encrypt contact correctly if the opts is undefined", async () => {
       let data = await encryptContact("123456", [123456789]);
       let contact = await decrypt("123456", data);
-      expect(contact).to.equal("[123456789]");
+      expect(contact.toString()).to.equal("[123456789]");
     });
   });
 });

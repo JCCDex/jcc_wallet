@@ -6,7 +6,7 @@ import { sha256 } from "@noble/hashes/sha256";
 import { ripemd160 } from "@noble/hashes/ripemd160";
 import { ed25519 as Ed25519 } from "@noble/curves/ed25519";
 import { secp256k1 as Secp256k1 } from "@noble/curves/secp256k1";
-import brorand from "brorand";
+import { randomBytes } from "@noble/hashes/utils";
 
 const hash = (message) => {
   return sha512
@@ -169,7 +169,7 @@ const Factory = (alphabet): IKeyPairFactory => {
 
   const generate = (options): { secret: string; address: string } => {
     assert(!options.entropy || options.entropy.length >= 16, "entropy too short");
-    const entropy = options.entropy ? options.entropy.slice(0, 16) : brorand(16);
+    const entropy = options.entropy ? options.entropy.slice(0, 16) : randomBytes(16);
     const type = options.algorithm === "ed25519" ? "ed25519" : "secp256k1";
     const secret = addressCodec.encodeSeed(entropy, type);
     const keypair = deriveKeyPair(secret);

@@ -1,11 +1,19 @@
-import { isEmptyObject } from "jcc_common";
 import { keccak256 } from "ethereum-cryptography/keccak.js";
 import { decrypt as aesDecrypt, encrypt as aesEncrypt } from "ethereum-cryptography/aes";
 
-import randombytes from "randombytes";
+import { randomBytes } from "@noble/hashes/utils";
 import { scrypt } from "@noble/hashes/scrypt";
 import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
 import { IEncryptModel, IKeystoreModel, IKeypairsModel } from "../types";
+import isPlainObject from "is-plain-object";
+
+export const isEmptyPlainObject = (obj) => {
+  const isPlain = isPlainObject(obj);
+  if (!isPlain) {
+    return true;
+  }
+  return Object.keys(obj).length === 0;
+};
 
 /**
  * decrypt wallet with password
@@ -15,8 +23,12 @@ import { IEncryptModel, IKeystoreModel, IKeypairsModel } from "../types";
  * @returns {(string)} return secret if success, otherwise throws `keystore is invalid` if the keystore is invalid or
  * throws `password is wrong` if the password is wrong
  */
-const decrypt = async (password: string, encryptData: IKeystoreModel): Promise<string> => {
-  if (isEmptyObject(encryptData) || isEmptyObject(encryptData.crypto) || isEmptyObject(encryptData.crypto.kdfparams)) {
+const decrypt = async (password: string, encryptData: IKeystoreModel): Promise<Buffer> => {
+  if (
+    isEmptyPlainObject(encryptData) ||
+    isEmptyPlainObject(encryptData.crypto) ||
+    isEmptyPlainObject(encryptData.crypto.kdfparams)
+  ) {
     throw new Error(KEYSTORE_IS_INVALID);
   }
   const iv = Buffer.from(encryptData.crypto.iv, "hex");
@@ -38,7 +50,7 @@ const decrypt = async (password: string, encryptData: IKeystoreModel): Promise<s
 
   const buf = await aesDecrypt(ciphertext, derivedKey.slice(0, 16), iv, "aes-128-ctr");
 
-  return Buffer.from(buf).toString();
+  return Buffer.from(buf);
 };
 
 /**
@@ -50,13 +62,13 @@ const decrypt = async (password: string, encryptData: IKeystoreModel): Promise<s
  * @returns {IKeystoreModel}
  */
 const encrypt = async (password: string, data: string, opts: IEncryptModel): Promise<IKeystoreModel> => {
-  const iv = opts.iv || randombytes(16).toString("hex");
+  const iv = opts.iv || Buffer.from(randomBytes(16)).toString("hex");
   const kdfparams = {
     dklen: opts.dklen || 32,
     n: opts.n || 4096,
     p: opts.p || 1,
     r: opts.r || 8,
-    salt: opts.salt || randombytes(32).toString("hex")
+    salt: opts.salt || Buffer.from(randomBytes(32)).toString("hex")
   };
   const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), {
     N: kdfparams.n,

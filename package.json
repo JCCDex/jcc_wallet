@@ -52,6 +52,7 @@
     "@babel/preset-typescript": "^7.24.6",
     "@types/chai": "^4.3.16",
     "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.10",
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "@typescript-eslint/parser": "^7.12.0",
     "babel-jest": "^29.7.0",
@@ -74,6 +75,7 @@
     "karma-mocha": "^2.0.1",
     "karma-webpack": "^5.0.1",
     "mocha": "^10.2.0",
+    "node-polyfill-webpack-plugin": "^4.0.0",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
     "sinon": "^17.0.1",
@@ -87,33 +89,17 @@
   "resolutions": {
     "@noble/curves": "^1.4.2",
     "@noble/hashes": "^1.4.0",
-    "randombytes": "^2.1.0",
-    "create-hmac": "^1.1.7",
-    "create-hash": "^1.2.0",
     "buffer": "^6.0.3"
   },
   "dependencies": {
     "@scure/bip32": "^1.4.0",
-    "@types/node": "^16.11.6",
     "base-x": "^4.0.0",
     "bip39": "^3.0.4",
     "bip44-constants": "^123.0.0",
-    "bn.js": "^5.2.1",
     "clone-deep": "^4.0.1",
-    "eosjs": "^22.1.0",
     "ethereum-cryptography": "^2.2.1",
     "ethers": "^6.13.1",
-    "jcc_common": "^0.1.0",
-    "lockr": "^0.8.5",
-    "node-polyfill-webpack-plugin": "^2.0.1"
-  },
-  "nyc": {
-    "check-coverage": true,
-    "per-file": true,
-    "lines": 99,
-    "statements": 99,
-    "functions": 99,
-    "branches": 99
+    "lockr": "^0.8.5"
   },
   "sideEffects": false,
   "packageManager": "yarn@4.0.0-rc.48"

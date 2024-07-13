@@ -1,7 +1,7 @@
 import cloneDeep from "clone-deep";
 import { sha256 } from "@noble/hashes/sha256";
 import * as eccrypto from "./eccrypto";
-import { isEmptyObject } from "jcc_common";
+import { isEmptyPlainObject } from "./util";
 import Lockr from "lockr";
 import { Factory as KeypairsFactory } from "./minify-swtc-keypair";
 import { ADDRESS_IS_EXISTENT, KEYSTORE_IS_INVALID, SECRET_IS_INVALID, WALLET_IS_EMPTY } from "./constant";
@@ -73,7 +73,7 @@ export default class JingchangWallet {
       if (typeof wallet === "string") {
         wallet = JSON.parse(wallet);
       }
-      const walletsNotEmpty = !isEmptyObject(wallet) && Array.isArray(wallet.wallets) && wallet.wallets.length > 0;
+      const walletsNotEmpty = !isEmptyPlainObject(wallet) && Array.isArray(wallet.wallets) && wallet.wallets.length > 0;
       return Boolean(walletsNotEmpty && wallet.contact && wallet.id && wallet.version);
     } catch (error) {
       return false;
@@ -208,7 +208,7 @@ export default class JingchangWallet {
       mac: Buffer.from(message.mac, "hex")
     };
     const decode = await eccrypto.decrypt(Buffer.from(privateKey, "hex"), encode);
-    return Buffer.from(decode).toString() as string;
+    return Buffer.from(decode).toString();
   }
 
   /**
@@ -285,7 +285,7 @@ export default class JingchangWallet {
   public hasDefault(type: string = "swt"): boolean {
     try {
       const wallet = this.findWallet((w) => w.type === type && w.default);
-      return !isEmptyObject(wallet);
+      return !isEmptyPlainObject(wallet);
     } catch (error) {
       return false;
     }
@@ -301,8 +301,8 @@ export default class JingchangWallet {
    */
   public async getSecretWithType(password: string, type: string = "swt"): Promise<string> {
     const wallet = await this.findWallet((w) => w.type === type && w.default);
-    const secret = decrypt(password, wallet);
-    return secret;
+    const secret = await decrypt(password, wallet);
+    return secret.toString();
   }
 
   /**
@@ -315,8 +315,8 @@ export default class JingchangWallet {
    */
   public async getSecretWithAddress(password: string, address: string): Promise<string> {
     const wallet = await this.findWallet((w) => w.address === address);
-    const secret = decrypt(password, wallet);
-    return secret;
+    const secret = await decrypt(password, wallet);
+    return secret.toString();
   }
 
   /**
@@ -526,7 +526,7 @@ export default class JingchangWallet {
     }
     const { wallets } = jingchangWallet;
     const wallet = wallets.find(filter);
-    if (isEmptyObject(wallet)) {
+    if (isEmptyPlainObject(wallet)) {
       throw new Error(WALLET_IS_EMPTY);
     }
     return wallet;

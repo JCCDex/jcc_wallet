@@ -5,10 +5,8 @@ import { bytesToBigInt, bytesToHex, hexToBytes } from "../minify-ethereumjs-util
 import { stripHexPrefix } from "../minify-ethereumjs-util/internal";
 import { ecrecover, ecsign } from "../minify-ethereumjs-util/signature";
 import { pubToAddress } from "../minify-ethereumjs-util/account";
-import { isEmptyObject } from "jcc_common";
-import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
-import { scrypt } from "@noble/hashes/scrypt";
-import { decrypt } from "ethereum-cryptography/aes";
+import { isEmptyPlainObject, decrypt } from "../util";
+import { KEYSTORE_IS_INVALID } from "../constant";
 import { randomBytes } from "@noble/hashes/utils";
 
 const isObject = (obj: any): boolean => {
@@ -93,32 +91,32 @@ export const plugin: IEthereumPlugin = {
     }
     const cryptoData = encryptData.Crypto || encryptData.crypto;
 
-    if (isEmptyObject(cryptoData) || isEmptyObject(cryptoData.cipherparams) || isEmptyObject(cryptoData.kdfparams)) {
+    if (
+      isEmptyPlainObject(cryptoData) ||
+      isEmptyPlainObject(cryptoData.cipherparams) ||
+      isEmptyPlainObject(cryptoData.kdfparams)
+    ) {
       throw new Error(KEYSTORE_IS_INVALID);
     }
-    const iv = Buffer.from(cryptoData.cipherparams.iv, "hex");
     const kdfparams = cryptoData.kdfparams;
-    const derivedKey = scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, "hex"), {
-      N: kdfparams.n,
-      r: kdfparams.r,
-      p: kdfparams.p,
-      dkLen: kdfparams.dklen
+    const buf = await decrypt(password, {
+      crypto: {
+        iv: cryptoData.cipherparams.iv as string,
+        cipher: cryptoData.cipher as string,
+        kdf: cryptoData.kdf as string,
+        kdfparams: {
+          dklen: kdfparams.dklen as number,
+          n: kdfparams.n as number,
+          p: kdfparams.p as number,
+          r: kdfparams.r as number,
+          salt: kdfparams.salt as string
+        }
+      },
+      mac: cryptoData.mac as string,
+      ciphertext: cryptoData.ciphertext as string
     });
 
-    const ciphertext = Buffer.from(cryptoData.ciphertext, "hex");
-
-    const mac = keccak256
-      .create()
-      .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
-      .digest();
-
-    if (Buffer.from(mac).toString("hex") !== cryptoData.mac) {
-      throw new Error(PASSWORD_IS_WRONG);
-    }
-
-    const buf = await decrypt(ciphertext, derivedKey.slice(0, 16), iv, "aes-128-ctr");
-
-    return Buffer.from(buf).toString("hex");
+    return buf.toString("hex");
   },
   createWallet(): IWalletModel {
     const priv = randomBytes(32);
