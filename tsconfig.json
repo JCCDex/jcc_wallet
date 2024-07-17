@@ -3,7 +3,7 @@
     "target": "ES2018",
     "lib": ["ES2018"],
     "outDir": "lib",
-    "baseUrl": ".",
+    "rootDir": ".",
     "module": "Node16",
     "noUnusedLocals": true,
     "declaration": true,
