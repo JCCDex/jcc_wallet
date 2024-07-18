@@ -1,28 +1,12 @@
 import { Factory as AddressCodecFactory, IAddressCodec } from "./address-codec";
 import { derivePrivateKey } from "./utils";
 import { bytesToHex, numberToBytesBE, hexToBytes } from "@noble/curves/abstract/utils";
-import { sha512 } from "@noble/hashes/sha512";
+import Sha512 from "./sha512";
 import { sha256 } from "@noble/hashes/sha256";
 import { ripemd160 } from "@noble/hashes/ripemd160";
 import { ed25519 as Ed25519 } from "@noble/curves/ed25519";
 import { secp256k1 as Secp256k1 } from "@noble/curves/secp256k1";
 import { randomBytes } from "@noble/hashes/utils";
-
-const hash = (message) => {
-  return sha512
-    .create()
-    .update(message)
-    .digest()
-    .slice(0, 32);
-};
-
-const funcHexToBytes = (hex) => {
-  const bytes = [];
-  for (let c = 0; c < hex.length; c += 2) {
-    bytes.push(parseInt(hex.substr(c, 2), 16));
-  }
-  return bytes;
-};
 
 function assert(condition, message) {
   if (!condition) {
@@ -80,7 +64,7 @@ const Factory = (alphabet): IKeyPairFactory => {
       return { privateKey: SECP256K1_PREFIX + privateKey, publicKey };
     },
     sign(message: string, privateKey: string): string {
-      const signHash = hash(Uint8Array.from(funcHexToBytes(message)));
+      const signHash = Sha512.half(message);
       return Secp256k1.sign(signHash, privateKey, {
         // "Canonical" signatures
         lowS: true,
@@ -91,14 +75,14 @@ const Factory = (alphabet): IKeyPairFactory => {
         .toUpperCase();
     },
     verify(message: string, signature: string, publicKey: string): boolean {
-      const signHash = hash(Uint8Array.from(funcHexToBytes(message)));
+      const signHash = Sha512.half(message);
       return Secp256k1.verify(signature, signHash, publicKey);
     }
   };
 
   const ed25519 = {
     deriveKeypair: (entropy): IKeyPair => {
-      const rawPrivateKey = hash(entropy);
+      const rawPrivateKey = Sha512.half(entropy);
       const privateKey = bytesToHex(rawPrivateKey);
       const pub = Ed25519.getPublicKey(privateKey);
       return {
@@ -188,7 +172,7 @@ const Factory = (alphabet): IKeyPairFactory => {
     generate,
     fromSecret,
     addressCodec,
-    hash,
+    hash: Sha512.half,
     sign: (message: string, privateKey: string): string => {
       const keypair = deriveKeyPair(privateKey);
       if (privateKey.startsWith(ED25519_PREFIX)) {
