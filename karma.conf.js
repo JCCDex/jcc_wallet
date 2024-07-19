@@ -1,6 +1,7 @@
 const webpackConfig = require("./webpack.config");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const webpack = require("webpack");
+const path = require("path");
 module.exports = function(config) {
   config.set({
     frameworks: ["detectBrowsers", "mocha"],
@@ -30,6 +31,9 @@ module.exports = function(config) {
       node: webpackConfig.node,
       resolve: webpackConfig.resolve,
       module: webpackConfig.module,
+      output: {
+        path: path.join(__dirname, "temp")
+      },
       mode: "development",
       plugins: [
         new NodePolyfillPlugin({
