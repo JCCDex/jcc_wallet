@@ -25,6 +25,7 @@ const pluginMap: IPluginMap = {
   ethereum: ethereumPlugin,
   bsc: bscPlugin,
   heco: hecoPlugin,
+  moac: ethereumPlugin,
   polygon: polygonPlugin,
   tron: tronPlugin,
   eos: eosPlugin,
