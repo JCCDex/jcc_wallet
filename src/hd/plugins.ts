@@ -29,7 +29,8 @@ const pluginMap: IPluginMap = {
   ripple: XWallet("ripple"),
   stream: XWallet("stream"),
   bizain: XWallet("bizain"),
-  jingtum: XWallet("jingtum")
+  jingtum: XWallet("jingtum"),
+  moac: ethereumPlugin
 };
 
 export function getPluginByType<T extends IHDPlugin>(type: string): T {
