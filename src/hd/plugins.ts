@@ -16,6 +16,8 @@ export const jtWallet = SWTCPlugin(Alphabet.JINGTUM);
 export const ethWallet = ethereumPlugin;
 export const moacWallet = ethereumPlugin;
 export const eosWallet = eosPlugin;
+export const baseWallet = ethereumPlugin;
+export const arb1Wallet = ethereumPlugin;
 
 interface IPluginMap {
   [key: string]: IHDPlugin;
@@ -33,7 +35,10 @@ const pluginMap: IPluginMap = {
   ripple: rippleWallet,
   stream: stmWallet,
   bizain: bizainWallet,
-  jingtum: jtWallet
+  jingtum: jtWallet,
+  moac: moacWallet,
+  base: baseWallet,
+  arb1: arb1Wallet
 };
 
 export function getPluginByType<T extends IHDPlugin>(type: string): T {
