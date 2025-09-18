@@ -99,7 +99,7 @@
     "@scure/bip32": "^1.4.0",
     "@types/node": "^16.11.6",
     "bip39": "^3.0.4",
-    "bip44-constants": "^123.0.0",
+    "bip44-constants": "^387.0.0",
     "bn.js": "^5.2.1",
     "clone-deep": "^4.0.1",
     "eccrypto": "^1.1.6",
