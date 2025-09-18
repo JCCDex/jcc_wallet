@@ -19,7 +19,7 @@ enum BIP44Chain {
   BVCADT = 0x8f000000,
   STREAM = 0x8f000001,
   BIZAIN = 0x8f000002,
-  Base = 0x8000013a,
+  BASE = 0x8000013a,
   ARB1 = 0x80002329
 }
 
@@ -49,7 +49,7 @@ const BIP44ChainMap = new Map([
   [BIP44Chain.BVCADT, "bvcadt"],
   [BIP44Chain.STREAM, "stream"],
   [BIP44Chain.BIZAIN, "bizain"],
-  [BIP44Chain.Base, "base"],
+  [BIP44Chain.BASE, "base"],
   [BIP44Chain.ARB1, "arb1"]
 ]);
 
