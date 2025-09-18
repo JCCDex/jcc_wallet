@@ -3043,10 +3043,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bip44-constants@npm:^123.0.0":
-  version: 123.0.0
-  resolution: "bip44-constants@npm:123.0.0"
-  checksum: 272c7b42593d3b2aae0b0c74c318067bba5fe7949a24b6c2abb1a0fbef6959628de7263261f242bd51db0886d58cf345e9a8e2de7108468f7f12b216c1e8ef30
+"bip44-constants@npm:^387.0.0":
+  version: 387.0.0
+  resolution: "bip44-constants@npm:387.0.0"
+  checksum: 07f86af5e4e6e108979962569cf15a6ec57c6357b0c48ba16590d51dcc6d4126adc1fc1792c6580adb02218b324b828135f15ea863c2436d13daeee9f8a1f246
   languageName: node
   linkType: hard
 
@@ -6144,7 +6144,7 @@ __metadata:
     babel-loader: "npm:^8.3.0"
     bip32: "npm:^4.0.0"
     bip39: "npm:^3.0.4"
-    bip44-constants: "npm:^123.0.0"
+    bip44-constants: "npm:^387.0.0"
     bn.js: "npm:^5.2.1"
     browserify: "npm:^16.5.0"
     chai: "npm:^4.2.0"
