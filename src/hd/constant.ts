@@ -18,7 +18,9 @@ enum BIP44Chain {
   // not register in bip44, customize setting range: 0x8f000000-0x8fffffff
   BVCADT = 0x8f000000,
   STREAM = 0x8f000001,
-  BIZAIN = 0x8f000002
+  BIZAIN = 0x8f000002,
+  BASE = 0x80002105,
+  ARB1 = 0x80002329
 }
 
 /**
@@ -46,7 +48,9 @@ const BIP44ChainMap = new Map([
   [BIP44Chain.CALL, "call"],
   [BIP44Chain.BVCADT, "bvcadt"],
   [BIP44Chain.STREAM, "stream"],
-  [BIP44Chain.BIZAIN, "bizain"]
+  [BIP44Chain.BIZAIN, "bizain"],
+  [BIP44Chain.BASE, "base"],
+  [BIP44Chain.ARB1, "arb1"]
 ]);
 
 export { BIP44Chain, BIP44ChainMap, getBIP44Chain };
