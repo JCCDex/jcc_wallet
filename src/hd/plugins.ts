@@ -34,7 +34,9 @@ const pluginMap: IPluginMap = {
   ripple: rippleWallet,
   stream: stmWallet,
   bizain: bizainWallet,
-  jingtum: jtWallet
+  jingtum: jtWallet,
+  base: ethereumPlugin,
+  arb1: ethereumPlugin
 };
 
 export function getPluginByType<T extends IHDPlugin>(type: string): T {
