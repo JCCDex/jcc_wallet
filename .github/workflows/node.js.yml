@@ -12,52 +12,55 @@ on:
 jobs:
   node-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     strategy:
       matrix:
         node-version: [18.x, 20.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: yarn
-      - run: npm run test:node
-      - run: npm run eslint
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run Node tests
+        run: npm run test:node
+      - name: Run ESLint
+        run: npm run eslint
 
       - name: Coveralls GitHub Action
-        uses: coverallsapp/github-action@1.1.3
+        uses: coverallsapp/github-action@v2
         with:
-          github-token: ${{ secrets.github_token }}
-
-  #   finish:
-  #     needs: node-test
-  #     runs-on: ubuntu-latest
-  #     steps:
-  #     - name: Coveralls GitHub Action
-  #       uses: coverallsapp/github-action@1.1.3
-  #       with:
-  #         github-token: ${{ secrets.github_token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        if: matrix.node-version == '18.x'
 
   headless-test:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         node-version: [18.x]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: yarn
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Run headless test
         uses: GabrielBB/xvfb-action@v1
         with:
           run: npm run test:browser
+        if: runner.os == 'Linux'
+      - name: Run headless test (macOS/Windows)
+        run: npm run test:browser
+        if: runner.os != 'Linux'
