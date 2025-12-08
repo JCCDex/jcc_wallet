@@ -10,9 +10,9 @@ export { PrivateKey } from "./PrivateKey";
 export { PublicKey } from "./PublicKey";
 export { Signature } from "./Signature";
 
-import { secp256k1 } from "@noble/curves/secp256k1";
-import { p256 } from "@noble/curves/p256";
-import { CurveFn } from "@noble/curves/abstract/weierstrass";
+import { secp256k1 } from "@noble/curves/secp256k1.js";
+import { p256 } from "@noble/curves/p256.js";
+import { CurveFn } from "@noble/curves/abstract/weierstrass.js";
 
 /** Construct the elliptic curve object based on key type */
 export const constructElliptic = (type: KeyType): CurveFn => {

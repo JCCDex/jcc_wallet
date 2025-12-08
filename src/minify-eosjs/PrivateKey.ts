@@ -6,7 +6,7 @@
 
 import BN from "bn.js";
 import { Key, KeyType, stringToPrivateKey } from "./eosjs-numeric";
-import { ProjPointType, CurveFn, SignOpts } from "@noble/curves/abstract/weierstrass";
+import { ProjPointType, CurveFn, SignOpts } from "@noble/curves/abstract/weierstrass.js";
 
 import { constructElliptic, PublicKey, Signature } from "./eosjs-key-conversions";
 

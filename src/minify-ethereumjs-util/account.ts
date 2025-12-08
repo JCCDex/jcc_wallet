@@ -1,6 +1,6 @@
 // forked from https://github.com/ethereumjs/ethereumjs-monorepo/blob/master/packages/util/src/account.ts
 
-import { secp256k1 } from "@noble/curves/secp256k1";
+import { secp256k1 } from "@noble/curves/secp256k1.js";
 import { keccak256 } from "ethereum-cryptography/keccak.js";
 import { assertIsBytes } from "./helper";
 

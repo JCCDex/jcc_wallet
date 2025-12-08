@@ -7,7 +7,7 @@
 import { Key, KeyType, signatureToString, stringToSignature } from "./eosjs-numeric";
 import { constructElliptic, PublicKey } from "./eosjs-key-conversions";
 import { BN } from "bn.js";
-import { CurveFn, SignatureType, RecoveredSignatureType } from "@noble/curves/abstract/weierstrass";
+import { CurveFn, SignatureType, RecoveredSignatureType } from "@noble/curves/abstract/weierstrass.js";
 import { toBEArray, toBigInt } from "./bn-utils";
 
 /** Represents/stores a Signature and provides easy conversion for use with `elliptic` lib */

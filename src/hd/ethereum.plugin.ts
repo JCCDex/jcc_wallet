@@ -1,4 +1,4 @@
-import { secp256k1 } from "@noble/curves/secp256k1";
+import { secp256k1 } from "@noble/curves/secp256k1.js";
 import { keccak256 } from "ethereum-cryptography/keccak.js";
 import { IKeyPair, IHDPlugin, IWalletModel } from "../types";
 import { bytesToBigInt, bytesToHex, hexToBytes } from "../minify-ethereumjs-util/bytes";
@@ -7,7 +7,7 @@ import { ecrecover, ecsign } from "../minify-ethereumjs-util/signature";
 import { pubToAddress } from "../minify-ethereumjs-util/account";
 import { isEmptyPlainObject, decrypt } from "../util";
 import { KEYSTORE_IS_INVALID } from "../constant";
-import { randomBytes } from "@noble/hashes/utils";
+import { randomBytes } from "@noble/hashes/utils.js";
 
 const isObject = (obj: any): boolean => {
   return Object.prototype.toString.call(obj) === "[object Object]";

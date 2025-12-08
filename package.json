@@ -87,13 +87,12 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@scure/bip32": "^1.4.0",
-    "base-x": "^4.0.0",
-    "bip39": "^3.0.4",
-    "bip44-constants": "^387.0.0",
+    "base-x": "^4.0.1",
+    "bip39": "^3.1.0",
+    "bip44-constants": "^396.0.0",
     "clone-deep": "^4.0.1",
-    "ethereum-cryptography": "^2.2.1",
-    "ethers": "^6.13.1",
+    "ethereum-cryptography": "^3.2.0",
+    "ethers": "^6.16.0",
     "lockr": "^0.8.5"
   },
   "sideEffects": false,

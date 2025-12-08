@@ -1,5 +1,5 @@
 import cloneDeep from "clone-deep";
-import { sha256 } from "@noble/hashes/sha256";
+import { sha256 } from "@noble/hashes/sha2.js";
 import * as eccrypto from "./eccrypto";
 import { isEmptyPlainObject } from "./util";
 import Lockr from "lockr";

@@ -1,6 +1,6 @@
 // forked from https://github.com/ethereumjs/ethereumjs-monorepo/blob/master/packages/util/src/signature.ts
 
-import { secp256k1 } from "@noble/curves/secp256k1";
+import { secp256k1 } from "@noble/curves/secp256k1.js";
 
 import { BIGINT_0, BIGINT_1, BIGINT_2, BIGINT_27 } from "./constants";
 import { concatBytes, setLengthLeft } from "./bytes";

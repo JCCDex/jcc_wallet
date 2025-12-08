@@ -1,5 +1,5 @@
 import { IKeyPairFactory, Factory as WalletFactory } from "../minify-swtc-keypair";
-import { bytesToHex } from "@noble/curves/abstract/utils";
+import { bytesToHex } from "@noble/curves/abstract/utils.js";
 import { ICreateOptionsModel, IKeyPair, IHDPlugin, IWalletModel } from "../types";
 
 export const SWTCPlugin = (alphabet: string): IHDPlugin => {

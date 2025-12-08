@@ -1,8 +1,8 @@
 import { keccak256 } from "ethereum-cryptography/keccak.js";
 import { decrypt as aesDecrypt, encrypt as aesEncrypt } from "ethereum-cryptography/aes";
 
-import { randomBytes } from "@noble/hashes/utils";
-import { scrypt } from "@noble/hashes/scrypt";
+import { randomBytes } from "@noble/hashes/utils.js";
+import { scrypt } from "@noble/hashes/scrypt.js";
 import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
 import { IEncryptModel, IKeystoreModel, IKeypairsModel } from "../types";
 import isPlainObject from "is-plain-object";

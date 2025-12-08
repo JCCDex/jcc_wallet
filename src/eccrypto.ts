@@ -7,12 +7,11 @@
 const EC_GROUP_ORDER = Buffer.from("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", "hex");
 const ZERO32 = Buffer.alloc(32, 0);
 
-import { randomBytes } from "@noble/hashes/utils";
-import { sha512 as SHA512 } from "@noble/hashes/sha512";
-import { hmac } from "@noble/hashes/hmac";
-import { sha256 } from "@noble/hashes/sha2";
+import { randomBytes } from "@noble/hashes/utils.js";
+import { hmac } from "@noble/hashes/hmac.js";
+import { sha256, sha512 as SHA512 } from "@noble/hashes/sha2.js";
 import { decrypt as aesDecrypt, encrypt as aesEncrypt } from "ethereum-cryptography/aes";
-import { secp256k1 } from "@noble/curves/secp256k1";
+import { secp256k1 } from "@noble/curves/secp256k1.js";
 
 const Point = secp256k1.ProjectivePoint;
 

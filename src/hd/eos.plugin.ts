@@ -1,5 +1,5 @@
 import { IHDPlugin, IKeyPair } from "../types";
-import { sha256 } from "@noble/hashes/sha256";
+import { sha256 } from "@noble/hashes/sha2.js";
 import { PublicKey } from "../minify-eosjs/PublicKey";
 import { PrivateKey } from "../minify-eosjs/PrivateKey";
 import { Signature } from "../minify-eosjs/Signature";

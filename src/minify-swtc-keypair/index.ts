@@ -1,12 +1,12 @@
 import { Factory as AddressCodecFactory, IAddressCodec } from "./address-codec";
 import { derivePrivateKey } from "./utils";
-import { bytesToHex, numberToBytesBE, hexToBytes } from "@noble/curves/abstract/utils";
+import { bytesToHex, numberToBytesBE, hexToBytes } from "@noble/curves/abstract/utils.js";
 import Sha512 from "./sha512";
-import { sha256 } from "@noble/hashes/sha256";
-import { ripemd160 } from "@noble/hashes/ripemd160";
-import { ed25519 as Ed25519 } from "@noble/curves/ed25519";
-import { secp256k1 as Secp256k1 } from "@noble/curves/secp256k1";
-import { randomBytes } from "@noble/hashes/utils";
+import { sha256 } from "@noble/hashes/sha2.js";
+import { ripemd160 } from "@noble/hashes/legacy.js";
+import { ed25519 as Ed25519 } from "@noble/curves/ed25519.js";
+import { secp256k1 as Secp256k1 } from "@noble/curves/secp256k1.js";
+import { randomBytes } from "@noble/hashes/utils.js";
 
 function assert(condition, message) {
   if (!condition) {

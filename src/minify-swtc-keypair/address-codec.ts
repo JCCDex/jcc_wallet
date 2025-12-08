@@ -1,4 +1,4 @@
-import { sha256 } from "@noble/hashes/sha256";
+import { sha256 } from "@noble/hashes/sha2.js";
 import baseCodec from "base-x";
 const FAMILY_SEED = 0x21; // 33
 const ED25519_SEED = [0x01, 0xe1, 0x4b]; // [1, 225, 75]

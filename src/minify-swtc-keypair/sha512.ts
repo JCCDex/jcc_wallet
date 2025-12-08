@@ -1,5 +1,5 @@
-import { bytesToNumberBE } from "@noble/curves/abstract/utils";
-import { sha512 } from "@noble/hashes/sha512";
+import { bytesToNumberBE } from "@noble/curves/abstract/utils.js";
+import { sha512 } from "@noble/hashes/sha2.js";
 
 export default class Sha512 {
   // instantiate empty sha512 hash

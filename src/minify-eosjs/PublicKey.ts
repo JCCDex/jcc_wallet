@@ -7,7 +7,7 @@
 import { Key, KeyType, publicKeyToLegacyString, stringToPublicKey } from "./eosjs-numeric";
 import { constructElliptic } from "./eosjs-key-conversions";
 import { toBEArray } from "./bn-utils";
-import { ProjPointType, CurveFn } from "@noble/curves/abstract/weierstrass";
+import { ProjPointType, CurveFn } from "@noble/curves/abstract/weierstrass.js";
 
 /** Represents/stores a public key and provides easy conversion for use with `elliptic` lib */
 export class PublicKey {
