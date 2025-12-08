@@ -127,7 +127,7 @@ export interface Key {
   data: Uint8Array;
 }
 
-const digestSuffixRipemd160 = (data: Uint8Array, suffix: string): ArrayBuffer => {
+const digestSuffixRipemd160 = (data: Uint8Array, suffix: string): Uint8Array => {
   const d = new Uint8Array(data.length + suffix.length);
   for (let i = 0; i < data.length; ++i) {
     d[i] = data[i];
@@ -141,7 +141,7 @@ const digestSuffixRipemd160 = (data: Uint8Array, suffix: string): ArrayBuffer =>
 const stringToKey = (s: string, type: KeyType, size: number, suffix: string): Key => {
   const whole = base58ToBinary(size ? size + 4 : 0, s);
   const result = { type, data: new Uint8Array(whole.buffer, 0, whole.length - 4) };
-  const digest = new Uint8Array(digestSuffixRipemd160(result.data, suffix));
+  const digest = digestSuffixRipemd160(result.data, suffix);
   if (
     digest[0] !== whole[whole.length - 4] ||
     digest[1] !== whole[whole.length - 3] ||
@@ -154,7 +154,7 @@ const stringToKey = (s: string, type: KeyType, size: number, suffix: string): Ke
 };
 
 const keyToString = (key: Key, suffix: string, prefix: string): string => {
-  const digest = new Uint8Array(digestSuffixRipemd160(key.data, suffix));
+  const digest = digestSuffixRipemd160(key.data, suffix);
   const whole = new Uint8Array(key.data.length + 4);
   for (let i = 0; i < key.data.length; ++i) {
     whole[i] = key.data[i];

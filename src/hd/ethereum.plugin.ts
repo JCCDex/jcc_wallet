@@ -53,7 +53,7 @@ export const plugin: IEthereumPlugin = {
   isValidSecret(secret: string): boolean {
     try {
       return secp256k1.utils.isValidPrivateKey(Buffer.from(stripHexPrefix(secret), "hex"));
-    } catch (_) {
+    } catch {
       return false;
     }
   },

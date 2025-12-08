@@ -45,7 +45,7 @@ export const plugin: ITronPlugin = {
       const comCddressBytes = computeAddress(pubBytes);
       const address = getBase58CheckAddress(comCddressBytes);
       return plugin.isValidAddress(address) as boolean;
-    } catch (_) {
+    } catch {
       return false;
     }
   },

@@ -132,7 +132,7 @@ const Factory = (alphabet): IKeyPairFactory => {
   const isValidSecret = (secret: string): boolean => {
     try {
       deriveKeyPair(secret);
-    } catch (_) {
+    } catch {
       return false;
     }
     return true;

@@ -44,7 +44,7 @@ export const plugin: IEosPlugin = {
     try {
       const pk = PublicKey.fromString(address);
       return pk.isValid();
-    } catch (_) {
+    } catch {
       return false;
     }
   },
@@ -53,7 +53,7 @@ export const plugin: IEosPlugin = {
     try {
       const eosPrivateKey = plugin.privateKeyToLegacyString(secret);
       return PrivateKey.fromString(eosPrivateKey).isValid() as boolean;
-    } catch (_) {
+    } catch {
       return false;
     }
   },

@@ -35,7 +35,7 @@ export const SWTCPlugin = (alphabet: string): IHDPlugin => {
         return Wallet.deriveAddress(key.publicKey);
       }
       return null;
-    } catch (_) {
+    } catch {
       return null;
     }
   };
@@ -50,7 +50,7 @@ export const SWTCPlugin = (alphabet: string): IHDPlugin => {
         keypair = Wallet.deriveKeyPair(keypair.privateKey);
       }
       return Wallet.verify(message, signature, keypair.publicKey);
-    } catch (_) {
+    } catch {
       return false;
     }
   };
@@ -63,7 +63,7 @@ export const SWTCPlugin = (alphabet: string): IHDPlugin => {
     try {
       const wallet = Wallet.fromSecret(secret);
       return wallet.address;
-    } catch (_) {
+    } catch {
       return null;
     }
   };
@@ -71,7 +71,7 @@ export const SWTCPlugin = (alphabet: string): IHDPlugin => {
   const createWallet = (opt: ICreateOptionsModel = {}): IWalletModel => {
     try {
       return Wallet.generate(opt);
-    } catch (_) {
+    } catch {
       return null;
     }
   };

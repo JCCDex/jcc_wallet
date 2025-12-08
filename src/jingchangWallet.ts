@@ -75,7 +75,7 @@ export default class JingchangWallet {
       }
       const walletsNotEmpty = !isEmptyPlainObject(wallet) && Array.isArray(wallet.wallets) && wallet.wallets.length > 0;
       return Boolean(walletsNotEmpty && wallet.contact && wallet.id && wallet.version);
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -286,7 +286,7 @@ export default class JingchangWallet {
     try {
       const wallet = this.findWallet((w) => w.type === type && w.default);
       return !isEmptyPlainObject(wallet);
-    } catch (error) {
+    } catch {
       return false;
     }
   }

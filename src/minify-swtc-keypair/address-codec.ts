@@ -212,7 +212,7 @@ export const Factory = (alphabet): IAddressCodec => {
   const isValidAddress = (address: string): boolean => {
     try {
       decodeAccountID(address);
-    } catch (_) {
+    } catch {
       return false;
     }
     return true;
