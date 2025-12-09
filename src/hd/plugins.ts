@@ -16,6 +16,7 @@ export const jtWallet = SWTCPlugin(Alphabet.JINGTUM);
 export const ethWallet = ethereumPlugin;
 export const moacWallet = ethereumPlugin;
 export const eosWallet = eosPlugin;
+export const tronWallet = tronPlugin;
 
 interface IPluginMap {
   [key: string]: IHDPlugin;
