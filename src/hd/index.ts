@@ -139,7 +139,13 @@ export class HDWallet {
    * @param {number} index bip44 last level index
    * @returns {IKeyPair} return keypair object
    */
-  public static getHDKeypair = (rootSecret: string, chain: number, account: number = 0, index: number): IKeyPair => {
+  public static getHDKeypair = (
+    rootSecret: string,
+    chain: number,
+    account: number = 0,
+    index: number,
+    change: number = 0
+  ): IKeyPair => {
     const bip44Chain = getBIP44Chain(chain);
     if (bip44Chain.length === 0) {
       return null;
@@ -149,7 +155,7 @@ export class HDWallet {
     const seed = BIP39.mnemonicToSeedSync(mnemonic);
 
     const b32 = HDKey.fromMasterSeed(seed);
-    const privateKey = b32.derive(`m/44'/${chainIdx}'/${account}'/0/${index}`).privateKey;
+    const privateKey = b32.derive(`m/44'/${chainIdx}'/${account}'/${change}/${index}`).privateKey;
 
     return keypair.deriveKeyPair(Buffer.from(privateKey).toString("hex")) as IKeyPair;
   };
@@ -234,12 +240,15 @@ export class HDWallet {
     if (isNaN(opt.chain) || isNaN(opt.account) || isNaN(opt.index)) {
       return null;
     }
+    if (isNaN(opt.change)) {
+      opt.change = 0;
+    }
 
-    const hdKeypair = HDWallet.getHDKeypair(this._secret, opt.chain, opt.account, opt.index);
+    const hdKeypair = HDWallet.getHDKeypair(this._secret, opt.chain, opt.account, opt.index, opt.change);
 
     return new HDWallet({
       keypair: hdKeypair,
-      path: { chain: opt.chain, account: opt.account, change: 0, index: opt.index }
+      path: { chain: opt.chain, account: opt.account, change: opt.change, index: opt.index }
     });
   };
 
