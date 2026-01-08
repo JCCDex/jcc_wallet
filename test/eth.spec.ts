@@ -126,4 +126,30 @@ describe("test eth", function() {
       expect(secret).to.equal("ca6dbabef201dce8458f29b2290fef4cb80df3e16fef96347c3c250a883e4486");
     });
   });
+
+  describe("test getKeyPairFromPrivateKey", function() {
+    it("should return keypair if the private key is valid", function() {
+      let keypair = ethWallet.getKeyPairFromPrivateKey(testSecret);
+      expect(keypair).to.not.equal(null);
+      expect(keypair.privateKey.toLowerCase()).to.equal(testSecret.toLowerCase());
+      expect(keypair.publicKey).to.be.a("string");
+      expect(keypair.publicKey.length).to.equal(128);
+      // 验证公钥能推导出正确地址
+      let address = ethWallet.address({ publicKey: keypair.publicKey });
+      expect(address.toLowerCase()).to.equal(testAddress.toLowerCase());
+    });
+
+    it("should return keypair if the private key has 00 prefix", function() {
+      let keypair = ethWallet.getKeyPairFromPrivateKey("00" + testSecret);
+      expect(keypair).to.not.equal(null);
+      expect(keypair.privateKey.toLowerCase()).to.equal(testSecret.toLowerCase());
+    });
+
+    it("should return null if the private key is invalid", function() {
+      for (let secret of invalidSecrets) {
+        let keypair = ethWallet.getKeyPairFromPrivateKey(secret);
+        expect(keypair).to.equal(null);
+      }
+    });
+  });
 });
