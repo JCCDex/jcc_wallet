@@ -520,5 +520,44 @@ describe("HD wallet testcase", function() {
       address = api.address({ publicKey: "", privateKey: "" });
       expect(address).to.equal(null);
     });
+
+    it("test tron getKeyPairFromPrivateKey", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      let tronHd = hd.deriveWallet({ chain: BIP44Chain.TRON, account: 0, index: 0 });
+      let api = tronHd.getWalletApi();
+
+      // 从私钥获取密钥对
+      let keypair = api.getKeyPairFromPrivateKey(tron_keypairs[0].privateKey);
+      expect(keypair).to.not.equal(null);
+      expect(keypair.privateKey.toLowerCase()).to.equal(tron_keypairs[0].privateKey.substring(2).toLowerCase());
+
+      // 验证公钥能推导出正确地址
+      let address = api.address({ publicKey: keypair.publicKey, privateKey: "" });
+      expect(address).to.equal(tron_account[0].address);
+
+      // 无效私钥返回 null
+      keypair = api.getKeyPairFromPrivateKey("invalid");
+      expect(keypair).to.equal(null);
+    });
+
+    it("test eos getKeyPairFromPrivateKey", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      let eosHd = hd.deriveWallet({ chain: BIP44Chain.EOS, account: 0, index: 0 });
+      let api = eosHd.getWalletApi();
+
+      // 从私钥获取密钥对
+      let keypair = api.getKeyPairFromPrivateKey(eos_keypairs[0].privateKey);
+      expect(keypair).to.not.equal(null);
+      expect(keypair.privateKey.toLowerCase()).to.equal(eos_keypairs[0].privateKey.substring(2).toLowerCase());
+      expect(keypair.publicKey.toLowerCase()).to.equal(eos_keypairs[0].publicKey.toLowerCase());
+
+      // 验证公钥能推导出正确地址
+      let address = api.address({ publicKey: keypair.publicKey, privateKey: "" });
+      expect(address).to.equal(eos_account[0].address);
+
+      // 无效私钥返回 null
+      keypair = api.getKeyPairFromPrivateKey("invalid");
+      expect(keypair).to.equal(null);
+    });
   });
 });

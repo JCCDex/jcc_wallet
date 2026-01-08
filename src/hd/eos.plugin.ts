@@ -9,6 +9,7 @@ import { stripHexPrefix } from "../minify-ethereumjs-util/internal";
 export interface IEosPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
   privateKeyToLegacyString(privateKey: string): string;
+  getKeyPairFromPrivateKey(privateKey: string): IKeyPair | null;
 }
 
 export const plugin: IEosPlugin = {
@@ -82,5 +83,24 @@ export const plugin: IEosPlugin = {
   recover(message: string, signature: string): string {
     const s = Signature.fromString(signature);
     return s.recover(message).toLegacyString();
+  },
+  getKeyPairFromPrivateKey(privateKey: string): IKeyPair | null {
+    try {
+      const key = plugin.checkPrivateKey(privateKey);
+      if (!plugin.isValidSecret(key)) {
+        return null;
+      }
+      const eosPrivateKey = plugin.privateKeyToLegacyString(key);
+      const pk = PrivateKey.fromString(eosPrivateKey);
+      const pubKey = pk.getPublicKey();
+      const point = pubKey.toPoint();
+      const publicKey = point.toHex(true);
+      return {
+        privateKey: key,
+        publicKey
+      };
+    } catch (_) {
+      return null;
+    }
   }
 };

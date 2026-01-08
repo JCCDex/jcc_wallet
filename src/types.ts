@@ -100,6 +100,7 @@ export interface IHDPlugin {
   getAddress?(secret: string): string;
   createWallet?(opts?: ICreateOptionsModel): IWalletModel;
   proxy?(functionName: string, ...args);
+  getKeyPairFromPrivateKey?(privateKey: string): IKeyPair | null;
 }
 
 export enum Alphabet {

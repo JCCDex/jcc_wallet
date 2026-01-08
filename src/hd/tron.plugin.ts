@@ -11,6 +11,7 @@ import { hashMessage, signMessage, verifyMessage } from "../minify-tron/message"
 
 export interface ITronPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
+  getKeyPairFromPrivateKey(privateKey: string): IKeyPair | null;
 }
 
 export const plugin: ITronPlugin = {
@@ -68,5 +69,23 @@ export const plugin: ITronPlugin = {
   },
   recover(message: string, signature: string): string {
     return verifyMessage(message, signature);
+  },
+  getKeyPairFromPrivateKey(privateKey: string): IKeyPair | null {
+    try {
+      const key = plugin.checkPrivateKey(privateKey);
+      if (!plugin.isValidSecret(key)) {
+        return null;
+      }
+      const pubBytes = getPubKeyFromPriKey(hexStr2byteArray(key));
+      const publicKey = Array.from(pubBytes)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      return {
+        privateKey: key,
+        publicKey
+      };
+    } catch (_) {
+      return null;
+    }
   }
 };

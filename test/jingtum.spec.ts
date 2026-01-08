@@ -3,6 +3,8 @@ const expect = chai.expect;
 const { jtWallet, bizainWallet } = require("../src");
 let testAddress = "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH";
 let testSecret = "snfXQMEVbbZng84CcfdKDASFRi4Hf";
+let privateKey = "00BDFED361E245A47C8603FA7B15D73787545455C5C731C89568EE117A18BDC67D";
+let publicKey = "02C13075B18C87A032226CE383AEFD748D7BB719E02CD7F5A8C1F2C7562DE7C12A"
 let testBizainAddress = "bMAy4Pu8CSf5apR44HbYyLFKeC9Dbau16Q";
 let testBizainSecret = "ssySqG4BhxpngV2FjAe1SJYFD4dcm";
 
@@ -97,6 +99,32 @@ describe("test jingtum", function() {
       b = bizainWallet.isValidSecret(wallet.secret);
       expect(a).to.equal(true);
       expect(b).to.equal(true);
+    });
+  });
+
+  describe("test getKeyPairFromPrivateKey", function() {
+    it("should return keypair if the secret is valid", function() {
+      let keypair = jtWallet.getKeyPairFromPrivateKey(testSecret);
+      expect(keypair).to.not.equal(null);
+      expect(keypair.privateKey.toLowerCase()).to.equal(privateKey.toLowerCase());
+      expect(keypair.publicKey.toLowerCase()).to.equal(publicKey.toLowerCase());
+      // 验证公钥能推导出正确地址
+      let address = jtWallet.address({ publicKey: keypair.publicKey });
+      expect(address).to.equal(testAddress);
+    });
+
+    it("should return keypair if the private key is valid", function() {
+      let keypair = jtWallet.getKeyPairFromPrivateKey(privateKey);
+      expect(keypair).to.not.equal(null);
+      expect(keypair.privateKey.toLowerCase()).to.equal(privateKey.toLowerCase());
+      expect(keypair.publicKey.toLowerCase()).to.equal(publicKey.toLowerCase());
+    });
+
+    it("should return null if the input is invalid", function() {
+      for (let secret of invalidSecrets) {
+        let keypair = jtWallet.getKeyPairFromPrivateKey(secret);
+        expect(keypair).to.equal(null);
+      }
     });
   });
 });

@@ -16,6 +16,7 @@ const isObject = (obj: any): boolean => {
 export interface IEthereumPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
   decryptKeystore(password: string, encryptData): Promise<string>;
+  getKeyPairFromPrivateKey(privateKey: string): IKeyPair | null;
 }
 
 export const plugin: IEthereumPlugin = {
@@ -122,5 +123,20 @@ export const plugin: IEthereumPlugin = {
     const priv = randomBytes(32);
     const address = plugin.getAddress(bytesToHex(priv));
     return { address, secret: bytesToHex(priv) };
+  },
+  getKeyPairFromPrivateKey(privateKey: string): IKeyPair | null {
+    try {
+      const key = plugin.checkPrivateKey(privateKey);
+      if (!plugin.isValidSecret(key)) {
+        return null;
+      }
+      const publicKey = secp256k1.ProjectivePoint.fromPrivateKey(Buffer.from(stripHexPrefix(key), "hex")).toHex(false);
+      return {
+        privateKey: key,
+        publicKey: publicKey.substring(2)
+      };
+    } catch (_) {
+      return null;
+    }
   }
 };
