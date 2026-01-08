@@ -84,7 +84,7 @@ export const plugin: ITronPlugin = {
         privateKey: key,
         publicKey
       };
-    } catch (_) {
+    } catch {
       return null;
     }
   }

@@ -79,7 +79,7 @@ export const SWTCPlugin = (alphabet: string): IHDPlugin => {
   const getKeyPairFromPrivateKey = (privateKey: string): IKeyPair | null => {
     try {
       return Wallet.deriveKeyPair(privateKey);
-    } catch (_) {
+    } catch {
       return null;
     }
   };

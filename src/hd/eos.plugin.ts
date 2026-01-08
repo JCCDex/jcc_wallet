@@ -99,7 +99,7 @@ export const plugin: IEosPlugin = {
         privateKey: key,
         publicKey
       };
-    } catch (_) {
+    } catch {
       return null;
     }
   }

@@ -135,7 +135,7 @@ export const plugin: IEthereumPlugin = {
         privateKey: key,
         publicKey: publicKey.substring(2)
       };
-    } catch (_) {
+    } catch {
       return null;
     }
   }
