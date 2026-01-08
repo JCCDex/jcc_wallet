@@ -78,11 +78,6 @@ export const SWTCPlugin = (alphabet: string): IHDPlugin => {
 
   const getKeyPairFromPrivateKey = (privateKey: string): IKeyPair | null => {
     try {
-      // secret
-      if (isValidSecret(privateKey)) {
-        return Wallet.deriveKeyPair(Wallet.fromSecret(privateKey).secret);
-      }
-      // privateKey
       return Wallet.deriveKeyPair(privateKey);
     } catch (_) {
       return null;
