@@ -133,7 +133,7 @@ describe("test eth", function() {
       expect(keypair).to.not.equal(null);
       expect(keypair.privateKey.toLowerCase()).to.equal(testSecret.toLowerCase());
       expect(keypair.publicKey).to.be.a("string");
-      expect(keypair.publicKey.length).to.equal(66);
+      expect(keypair.publicKey.length).to.equal(64);
     });
 
     it("should return keypair if the private key has 00 prefix", function() {

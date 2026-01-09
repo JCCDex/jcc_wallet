@@ -8,7 +8,7 @@ import {
 } from "../minify-tron/crypto";
 import { hexStr2byteArray } from "../minify-tron/code";
 import { hashMessage, signMessage, verifyMessage } from "../minify-tron/message";
-import { secp256k1 } from "@noble/curves/secp256k1.js";
+
 
 export interface ITronPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
@@ -77,7 +77,10 @@ export const plugin: ITronPlugin = {
       if (!plugin.isValidSecret(key)) {
         return null;
       }
-      const publicKey = secp256k1.ProjectivePoint.fromPrivateKey(Buffer.from(key, "hex")).toHex(true);
+      const pubBytes = getPubKeyFromPriKey(hexStr2byteArray(key));
+      const publicKey = Array.from(pubBytes)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
       return {
         privateKey: key,
         publicKey

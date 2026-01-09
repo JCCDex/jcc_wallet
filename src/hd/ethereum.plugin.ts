@@ -133,7 +133,7 @@ export const plugin: IEthereumPlugin = {
       const publicKey = secp256k1.ProjectivePoint.fromPrivateKey(Buffer.from(stripHexPrefix(key), "hex")).toHex(true);
       return {
         privateKey: key,
-        publicKey
+        publicKey: publicKey.substring(2)
       };
     } catch {
       return null;
