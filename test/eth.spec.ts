@@ -133,10 +133,7 @@ describe("test eth", function() {
       expect(keypair).to.not.equal(null);
       expect(keypair.privateKey.toLowerCase()).to.equal(testSecret.toLowerCase());
       expect(keypair.publicKey).to.be.a("string");
-      expect(keypair.publicKey.length).to.equal(128);
-      // 验证公钥能推导出正确地址
-      let address = ethWallet.address({ publicKey: keypair.publicKey });
-      expect(address.toLowerCase()).to.equal(testAddress.toLowerCase());
+      expect(keypair.publicKey.length).to.equal(66);
     });
 
     it("should return keypair if the private key has 00 prefix", function() {

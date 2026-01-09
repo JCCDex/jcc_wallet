@@ -530,10 +530,7 @@ describe("HD wallet testcase", function() {
       let keypair = api.getKeyPairFromPrivateKey(tron_keypairs[0].privateKey);
       expect(keypair).to.not.equal(null);
       expect(keypair.privateKey.toLowerCase()).to.equal(tron_keypairs[0].privateKey.substring(2).toLowerCase());
-
-      // 验证公钥能推导出正确地址
-      let address = api.address({ publicKey: keypair.publicKey, privateKey: "" });
-      expect(address).to.equal(tron_account[0].address);
+      expect(keypair.publicKey.toLowerCase()).to.equal(tron_keypairs[0].publicKey.toLowerCase());
 
       // 无效私钥返回 null
       keypair = api.getKeyPairFromPrivateKey("invalid");

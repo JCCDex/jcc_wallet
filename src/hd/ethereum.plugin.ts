@@ -130,10 +130,10 @@ export const plugin: IEthereumPlugin = {
       if (!plugin.isValidSecret(key)) {
         return null;
       }
-      const publicKey = secp256k1.ProjectivePoint.fromPrivateKey(Buffer.from(stripHexPrefix(key), "hex")).toHex(false);
+      const publicKey = secp256k1.ProjectivePoint.fromPrivateKey(Buffer.from(stripHexPrefix(key), "hex")).toHex(true);
       return {
         privateKey: key,
-        publicKey: publicKey.substring(2)
+        publicKey
       };
     } catch {
       return null;
