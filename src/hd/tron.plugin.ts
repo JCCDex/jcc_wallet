@@ -9,6 +9,7 @@ import {
 import { hexStr2byteArray } from "../minify-tron/code";
 import { hashMessage, signMessage, verifyMessage } from "../minify-tron/message";
 
+
 export interface ITronPlugin extends IHDPlugin {
   checkPrivateKey(privateKey: string): string;
   getKeyPairFromPrivateKey(privateKey: string): IKeyPair | null;
