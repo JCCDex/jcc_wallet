@@ -149,4 +149,49 @@ describe("test eth", function() {
       }
     });
   });
+
+  describe("test hash", function() {
+    it("should return a non-empty hex string", function() {
+      let hash = ethWallet.hash("test message");
+      expect(hash).to.be.a("string");
+      expect(hash.length).to.be.greaterThan(0);
+      // keccak256 of utf-8 bytes produces 32 bytes = 64 hex chars
+      expect(hash.length).to.equal(64);
+    });
+  });
+
+  describe("test sign / verify / recover", function() {
+    const rawMessage = "Some data";
+    const web3Message = "\x19Ethereum Signed Message:\n" + rawMessage.length + rawMessage;
+
+    it("should sign and verify with correct address", function() {
+      let signature = ethWallet.sign(web3Message, testSecret);
+      expect(signature).to.be.a("string");
+      expect(signature.length).to.be.greaterThan(0);
+      let isValid = ethWallet.verify(web3Message, signature, testAddress);
+      expect(isValid).to.equal(true);
+    });
+
+    it("should recover the signer address from a signature", function() {
+      let signature = ethWallet.sign(web3Message, testSecret);
+      let recovered = ethWallet.recover(web3Message, signature);
+      expect(recovered.toLowerCase()).to.equal(testAddress.toLowerCase());
+    });
+
+    it("should produce the same signature when key has 00 prefix", function() {
+      let sig1 = ethWallet.sign(web3Message, testSecret);
+      let sig2 = ethWallet.sign(web3Message, "00" + testSecret);
+      expect(sig1).to.equal(sig2);
+    });
+  });
+
+  describe("test address from public key", function() {
+    it("should derive address from an uncompressed public key", function() {
+      // 128-char uncompressed public key (secp256k1, without "04" prefix) derived from testSecret
+      const uncompressedPubKey =
+        "3c76967a9ce2f6c17e166b3d09e6965438ed4e2808953303126f95c5bb443fd68db4cf5c0a038f31142df43c864aeb6d6d9b077fa97746f153a10f76027af85b";
+      let address = ethWallet.address({ publicKey: uncompressedPubKey, privateKey: "" });
+      expect(address.toLowerCase()).to.equal(testAddress.toLowerCase());
+    });
+  });
 });

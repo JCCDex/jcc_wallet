@@ -230,6 +230,13 @@ describe("HD wallet testcase", function() {
       let swtcAddress = swtcHd.address();
       expect(swtcAddress).to.equal(null);
     });
+
+    it("test path() getter on derived wallet", function() {
+      let hd = HDWallet.fromMnemonic({ mnemonic: testMnemonicCn, language: "chinese_simplified" });
+      let swtcHd = hd.deriveWallet({ chain: BIP44Chain.SWTC, account: 0, index: 0 });
+      let path = swtcHd.path();
+      expect(path).to.deep.equal({ chain: BIP44Chain.SWTC, account: 0, change: 0, index: 0 });
+    });
   });
 
   describe("test plugin isValidAddress and isValidSecret", function() {

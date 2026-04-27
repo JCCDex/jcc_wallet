@@ -4,7 +4,7 @@ const { jtWallet, bizainWallet } = require("../src");
 let testAddress = "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH";
 let testSecret = "snfXQMEVbbZng84CcfdKDASFRi4Hf";
 let privateKey = "00BDFED361E245A47C8603FA7B15D73787545455C5C731C89568EE117A18BDC67D";
-let publicKey = "02C13075B18C87A032226CE383AEFD748D7BB719E02CD7F5A8C1F2C7562DE7C12A"
+let publicKey = "02C13075B18C87A032226CE383AEFD748D7BB719E02CD7F5A8C1F2C7562DE7C12A";
 let testBizainAddress = "bMAy4Pu8CSf5apR44HbYyLFKeC9Dbau16Q";
 let testBizainSecret = "ssySqG4BhxpngV2FjAe1SJYFD4dcm";
 
@@ -125,6 +125,21 @@ describe("test jingtum", function() {
         let keypair = jtWallet.getKeyPairFromPrivateKey(secret);
         expect(keypair).to.equal(null);
       }
+    });
+  });
+
+  describe("test verify error handling", function() {
+    it("should return false when keypair argument is null (exercises catch path)", function() {
+      let result = jtWallet.verify("some message", "some signature", testAddress, null);
+      expect(result).to.equal(false);
+    });
+
+    it("should return false when keypair has invalid publicKey format causing internal throw", function() {
+      // address() looks up from privateKey → returns correct address → passes addr check
+      // then Wallet.verify with a garbage publicKey should throw → catch returns false
+      const keypairWithBadPubKey = { privateKey: testSecret, publicKey: "not-valid-hex-pubkey-at-all" };
+      let result = jtWallet.verify("some message", "some signature", testAddress, keypairWithBadPubKey);
+      expect(result).to.equal(false);
     });
   });
 });

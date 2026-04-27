@@ -7,6 +7,18 @@ import { KEYSTORE_IS_INVALID, PASSWORD_IS_WRONG } from "../constant";
 import { IEncryptModel, IKeystoreModel, IKeypairsModel } from "../types";
 import isPlainObject from "is-plain-object";
 
+// Constant-time buffer comparison to prevent MAC timing attacks
+function equalConstTime(b1: Buffer, b2: Buffer): boolean {
+  if (b1.length !== b2.length) {
+    return false;
+  }
+  let res = 0;
+  for (let i = 0; i < b1.length; i++) {
+    res |= b1[i] ^ b2[i];
+  }
+  return res === 0;
+}
+
 export const isEmptyPlainObject = (obj) => {
   const isPlain = isPlainObject(obj);
   if (!isPlain) {
@@ -44,7 +56,7 @@ const decrypt = async (password: string, encryptData: IKeystoreModel): Promise<B
     .create()
     .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
     .digest();
-  if (Buffer.from(mac).toString("hex") !== encryptData.mac) {
+  if (!equalConstTime(Buffer.from(mac), Buffer.from(encryptData.mac, "hex"))) {
     throw new Error(PASSWORD_IS_WRONG);
   }
 
@@ -65,7 +77,7 @@ const encrypt = async (password: string, data: string, opts: IEncryptModel): Pro
   const iv = opts.iv || Buffer.from(randomBytes(16)).toString("hex");
   const kdfparams = {
     dklen: opts.dklen || 32,
-    n: opts.n || 4096,
+    n: opts.n || 16384,
     p: opts.p || 1,
     r: opts.r || 8,
     salt: opts.salt || Buffer.from(randomBytes(32)).toString("hex")

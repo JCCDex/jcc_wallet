@@ -694,4 +694,53 @@ describe("test JingchangWallet", function() {
       }
     });
   });
+
+  describe("instance: test replaceKeystore api", function() {
+    let inst;
+    beforeAll(() => {
+      inst = new JingchangWallet(testWallet, true, true);
+    });
+
+    afterAll(() => {
+      JingchangWallet.clear();
+    });
+
+    it("should replace keystore and wallet data should be decryptable with new password", async function() {
+      const newPassword = "newPass123";
+      const jingchangWallet = await inst.replaceKeystore(testSecret, newPassword, jtWallet.getAddress);
+      expect(JingchangWallet.isValid(jingchangWallet)).to.true;
+      const secret = await inst.getSecretWithType(newPassword);
+      expect(secret).to.equal(testSecret);
+    });
+  });
+
+  describe("static: test encryptWithPublicKey / decryptWithPrivateKey error paths", function() {
+    it("should throw Bad MAC when decrypting with wrong private key", async function() {
+      const keypair = JingchangWallet.deriveKeyPair(testSecret);
+      const message = "eccrypto test message";
+      const encoded = await JingchangWallet.encryptWithPublicKey(message, keypair.publicKey);
+      // Use a different valid private key so the shared secret differs → MAC mismatch
+      const wrongKey = testEthereumSecret;
+      try {
+        await JingchangWallet.decryptWithPrivateKey(encoded, wrongKey);
+        expect.fail("should have thrown");
+      } catch (error) {
+        expect(error.message).to.equal("Bad MAC");
+      }
+    });
+
+    it("should throw Bad MAC when MAC length is tampered", async function() {
+      const keypair = JingchangWallet.deriveKeyPair(testSecret);
+      const message = "eccrypto tamper test";
+      const encoded = await JingchangWallet.encryptWithPublicKey(message, keypair.publicKey);
+      // Tamper: replace 32-byte mac with a 16-byte value → equalConstTime length mismatch
+      const tampered = Object.assign({}, encoded, { mac: Buffer.alloc(16).toString("hex") });
+      try {
+        await JingchangWallet.decryptWithPrivateKey(tampered, keypair.privateKey);
+        expect.fail("should have thrown");
+      } catch (error) {
+        expect(error.message).to.equal("Bad MAC");
+      }
+    });
+  });
 });
