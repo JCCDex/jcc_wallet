@@ -71,12 +71,12 @@ const Factory = (alphabet): IKeyPairFactory => {
         // Would fail tests if signatures aren't deterministic
         extraEntropy: undefined
       })
-        .toDERHex(true)
+        .toDERHex()
         .toUpperCase();
     },
     verify(message: string, signature: string, publicKey: string): boolean {
       const signHash = Sha512.half(message);
-      return Secp256k1.verify(signature, signHash, publicKey);
+      return Secp256k1.verify(hexToBytes(signature), signHash, hexToBytes(publicKey));
     }
   };
 

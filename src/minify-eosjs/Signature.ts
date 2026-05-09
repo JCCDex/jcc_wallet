@@ -7,6 +7,7 @@
 import { Key, KeyType, signatureToString, stringToSignature } from "./eosjs-numeric";
 import { constructElliptic, PublicKey } from "./eosjs-key-conversions";
 import { CurveFn, SignatureType, RecoveredSignatureType } from "@noble/curves/abstract/weierstrass.js";
+import { sha256 } from "@noble/hashes/sha2.js";
 import { toBEArray, toBigInt } from "./bn-utils";
 
 /** Represents/stores a Signature and provides easy conversion for use with `elliptic` lib */
@@ -95,7 +96,7 @@ export class Signature {
       if (typeof data === "string") {
         data = Buffer.from(data, encoding);
       }
-      data = this.ec.CURVE.hash(data);
+      data = sha256(data);
     }
     const sig = this.toRecoveredSignature();
     const recoveredPublicKey = sig.recoverPublicKey(data);

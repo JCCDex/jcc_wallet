@@ -1,6 +1,6 @@
 {
   "name": "jcc_wallet",
-  "version": "4.0.9",
+  "version": "4.0.10",
   "description": "Toolkit of wallet to manage multiple chains & support multiple keystores for each chain",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -86,6 +86,9 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@noble/curves": "1.9.7",
+    "@noble/hashes": "1.8.0",
+    "@scure/bip32": "1.7.0",
     "base-x": "^4.0.1",
     "bip39": "^3.1.0",
     "bip44-constants": "^396.0.0",
@@ -93,7 +96,6 @@
     "buffer": "^6.0.3",
     "clone-deep": "^4.0.1",
     "ethereum-cryptography": "^3.2.0",
-    "ethers": "^6.16.0",
     "lockr": "^0.8.5"
   },
   "sideEffects": false,
@@ -110,7 +112,9 @@
     "serialize-javascript": "7.0.5",
     "babel-plugin-istanbul": "8.0.2",
     "bn.js": "5.2.3",
-    "diff": "5.2.2"
+    "diff": "5.2.2",
+    "@noble/curves": "1.9.7",
+    "@noble/hashes": "1.8.0"
   },
   "resolutions": {
     "elliptic": "6.6.1",
@@ -124,6 +128,8 @@
     "serialize-javascript": "7.0.5",
     "babel-plugin-istanbul": "8.0.2",
     "bn.js": "5.2.3",
-    "diff": "5.2.2"
+    "diff": "5.2.2",
+    "@noble/curves": "1.9.7",
+    "@noble/hashes": "1.8.0"
   }
 }

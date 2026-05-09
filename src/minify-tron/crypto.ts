@@ -5,7 +5,9 @@ import { hexStr2byteArray } from "./code";
 import { encode58, decode58 } from "./base58";
 import { byteArray2hexStr } from "./bytes";
 import { secp256k1 } from "@noble/curves/secp256k1.js";
-import { keccak256, sha256 } from "ethers/crypto";
+import { keccak256 } from "ethereum-cryptography/keccak.js";
+import { sha256 } from "ethereum-cryptography/sha256.js";
+import { toHex } from "ethereum-cryptography/utils.js";
 
 function normalizePrivateKeyBytes(priKeyBytes) {
   return hexStr2byteArray(byteArray2hexStr(priKeyBytes).padStart(64, "0"));
@@ -54,9 +56,7 @@ export function isAddressValid(base58Str) {
 export function computeAddress(pubBytes) {
   if (pubBytes.length === 65) pubBytes = pubBytes.slice(1);
 
-  const hash = keccak256(new Uint8Array(pubBytes))
-    .toString()
-    .substring(2);
+  const hash = toHex(keccak256(new Uint8Array(pubBytes)));
   const addressHex = ADDRESS_PREFIX + hash.substring(24);
 
   return hexStr2byteArray(addressHex);
@@ -82,9 +82,7 @@ export function getPubKeyFromPriKey(priKeyBytes) {
 }
 
 export function SHA256(msgBytes) {
-  const msgHex = byteArray2hexStr(msgBytes);
-  const hashHex = sha256("0x" + msgHex).replace(/^0x/, "");
-  return hexStr2byteArray(hashHex);
+  return Array.from(sha256(new Uint8Array(msgBytes)));
 }
 
 export function pkToAddress(privateKey, strict = false) {

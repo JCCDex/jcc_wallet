@@ -6,6 +6,7 @@
 
 import { Key, KeyType, stringToPrivateKey } from "./eosjs-numeric";
 import { ProjPointType, CurveFn, SignOpts } from "@noble/curves/abstract/weierstrass.js";
+import { sha256 } from "@noble/hashes/sha2.js";
 
 import { constructElliptic, PublicKey, Signature } from "./eosjs-key-conversions";
 
@@ -44,7 +45,7 @@ export class PrivateKey {
       if (typeof data === "string") {
         data = Buffer.from(data, encoding);
       }
-      data = this.ec.CURVE.hash(data);
+      data = sha256(data);
     }
     let tries = 0;
     let signature: Signature;
