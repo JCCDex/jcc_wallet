@@ -4,7 +4,6 @@
  * rewrite curves
  */
 
-import BN from "bn.js";
 import { Key, KeyType, stringToPrivateKey } from "./eosjs-numeric";
 import { ProjPointType, CurveFn, SignOpts } from "@noble/curves/abstract/weierstrass.js";
 
@@ -40,7 +39,7 @@ export class PrivateKey {
   }
 
   /** Sign a message or hashed message digest with private key */
-  public sign(data: BN, shouldHash: boolean = true, encoding: BufferEncoding = "utf8"): Signature {
+  public sign(data: string | Uint8Array, shouldHash: boolean = true, encoding: BufferEncoding = "utf8"): Signature {
     if (shouldHash) {
       if (typeof data === "string") {
         data = Buffer.from(data, encoding);

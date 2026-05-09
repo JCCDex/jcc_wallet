@@ -1,5 +1,4 @@
 const webpackConfig = require("./webpack.config");
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
 module.exports = function(config) {
@@ -36,8 +35,8 @@ module.exports = function(config) {
       },
       mode: "development",
       plugins: [
-        new NodePolyfillPlugin({
-          excludeAliases: ["console", "crypto"]
+        new webpack.ProvidePlugin({
+          Buffer: ["buffer", "Buffer"]
         }),
         new webpack.IgnorePlugin({
           resourceRegExp: /canvas/,

@@ -1,7 +1,7 @@
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const path = require("path");
+const webpack = require("webpack");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 const config = {
@@ -19,7 +19,8 @@ const config = {
       tls: false,
       net: false,
       fs: false,
-      child_process: false
+      child_process: false,
+      buffer: require.resolve("buffer/")
     }
   },
   optimization: {
@@ -45,8 +46,8 @@ const config = {
   },
   plugins: [
     new DuplicatePackageCheckerPlugin(),
-    new NodePolyfillPlugin({
-      excludeAliases: ["process", "console", "crypto"]
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"]
     })
   ]
 };

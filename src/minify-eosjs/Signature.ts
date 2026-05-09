@@ -6,7 +6,6 @@
 
 import { Key, KeyType, signatureToString, stringToSignature } from "./eosjs-numeric";
 import { constructElliptic, PublicKey } from "./eosjs-key-conversions";
-import { BN } from "bn.js";
 import { CurveFn, SignatureType, RecoveredSignatureType } from "@noble/curves/abstract/weierstrass.js";
 import { toBEArray, toBigInt } from "./bn-utils";
 
@@ -91,7 +90,7 @@ export class Signature {
   }
 
   /** Recover a public key from a message or hashed message digest and signature */
-  public recover(data: BN, shouldHash: boolean = true, encoding: BufferEncoding = "utf8"): PublicKey {
+  public recover(data: string | Uint8Array, shouldHash: boolean = true, encoding: BufferEncoding = "utf8"): PublicKey {
     if (shouldHash) {
       if (typeof data === "string") {
         data = Buffer.from(data, encoding);
